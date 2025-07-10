@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from save_scanner import scan_saves
+from routes import saves
 
 app = FastAPI()
 
@@ -12,6 +12,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/saves")
-def get_saves():
-    return scan_saves()
+app.include_router(saves.router, prefix="/api", tags=["saves"])
