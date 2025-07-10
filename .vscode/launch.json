@@ -3,14 +3,14 @@
   "configurations": [
     {
       "name": "Start FastAPI Server (Dev)",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/api/Start-ApiServer.ps1",
       "console": "integratedTerminal"
     },
     {
       "name": "Start FastAPI + Open Swagger",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/api/Start-ApiWithDocs.ps1",
       "console": "integratedTerminal"
