@@ -26,3 +26,11 @@ pip-log.txt
 /dist/
 /build/
 /
+
+# Visual Studio Artifacts
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
