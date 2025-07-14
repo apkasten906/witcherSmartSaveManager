@@ -1,36 +1,51 @@
 <Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="WitcherGuiApp.Views.MainWindow"
+        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:viewmodels="clr-namespace:WitcherGuiApp.ViewModels" 
+        av:DataContext="{av:DesignInstance Type=viewmodels:MainViewModel}" 
+        mc:Ignorable="av" 
+        x:Class="WitcherGuiApp.Views.MainWindow"
         x:Name="MainWindowRoot"
         Title="Witcher Save Manager" Height="450" Width="800">
 
-    <StackPanel Margin="10,0,10,0" Height="378" VerticalAlignment="Center">
-        <!-- Load Button -->
-        <Button Content="Find Witcher Save Games"
-                Click="FetchSaves_Click"
-                Width="180"
-                Margin="0,0,0,10"
-                HorizontalAlignment="Left"/>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Status + Buttons -->
+            <RowDefinition Height="*"/>
+            <!-- DataGrid (expands) -->
+        </Grid.RowDefinitions>
 
-        <!-- Status message -->
-        <TextBlock Text="{Binding StatusMessage}" Margin="0,0,0,10" FontWeight="Bold" Foreground="DarkRed" Height="29"/>
+        <!-- Status + Buttons container -->
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <TextBlock Text="{Binding StatusMessage}"
+                       FontWeight="Bold"
+                       Foreground="DarkRed"
+                       Margin="0,0,0,10" />
 
-        <!-- Delete Button -->
-        <Button Content="Delete Selected"
-                Command="{Binding DeleteSelectedCommand}"
-                Margin="0,0,0,10"
-                Width="120"
-                HorizontalAlignment="Left"/>
+            <Button Content="Find Witcher Save Games"
+                    Click="FetchSaves_Click"
+                    Width="180"
+                    Margin="0,0,0,5"
+                    HorizontalAlignment="Left"/>
 
-        <!-- Save Game Grid -->
-        <DataGrid ItemsSource="{Binding Saves}"
+            <Button Content="Delete Selected"
+                    Command="{Binding DeleteSelectedCommand}"
+                    Width="120"
+                    HorizontalAlignment="Left"/>
+        </StackPanel>
+
+        <!-- Scrollable, resizable DataGrid -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Saves}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
-                  HeadersVisibility="Column"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                  SelectionMode="Extended" av:IsHidden="True">
+                  IsReadOnly="False"
+                  SelectionMode="Extended">
 
             <DataGrid.Columns>
                 <!-- Checkbox Column with header binding -->
@@ -65,5 +80,5 @@
                                     Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
-    </StackPanel>
+     </Grid>
 </Window>
