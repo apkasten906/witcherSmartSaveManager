@@ -8,7 +8,7 @@ namespace WitcherGuiApp.Utils
         public static string GetExtensionForGame(string gameKey)
         {
             string key = $"{gameKey}SaveExtension";
-            string? ext = ConfigurationManager.AppSettings[key];
+            var ext = ConfigurationManager.AppSettings[key];
 
             if (!string.IsNullOrWhiteSpace(ext))
                 return ext;

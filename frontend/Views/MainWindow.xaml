@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:viewmodels="clr-namespace:WitcherGuiApp.ViewModels" 
+        xmlns:viewmodels="clr-namespace:WitcherGuiApp.ViewModels"
         av:DataContext="{av:DesignInstance Type=viewmodels:MainViewModel}" 
         mc:Ignorable="av" 
         x:Class="WitcherGuiApp.Views.MainWindow"
@@ -20,10 +20,6 @@
 
         <!-- Status + Buttons container -->
         <StackPanel Orientation="Vertical" Grid.Row="0">
-            <TextBlock Text="{Binding StatusMessage}"
-                       FontWeight="Bold"
-                       Foreground="DarkRed"
-                       Margin="0,0,0,10" />
 
             <Button Content="Find Witcher Save Games"
                     Click="FetchSaves_Click"
@@ -31,10 +27,23 @@
                     Margin="0,0,0,5"
                     HorizontalAlignment="Left"/>
 
-            <Button Content="Delete Selected"
+            <!--Backup Folder Location Input-->            
+            <TextBox Text="{Binding BackupFilePath}"  TextWrapping="Wrap" Width="294" HorizontalAlignment="Left"/>
+            <Button Command="{Binding BackupLocationPickerCommand}" Content="..." Width="20"/>
+
+            <Button Command="{Binding BackupSelectedCommand}" Content="Backup Selected Files" Width="120" HorizontalAlignment="Left"/>
+
+            <Button Content="Delete Selected Files"
                     Command="{Binding DeleteSelectedCommand}"
                     Width="120"
                     HorizontalAlignment="Left"/>
+            
+            <TextBlock Text="{Binding StatusMessage}"
+                       FontWeight="Bold"
+                       Foreground="DarkRed"
+                       />
+            
+            <ProgressBar Height="10" HorizontalAlignment="Center" />
         </StackPanel>
 
         <!-- Scrollable, resizable DataGrid -->
@@ -80,5 +89,5 @@
                                     Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
-     </Grid>
+    </Grid>
 </Window>

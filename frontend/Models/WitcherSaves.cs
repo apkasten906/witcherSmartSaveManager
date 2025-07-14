@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace WitcherGuiApp.Models
 {
-    public class SaveFile
+    public class WitcherSaveFile
     {
         [JsonPropertyName("game")]
         public string Game { get; set; }

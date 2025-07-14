@@ -6,7 +6,7 @@ namespace WitcherGuiApp.Utils
 {
     public static class MetadataExtractor
     {
-        public static void PopulateMetadata(SaveFile save)
+        public static void PopulateMetadata(WitcherSaveFile save)
         {
             // Placeholder logic – replace with actual parsing later
             save.Metadata["source"] = "mock";
