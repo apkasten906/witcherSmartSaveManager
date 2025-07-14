@@ -1,0 +1,12 @@
+// This file allows you to override default save game paths and file extensions.
+// Modify only the values. Do not remove the top-level keys: SavePaths, SaveExtensions.
+// SavePaths will override the App.config values if present.
+// SaveExtensions lets you define which file types to look for in each game's save folder.
+
+{
+  "SavePaths": {
+    "Witcher1": "%USERPROFILE%\\Documents\\The Witcher\\saves",
+    "Witcher2": "%USERPROFILE%\\Documents\\Witcher 2\\gamesaves",
+    "Witcher3": "%USERPROFILE%\\Documents\\The Witcher 3\\gamesaves"
+  }  
+}

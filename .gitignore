@@ -26,3 +26,17 @@ pip-log.txt
 /dist/
 /build/
 /
+
+# Visual Studio Artifacts
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+/frontend/Views/1pekkllx.mrw~
+/frontend/Views/ajjsbb3z.5ln~
+/frontend/Views/bn2fwdxz.ny2~
+/frontend/Views/drxho0l0.clo~
+/frontend/Views/kqoaxjsq.4tb~
+/frontend/Views/rbdp3f2b.umr~
