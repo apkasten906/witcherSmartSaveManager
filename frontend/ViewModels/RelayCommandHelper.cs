@@ -12,11 +12,13 @@ public class RelayCommand : ICommand
         _canExecute = canExecute;
     }
 
-    public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
+    public bool CanExecute(object parameter) => _canExecute?.Invoke(parameter) ?? true;
+
     public void Execute(object parameter) => _execute(parameter);
+
     public event EventHandler CanExecuteChanged
     {
-        add => CommandManager.RequerySuggested += value;
-        remove => CommandManager.RequerySuggested -= value;
+        add { CommandManager.RequerySuggested += value; }
+        remove { CommandManager.RequerySuggested -= value; }
     }
 }
