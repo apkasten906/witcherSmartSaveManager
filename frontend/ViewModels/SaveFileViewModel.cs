@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows.Input;
 using WitcherGuiApp.Models;
 
 namespace WitcherGuiApp.ViewModels
@@ -10,6 +11,7 @@ namespace WitcherGuiApp.ViewModels
         public SaveFileViewModel(SaveFile saveFile)
         {
             SaveFile = saveFile;
+            
         }
 
         public string FileName => SaveFile.FileName;

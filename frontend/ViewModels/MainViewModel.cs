@@ -1,13 +1,12 @@
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
-using WitcherGuiApp.Models;
 using WitcherGuiApp.Services;
-using WitcherGuiApp.ViewModels;
 
 namespace WitcherGuiApp.ViewModels
 {
@@ -30,24 +29,20 @@ namespace WitcherGuiApp.ViewModels
             }
         }
 
-        private bool _areAllSelected;
         public bool AreAllSelected
         {
-            get => _areAllSelected;
+            get => Saves.Count > 0 && Saves.All(s => s.IsSelected);
             set
             {
-                if (_areAllSelected != value)
+                foreach (var save in Saves)
                 {
-                    _areAllSelected = value;
-                    OnPropertyChanged();
-
-                    foreach (var save in Saves)
-                    {
-                        save.IsSelected = value;
-                    }
+                    save.IsSelected = value;
                 }
+
+                OnPropertyChanged(); // force header update
             }
         }
+
 
         public MainViewModel()
         {
@@ -69,8 +64,12 @@ namespace WitcherGuiApp.ViewModels
         {
             if (e.PropertyName == nameof(SaveFileViewModel.IsSelected))
             {
-                _areAllSelected = Saves.All(s => s.IsSelected);
-                OnPropertyChanged(nameof(AreAllSelected));
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    OnPropertyChanged(nameof(AreAllSelected));
+                });
+
+                CommandManager.InvalidateRequerySuggested();
             }
         }
 
@@ -93,9 +92,12 @@ namespace WitcherGuiApp.ViewModels
 
                     foreach (var save in saveFiles)
                     {
-                        var vm = new SaveFileViewModel(save);
-                        vm.PropertyChanged += Save_PropertyChanged;
-                        App.Current.Dispatcher.Invoke(() => Saves.Add(vm));
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            var vm = new SaveFileViewModel(save);
+                            vm.PropertyChanged += Save_PropertyChanged;
+                            Saves.Add(vm);
+                        });
                     }
 
                     StatusMessage = saveFiles.Count == 0
@@ -128,6 +130,7 @@ namespace WitcherGuiApp.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
+            Console.WriteLine($"PropertyChanged: {name}");
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
