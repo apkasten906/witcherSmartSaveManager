@@ -1,13 +1,15 @@
-# Start-ApiWithDocs.ps1
-
 # Set Python path for imports
 $env:PYTHONPATH = "api"
 
-# Activate the virtual environment
-. .\venv\Scripts\Activate.ps1
+# Activate the virtual environment in this shell (optional if only running in new window)
+. "$PSScriptRoot\venv\Scripts\Activate.ps1"
 
-# Start the FastAPI server in the background
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "uvicorn main:app --reload --app-dir api"
+# Start the FastAPI server in a new PowerShell window, with activation inside that window
+Start-Process powershell -ArgumentList @(
+    "-NoExit",
+    "-Command",
+    ". '$PSScriptRoot\venv\Scripts\Activate.ps1'; uvicorn main:app --reload --app-dir api"
+)
 
 # Wait briefly, then open Swagger docs
 Start-Sleep -Seconds 2
