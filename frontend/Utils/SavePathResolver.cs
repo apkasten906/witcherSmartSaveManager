@@ -35,6 +35,15 @@ namespace WitcherGuiApp.Utils
             throw new Exception($"No save path configured for game key '{gameKey}'");
         }
 
+        public static string GetDefaultBackupPath(string gameKey)
+        {
+            var userBackupPath = _userConfig?[$"BackupPaths:{gameKey}"];
+            if (!string.IsNullOrWhiteSpace(userBackupPath))
+                return Environment.ExpandEnvironmentVariables(userBackupPath);
+            // Reasonable fallback
+            return $"{GetSavePath(gameKey)}\\_backup";
+        }
+
         public static string GetSaveExtension(string gameKey)
         {
             var extension = _userConfig?[$"SaveExtensions:{gameKey}"];

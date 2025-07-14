@@ -6,9 +6,9 @@ namespace WitcherGuiApp.ViewModels
 {
     public class SaveFileViewModel : INotifyPropertyChanged
     {
-        public SaveFile SaveFile { get; }
+        public WitcherSaveFile SaveFile { get; }
 
-        public SaveFileViewModel(SaveFile saveFile)
+        public SaveFileViewModel(WitcherSaveFile saveFile)
         {
             SaveFile = saveFile;
             
