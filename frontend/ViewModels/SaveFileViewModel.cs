@@ -18,6 +18,7 @@ namespace WitcherGuiApp.ViewModels
         public string FileName => SaveFile.FileName;
         public string ModifiedTimeIso => SaveFile.ModifiedTimeIso;
         public int Size => SaveFile.Size;
+        public bool ScreenshotExists => !string.IsNullOrEmpty(SaveFile?.ScreenshotPath);
 
         private bool _backupExists = false;
         //get; set; }

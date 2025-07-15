@@ -78,6 +78,18 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Thumbnail">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding SaveFile.ScreenshotPath}"
+                               Width="120"
+                               Height="68"
+                               Stretch="Uniform"
+                               Margin="2"
+                               Visibility="{Binding ScreenshotExists, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
                 <!-- Read-only display columns -->
                 <DataGridTextColumn Header="Filename"
