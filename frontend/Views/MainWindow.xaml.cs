@@ -17,11 +17,6 @@ namespace WitcherGuiApp.Views
         {
             await _viewModel.LoadSavesAsync();
         }
-
-        private void ListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }
 

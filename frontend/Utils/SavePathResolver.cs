@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
+using WitcherGuiApp.Models;
 
 namespace WitcherGuiApp.Utils
 {
@@ -22,7 +23,7 @@ namespace WitcherGuiApp.Utils
             }
         }
 
-        public static string GetSavePath(string gameKey)
+        public static string GetSavePath(GameKey gameKey)
         {
             var userPath = _userConfig?[$"SavePaths:{gameKey}"];
             if (!string.IsNullOrWhiteSpace(userPath))
@@ -35,7 +36,7 @@ namespace WitcherGuiApp.Utils
             throw new Exception($"No save path configured for game key '{gameKey}'");
         }
 
-        public static string GetDefaultBackupPath(string gameKey)
+        public static string GetDefaultBackupPath(GameKey gameKey)
         {
             var userBackupPath = _userConfig?[$"BackupPaths:{gameKey}"];
             if (!string.IsNullOrWhiteSpace(userBackupPath))
@@ -44,7 +45,7 @@ namespace WitcherGuiApp.Utils
             return $"{GetSavePath(gameKey)}\\_backup";
         }
 
-        public static string GetSaveExtension(string gameKey)
+        public static string GetSaveExtension(GameKey gameKey)
         {
             var extension = _userConfig?[$"SaveExtensions:{gameKey}"];
             if (!string.IsNullOrWhiteSpace(extension))
