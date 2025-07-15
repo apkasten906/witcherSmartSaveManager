@@ -1,4 +1,4 @@
-<Window
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
@@ -27,12 +27,16 @@
                     Margin="0,0,0,5"
                     HorizontalAlignment="Left"/>
 
-            <!--Backup Folder Location Input-->            
-            <TextBox Text="{Binding BackupFilePath}"  TextWrapping="Wrap" Width="294" HorizontalAlignment="Left"/>
-            <Button Command="{Binding BackupLocationPickerCommand}" Content="..." Width="20"/>
-
-            <Button Command="{Binding BackupSelectedCommand}" Content="Backup Selected Files" Width="120" HorizontalAlignment="Left"/>
-
+            <!--Backup Folder Location Input-->
+            <Label HorizontalAlignment="Left">Backup Location</Label>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBox Text="{Binding BackupFilePath}"  TextWrapping="Wrap" Width="500" HorizontalAlignment="Left"/>
+                <Button Command="{Binding BackupLocationPickerCommand}" Content="..." Width="20" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+            </StackPanel>
+                
+            <Button Command="{Binding BackupSelectedCommand}" Content="Backup Selected Files" Width="120" HorizontalAlignment="Left" Margin="0,0,0,10"/>
+            
+                
             <Button Content="Delete Selected Files"
                     Command="{Binding DeleteSelectedCommand}"
                     Width="120"
@@ -44,6 +48,7 @@
                        />
             
             <ProgressBar Height="10" HorizontalAlignment="Center" />
+            <Label Content="Label"/>
         </StackPanel>
 
         <!-- Scrollable, resizable DataGrid -->
@@ -87,6 +92,19 @@
                                     Binding="{Binding Size}"
                                     IsReadOnly="True"
                                     Width="100"/>
+                <DataGridTemplateColumn IsReadOnly="True" Width="70">
+                    <DataGridTemplateColumn.Header>Backed Up
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="✔"
+                               Foreground="Green"
+                               FontSize="16"
+                               HorizontalAlignment="Center"
+                               Visibility="{Binding BackupExists, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

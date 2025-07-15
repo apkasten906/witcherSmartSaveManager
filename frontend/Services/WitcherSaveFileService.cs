@@ -1,98 +1,98 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
 using WitcherGuiApp.Models;
 using WitcherGuiApp.Utils;
+
 
 namespace WitcherGuiApp.Services
 {
     public class WitcherSaveFileService
     {
-        private readonly string gameKey;
+        private readonly GameKey gameKey;
         private readonly string _saveFolder;
+        private readonly string _backupSaveFolder;
 
-    public WitcherSaveFileService(string gameKey)
-    {
-        this.gameKey = gameKey;
-        _saveFolder = SavePathResolver.GetSavePath(gameKey);
-    }
-
-
-    public List<WitcherSaveFile> GetSaveFiles()
-    {
-        if (!Directory.Exists(_saveFolder))
-            return new List<WitcherSaveFile>();
-
-        string extensionPattern = GameSaveExtensions.GetExtensionForGame(gameKey);
-
-        var files = Directory.EnumerateFiles(_saveFolder, extensionPattern, SearchOption.TopDirectoryOnly);
-
-        return files.Select(file =>
+        public WitcherSaveFileService(GameKey gameKey)
         {
-            var info = new FileInfo(file);
-            var saveName = Path.GetFileNameWithoutExtension(info.Name);
-            var screenshotPath = Path.Combine(_saveFolder, saveName + ".bmp");
+            this.gameKey = gameKey;
+            _saveFolder = SavePathResolver.GetSavePath(gameKey);
+            _backupSaveFolder = SavePathResolver.GetDefaultBackupPath(gameKey);
+        }
 
-
-            return new WitcherSaveFile
-            {
-                Game = gameKey,
-                FileName = info.Name,
-                ModifiedTime = new DateTimeOffset(info.LastWriteTimeUtc).ToUnixTimeSeconds(),
-                ModifiedTimeIso = info.LastWriteTimeUtc.ToString("o"),
-                Size = (int)info.Length,
-                FullPath = info.FullName,
-                ScreenshotPath = File.Exists(screenshotPath) ? screenshotPath : string.Empty,
-                Metadata = MetadataExtractor.GetMetadata(file)
-            };
-        }).ToList();
-    }
-
-
-    public bool DeleteSaveFile(string fullPath)
-    {
-        if (string.IsNullOrWhiteSpace(fullPath) || !File.Exists(fullPath))
-            return false;
-
-        try
+        public List<WitcherSaveFile> GetSaveFiles()
         {
-            File.Delete(fullPath);
+            if (!Directory.Exists(_saveFolder))
+                return new List<WitcherSaveFile>();
 
-            // Attempt to delete corresponding .bmp screenshot
-            var bmpPath = Path.Combine(Path.GetDirectoryName(fullPath) ?? "", Path.GetFileNameWithoutExtension(fullPath) + ".bmp");
-            if (File.Exists(bmpPath))
+            string extensionPattern = GameSaveExtensions.GetExtensionForGame(gameKey);
+
+            var files = Directory.EnumerateFiles(_saveFolder, extensionPattern, SearchOption.TopDirectoryOnly);
+
+            return files.Select(file =>
             {
-                File.Delete(bmpPath);
+                var info = new FileInfo(file);
+                var saveName = Path.GetFileNameWithoutExtension(info.Name);
+                var screenshotName = saveName + "_640x360.bmp"; // Assuming the screenshot follows this naming convention
+                var screenshotPath = Path.Combine(_saveFolder, screenshotName);
+                var backupPath = Path.Combine(_backupSaveFolder, info.Name);
+                var backupScreenshotPath = Path.Combine(_backupSaveFolder, screenshotName);
+
+
+                return new WitcherSaveFile
+                {
+                    Game = gameKey,
+                    FileName = info.Name,
+                    ModifiedTime = new DateTimeOffset(info.LastWriteTimeUtc).ToUnixTimeSeconds(),
+                    ModifiedTimeIso = info.LastWriteTimeUtc.ToString("o"),
+                    Size = (int)info.Length,
+                    FullPath = info.FullName,
+                    ScreenshotPath = File.Exists(screenshotPath) ? screenshotPath : string.Empty,
+                    BackupExists = File.Exists(backupPath),
+                    Metadata = MetadataExtractor.GetMetadata(file)
+                };
+            }).ToList();
+        }
+
+        // this method needs to be a bit different from backups, because we have to also remove the saves from the OberservableCollection (flow at the ViewModel level)
+        public bool DeleteSaveFile(WitcherSaveFile save)
+        {            
+            if (string.IsNullOrWhiteSpace(save.FullPath) || !File.Exists(save.FullPath))
+                throw new FileNotFoundException("Save file does not exist.", save.FullPath);
+
+            File.Delete(save.FullPath);
+
+            // Attempt to delete corresponding .bmp screenshot                
+            if (File.Exists(save.ScreenshotPath))
+            {
+                File.Delete(save.ScreenshotPath);
             }
-
             return true;
         }
-        catch
-        {
-            return false;
-        }
-    }
 
-        
-        public bool BackupSaveFile(string fullPath, string gamekey, string backupFolderPath = "", bool overwriteAll = false)
-        {
-            if (string.IsNullOrWhiteSpace(fullPath) || !File.Exists(fullPath))
-                return false;
-
+        public string BackupSaveFile(WitcherSaveFile save, bool overwrite = false)
+        {     
             try
-            {                
-                File.Copy(fullPath, backupFolderPath);
+            {
+                if (string.IsNullOrWhiteSpace(save.FullPath) || !File.Exists(save.FullPath))
+                    throw new FileNotFoundException("Save file does not exist.", save.FullPath);
+
+                File.Copy(save.FullPath, Path.Combine(_backupSaveFolder, save.FileName), overwrite);
+
+                if (!string.IsNullOrWhiteSpace(save.ScreenshotPath) && File.Exists(save.ScreenshotPath))
+                {
+                    string screenshotBackupPath = Path.Combine(_backupSaveFolder, Path.GetFileName(save.ScreenshotPath));                    
+                    File.Copy(save.ScreenshotPath, screenshotBackupPath, overwrite);
+                }
+                return "success";
+                    
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error backing up file: {ex.Message}");
-                return false;
+                return ex.Message;
             }
-            return true;
         }
     }    
 }

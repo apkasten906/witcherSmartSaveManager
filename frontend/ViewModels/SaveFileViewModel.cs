@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.VisualBasic;
+using System.ComponentModel;
 using System.Windows.Input;
 using WitcherGuiApp.Models;
 
@@ -11,12 +12,25 @@ namespace WitcherGuiApp.ViewModels
         public SaveFileViewModel(WitcherSaveFile saveFile)
         {
             SaveFile = saveFile;
-            
+            BackupExists = saveFile.BackupExists;
         }
 
         public string FileName => SaveFile.FileName;
         public string ModifiedTimeIso => SaveFile.ModifiedTimeIso;
         public int Size => SaveFile.Size;
+
+        private bool _backupExists = false;
+        //get; set; }
+        //=> SaveFile.BackupExists;
+        public bool BackupExists        
+        {
+            get => _backupExists;
+            set
+            {
+                _backupExists = value;
+                OnPropertyChanged(nameof(BackupExists));                
+            }
+        }
 
         private bool _isSelected;
         public bool IsSelected

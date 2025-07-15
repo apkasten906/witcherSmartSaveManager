@@ -23,6 +23,8 @@ namespace WitcherGuiApp.Tests.Mocks
 
             var files = Directory.EnumerateFiles(_mockPath, _mockExtension, SearchOption.TopDirectoryOnly);
 
+
+            // TODO: fix this and make it easier to implement
             var result = new List<WitcherSaveFile>();
             foreach (var file in files)
             {
@@ -32,7 +34,7 @@ namespace WitcherGuiApp.Tests.Mocks
 
                 result.Add(new WitcherSaveFile
                 {
-                    Game = "MockGame",
+                    Game = GameKey.Witcher2,
                     FileName = info.Name,
                     ModifiedTime = new DateTimeOffset(info.LastWriteTimeUtc).ToUnixTimeSeconds(),
                     ModifiedTimeIso = info.LastWriteTimeUtc.ToString("o"),
