@@ -160,7 +160,9 @@ namespace WitcherGuiApp.ViewModels
 
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                BackupFilePath = dlg.FileName;                
+                BackupFilePath = dlg.FileName;
+
+                RefreshBackupStates();
             }
         }
 
@@ -244,6 +246,15 @@ namespace WitcherGuiApp.ViewModels
                 StatusMessage = $"Error backing up saves: {ex.Message}";
                 return;
             }            
+        }
+
+        private void RefreshBackupStates()
+        {
+            foreach (var save in Saves)
+            {
+                var backupPath = Path.Combine(BackupFilePath, Path.GetFileName(save.FileName));
+                save.BackupExists = File.Exists(backupPath);
+            }
         }
 
         private void DeleteSelectedSaves()
