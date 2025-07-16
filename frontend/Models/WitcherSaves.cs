@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace WitcherGuiApp.Models
 {
-    public class SaveFile
+    public class WitcherSaveFile
     {
         [JsonPropertyName("game")]
-        public string Game { get; set; }
+        public GameKey Game { get; set; }
 
         [JsonPropertyName("file_name")]
         public string FileName { get; set; }
@@ -28,5 +28,8 @@ namespace WitcherGuiApp.Models
 
         [JsonPropertyName("metadata")]
         public Dictionary<string, object> Metadata { get; set; }
+        
+        [JsonPropertyName("BackupExists")]
+        public bool BackupExists { get; internal set; }
     }
 }

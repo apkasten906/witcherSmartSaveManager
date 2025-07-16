@@ -4,26 +4,9 @@ An intelligent, cross-version **save game manager** for the Witcher series (star
 
 ---
 
-## 🧩 Architecture: Python + C# Hybrid
-
-This project follows a **loosely coupled hybrid architecture**:
-
-### ⚙️ `api/` — Python (FastAPI Backend)
-- REST API that handles:
-  - Scanning save files
-  - Extracting metadata (timestamps, quest names, etc.)
-  - Serving screenshot previews
-  - Deleting selected saves
-- Runs independently as a local service.
-- Can be tested or extended without the frontend.
-
-### 🪟 `frontend/` — C# (.NET WinForms GUI)
+### 🪟 C# (.NET WinForms GUI)
 - Windows-native desktop application.
-- Queries the REST API to:
-  - Display saves visually (like in-game)
-  - Select and delete multiple saves
-  - Let users override save folder paths
-- No tight integration — talks to Python backend via HTTP only.
+- Integrated service layer for managing files
 
 ---
 
@@ -31,27 +14,12 @@ This project follows a **loosely coupled hybrid architecture**:
 
 ### ✅ Prerequisites
 
-- Python 3.11+
 - .NET SDK 8.0+
 - Git, PowerShell (for optional scaffolding)
 
 ---
 
-### 🐍 Backend Setup (FastAPI)
-
-```bash
-cd api
-python -m venv .venv
-.venv\Scripts\activate    # or source .venv/bin/activate on Linux/mac
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-API will be live at: `http://localhost:8000`
-
----
-
-### 🖥 Frontend Setup (C# WinForms)
+### 🖥 Setup (C# WinForms)
 
 ```bash
 cd frontend
@@ -59,14 +27,10 @@ dotnet build
 dotnet run
 ```
 
-Make sure the backend is running before starting the GUI.
-
----
 
 ## 📦 Folder Structure
 
 ```
-api/             → FastAPI backend (scan/delete saves, serve images)
 frontend/        → C# WinForms frontend
 .github/         → CI and PR templates
 docs/            → Planning docs (e.g. Trello CSV)
@@ -89,7 +53,7 @@ docs/            → Planning docs (e.g. Trello CSV)
 ## 🔮 Roadmap
 
 - [ ] Add save analysis logic for critical decision points
-- [ ] Add support for Witcher 1 and Witcher 2
+- [x] Add support for Witcher 1, Witcher 2, and Witcher 3
 - [ ] Steam/GOG save path detection
 - [ ] Backup feature before deletion
 - [ ] Cloud sync support (OneDrive/GOG Galaxy)

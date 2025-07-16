@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using WitcherGuiApp.Models;
 
 namespace WitcherGuiApp.Utils
 {
@@ -30,9 +31,9 @@ namespace WitcherGuiApp.Utils
 
                         {{
                           ""SavePaths"": {{
-                            ""Witcher1"": ""{defaultW1}"",
-                            ""Witcher2"": ""{defaultW2}"",
-                            ""Witcher3"": ""{defaultW3}""
+                            ""{GameKey.Witcher1}"": ""{defaultW1}"",
+                            ""{GameKey.Witcher2}"": ""{defaultW2}"",
+                            ""{GameKey.Witcher3}"": ""{defaultW3}""
                           }}
                         }}
                         ";

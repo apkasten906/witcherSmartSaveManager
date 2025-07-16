@@ -16,23 +16,25 @@ namespace WitcherGuiApp.Tests.Mocks
             _mockExtension = mockExtension;
         }
 
-        public List<SaveFile> GetSaveFiles()
+        public List<WitcherSaveFile> GetSaveFiles()
         {
             if (!Directory.Exists(_mockPath))
-                return new List<SaveFile>();
+                return new List<WitcherSaveFile>();
 
             var files = Directory.EnumerateFiles(_mockPath, _mockExtension, SearchOption.TopDirectoryOnly);
 
-            var result = new List<SaveFile>();
+
+            // TODO: fix this and make it easier to implement
+            var result = new List<WitcherSaveFile>();
             foreach (var file in files)
             {
                 var info = new FileInfo(file);
                 string baseName = Path.GetFileNameWithoutExtension(info.Name);
                 string bmpPath = Path.Combine(_mockPath, baseName + ".bmp");
 
-                result.Add(new SaveFile
+                result.Add(new WitcherSaveFile
                 {
-                    Game = "MockGame",
+                    Game = GameKey.Witcher2,
                     FileName = info.Name,
                     ModifiedTime = new DateTimeOffset(info.LastWriteTimeUtc).ToUnixTimeSeconds(),
                     ModifiedTimeIso = info.LastWriteTimeUtc.ToString("o"),

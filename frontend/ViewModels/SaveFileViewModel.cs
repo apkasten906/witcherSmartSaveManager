@@ -1,20 +1,37 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.VisualBasic;
+using System.ComponentModel;
+using System.Windows.Input;
 using WitcherGuiApp.Models;
 
 namespace WitcherGuiApp.ViewModels
 {
     public class SaveFileViewModel : INotifyPropertyChanged
     {
-        public SaveFile SaveFile { get; }
+        public WitcherSaveFile SaveFile { get; }
 
-        public SaveFileViewModel(SaveFile saveFile)
+        public SaveFileViewModel(WitcherSaveFile saveFile)
         {
             SaveFile = saveFile;
+            BackupExists = saveFile.BackupExists;
         }
 
         public string FileName => SaveFile.FileName;
         public string ModifiedTimeIso => SaveFile.ModifiedTimeIso;
         public int Size => SaveFile.Size;
+        public bool ScreenshotExists => !string.IsNullOrEmpty(SaveFile?.ScreenshotPath);
+
+        private bool _backupExists = false;
+        //get; set; }
+        //=> SaveFile.BackupExists;
+        public bool BackupExists        
+        {
+            get => _backupExists;
+            set
+            {
+                _backupExists = value;
+                OnPropertyChanged(nameof(BackupExists));                
+            }
+        }
 
         private bool _isSelected;
         public bool IsSelected
