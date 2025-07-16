@@ -16,7 +16,7 @@ namespace WitcherGuiApp.Views
         private async void FetchSaves_Click(object sender, RoutedEventArgs e)
         {
             await _viewModel.LoadSavesAsync();
-        }
+        }        
     }
 }
 

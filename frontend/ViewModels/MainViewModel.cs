@@ -160,7 +160,9 @@ namespace WitcherGuiApp.ViewModels
 
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                BackupFilePath = dlg.FileName;                
+                BackupFilePath = dlg.FileName;
+
+                RefreshBackupStates();
             }
         }
 
@@ -217,7 +219,7 @@ namespace WitcherGuiApp.ViewModels
                         else if (dialog.Result == MessageBoxResult.No)
                         {
                             _overwriteAll = dialog.OverwriteAllChecked;
-                            overwrite = false; // user chose not to overwrite this file
+                            overwrite = false; // user chose not to overwrite this file, but will overwrite others if checked
                             continue;
                         }
                         else if (dialog.Result == MessageBoxResult.Cancel)
@@ -228,7 +230,7 @@ namespace WitcherGuiApp.ViewModels
 
                     var backupResult = _saveFileService.BackupSaveFile(save.SaveFile, overwrite);
 
-                    if (backupResult == "success")
+                    if (backupResult)
                     {
                         //save.SaveFile.BackupExists = true; // Update the backup status in the view model
                         save.BackupExists = true; // Update the backup status in the view model
@@ -244,6 +246,15 @@ namespace WitcherGuiApp.ViewModels
                 StatusMessage = $"Error backing up saves: {ex.Message}";
                 return;
             }            
+        }
+
+        private void RefreshBackupStates()
+        {
+            foreach (var save in Saves)
+            {
+                var backupPath = Path.Combine(BackupFilePath, Path.GetFileName(save.FileName));
+                save.BackupExists = File.Exists(backupPath);
+            }
         }
 
         private void DeleteSelectedSaves()

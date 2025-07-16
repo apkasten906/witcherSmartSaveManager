@@ -31,7 +31,7 @@
             <Label HorizontalAlignment="Left">Backup Location</Label>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <TextBox Text="{Binding BackupFilePath}"  TextWrapping="Wrap" Width="500" HorizontalAlignment="Left"/>
-                <Button Command="{Binding BackupLocationPickerCommand}" Content="..." Width="20" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                <Button Command="{Binding BackupLocationPickerCommand}" Content="..." Width="20" HorizontalAlignment="Left" Margin="10,0,0,0" />
             </StackPanel>
                 
             <Button Command="{Binding BackupSelectedCommand}" Content="Backup Selected Files" Width="120" HorizontalAlignment="Left" Margin="0,0,0,10"/>
