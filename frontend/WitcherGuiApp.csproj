@@ -36,4 +36,9 @@
     </None>
   </ItemGroup>
 
+	<ItemGroup>
+		<Resource Include="./Views/Assets/icon_wolf_save.ico" />
+	</ItemGroup>
+
+
 </Project>
