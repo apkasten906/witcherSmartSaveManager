@@ -1,6 +1,16 @@
 # 🧙‍♂️ Witcher Smart Save Manager
 
-An intelligent, cross-version **save game manager** for the Witcher series (starting with **The Witcher 2**). Designed to reduce save clutter, optimize cloud usage, and preserve key decision points — all while giving you full control over your files.
+The goal of the Windows Smart Save Manager is to provide an intelligent, cross-version **save game manager** for the Witcher series (starting with **The Witcher 2**). The games in the Witcher series were all developed without cloud storage and mind and as a consequence, save games tend to accumulate rapidly and overwhelm the small amount of free cloud storage offered by GoG Galaxy and Steam.  Therefore, the Witcher Smart Save Managers seeks to reduce clutter, optimize cloud usage, and preserve key decision points — all while giving you full control over your files.
+
+Current Version: v0.1
+- Supports detection of **Witcher 2** save files based on Manufacturer Default Witcher 2 installation location (%userpath%\Documents\Witcher 2\gamesaves)
+- Supports individual and bulk backing up of saves to chosen location
+- Supports backup verification
+- Offers Thumbnails, save date, and save game file name for identification
+- Supports individual and bulk Deleting of saves
+
+  INSTALL: Compile to Release and copy files from bin
+  NOTE: In this version, if you do not want your saves to be downloaded from cloud, you will either need to turn off your cloud sync and/or delete the save games out of your cloud storage.
 
 ---
 
