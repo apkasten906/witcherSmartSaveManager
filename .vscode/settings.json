@@ -1,5 +1,4 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
   "terminal.integrated.profiles.windows": {
     "PowerShell (venv)": {
       "path": "powershell.exe",
@@ -10,12 +9,6 @@
     }
   },
   "terminal.integrated.defaultProfile.windows": "PowerShell (venv)",
-  "python.linting.enabled": true,
-  "python.linting.flake8Enabled": true,
-  "python.linting.flake8Path": "${workspaceFolder}/venv/Scripts/flake8",  // Adjust path if needed
-  "python.linting.flake8Args": [
-    "--max-line-length=79"
-  ],
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": false
 }
