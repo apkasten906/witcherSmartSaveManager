@@ -1,60 +1,20 @@
-| Number | Title | Body | Milestone |
-|--------|-------|------|----------|
-| 53 | Allow  selection of custom install folder | As a gamer, I want an option to specificy a save game folder, so that I can also load saves from my custom install location. | Complete Witcher 2 Base Features |
-| 52 | Prepare for release | As a gamer, I want to be able to download the most recent binaries, so I can manually copy and run the app | Complete Witcher 2 Base Features |
-| 51 | Create windows installer | As a gamer, I want a windows installer, so that I can easily setup the smart save manager.
-
-AC:
-- compressed file storage of the latest version of The Witcher Smart Save Manager
-- Provides users with the ability to choose where to install the app
-- Creates windows registry entry
-- Includes an uninstall executable
-- extracts files to chosen location | Complete Witcher 2 Base Features |
-| 50 | Integrate with Steam Cloud | As a gamer, I want to be able to delete my game saves in steam cloud, so that they don't sync back down to my local storage.
-
-https://partner.steamgames.com/doc/sdk | Complete Witcher 2 Base Features |
-| 49 | Integrate with GoG Galaxy Cloud | As a gamer, I want to be able to delete my game saves in GoG Galaxy cloud, so that they don't sync back down to my local storage.
-
-https://docs.gog.com/sdk/ | Complete Witcher 2 Base Features |
-| 41 | Enable automatic game install detection and game installation selection management |  |  |
-| 40 | Introduce Multi-language support | Replace english text with tokens to facilitate many languages.
-
-Currently the tool is setup to only support English.
-
-Any content or error should be handled using a token-based system that allows us to substitute text with other languages.
-
-Initial Language support plan ( all languages supported by The Witcher 2) - because I can debug these myself:
-- English
-- German
-
-Phase 2
-- French
-- Polish
-- Spanish
-- Italian
-- Hungarian
-- Russian
-
-Phase 3 
-- Czech
-- Slovak
-- Slovenian
-- Croatian
-- Romanian
-- Bulgarian
-- Greek
-- Turkish
-- Serbian
-- Ukranian | Complete Witcher 2 Base Features |
-| 39 | Figure out logging |  | Complete Witcher 2 Base Features |
-| 38 | Figure out error handling |  | Complete Witcher 2 Base Features |
-| 36 | Reskin editor to make it look Witchery! |  | Complete Witcher 2 Base Features |
-| 35 | Allow users to see addtional metadata about quests / decisions in manager |  | Complete Witcher 2 Save Smart Save States |
-| 33 | Come up with recommendations for save file deletions |  | Complete Witcher 2 Save Smart Save States |
-| 32 | Figure out how to parse Witcher 3 save files |  | Add Witcher 1 and 3 Support |
-| 31 | Figure out how to parse Witcher 1 save files |  | Add Witcher 1 and 3 Support |
-| 30 | Figure out how to parse Witcher 2 save files | Figure out how to install and use Gibbed Red Tool.  
-Parse Save and w2strings files for plot variables and quest information.
-Decide how to store the data. | Complete Witcher 2 Save Smart Save States |
-| 29 | Create Tab for Witcher 3 | As a user, I want to be able to manage my files for Witcher 3 | Add Witcher 1 and 3 Support |
-| 28 | Create Tab for Witcher 1 | As a user, I want to be able to manage my Witcher 1 saves. | Add Witcher 1 and 3 Support |
+| Number | Title | Body | Acceptance Criteria | Milestone |
+|--------|-------|------|--------------------|-----------|
+| 53 | Allow selection of custom install folder | As a gamer, I want an option to specificy a save game folder, so that I can also load saves from my custom install location. | Only one custom folder at a time (Witcher 2 for now; Witcher 1/3 support later). Selected folder is saved between sessions (in userpaths.json). Validate that the folder contains Witcher save files. Use standard folder picker for now. | Complete Witcher 2 Base Features |
+| 52 | Prepare for release | As a gamer, I want to be able to download the most recent binaries, so I can manually copy and run the app. | Windows only. Automate building and copying binaries with a script. Use GitHub Releases to distribute binaries and essential files. Release should include all files essential to running the application and providing all features. No code signing or installer packaging required at this stage. | Complete Witcher 2 Base Features |
+| 51 | Create windows installer | As a gamer, I want a windows installer, so that I can easily setup the smart save manager. | Use WiX Toolset for installer. Support silent install option. Registry entries: InstallPath, Version, and standard uninstall info. Include all assets, config files, and documentation. No custom branding or UI required. Check for .NET runtime and prompt to install if missing. | Complete Witcher 2 Base Features |
+| 50 | Integrate with Steam Cloud | As a gamer, I want to be able to delete my game saves in steam cloud, so that they don't sync back down to my local storage. | Feature should allow users to see if the game is saved in the cloud and delete saves from the cloud when deleted in the manager. Only Witcher 2 for now. Prompt for Steam authentication. Show indicator for cloud saves in UI. Prompt for confirmation when deleting cloud saves. Display progress/status messages during cloud operations. Show error messages if cloud operations fail. Optionally provide manual 'Sync with Cloud' button. Steamworks developer account and API key required for development. | Complete Witcher 2 Base Features |
+| 49 | Integrate with GoG Galaxy Cloud | As a gamer, I want to be able to delete my game saves in GoG Galaxy cloud, so that they don't sync back down to my local storage. | Feature should allow users to see if the game is saved in the cloud and delete saves from the cloud when deleted in the manager. Only Witcher 2 for now. Prompt for GoG authentication. Show indicator for cloud saves in UI. Prompt for confirmation when deleting cloud saves. Display progress/status messages during cloud operations. Show error messages if cloud operations fail. Optionally provide manual 'Sync with Cloud' button. GoG developer account and API credentials required for development. | Complete Witcher 2 Base Features |
+| 41 | Enable automatic game install detection and game installation selection management |  | App automatically scans common install locations for Witcher games (Steam, GoG, default folders). If multiple installs are found, prompt user to select which one to use. Remember user’s selection for future sessions. Support both Steam and GoG installs. Display detected installs in a list or dropdown, showing game name, platform, and install path. Allow manual browse for game install if not detected. Show details for each detected install (version, platform, path). | |
+| 40 | Introduce Multi-language support | Replace english text with tokens to facilitate many languages. | 
+Any content or error should be handled using a token-based system that allows us to substitute text with other languages. All UI text moved to .resx resource files for localization. Start with English, German, French, Polish, Spanish, Italian, Hungarian, Russian using machine translations. App prompts user to select language on first launch, with menu/settings option for later changes. Use dropdown/list for language selection, showing native names. Indicate current language in UI. Apply language changes immediately if possible. | Complete Witcher 2 Base Features |
+| 39 | Figure out logging | | Log critical errors by default; debug mode enables verbose logging (Info, Warning, Debug). Log to both file and optionally display recent log messages in UI. Use Serilog for flexibility and file/console support. Rotate log files (e.g., last 5 logs, max 5MB each). Support log levels: Error (default), Info, Warning, Debug. Allow users to view logs in app and export logs for troubleshooting. | Complete Witcher 2 Base Features |
+| 38 | Figure out error handling | | Show all critical errors to the user with clear messages. Non-critical errors are logged; show in UI only if they affect user actions. Offer retry options for recoverable errors. Error messages are localized. Collect error details (stack trace, context) in logs for troubleshooting; show user-friendly messages in UI. | Complete Witcher 2 Base Features |
+| 36 | Reskin editor to make it look Witchery! | | Use Witcher-inspired icons, dark fantasy backgrounds, and medieval-style fonts (suggest open-source or AI-generated assets). Apply dark fantasy color scheme throughout. Use consistent named styles for all controls. Include custom window chrome (optional for accessibility). Add accessibility mode (high contrast, larger fonts) in settings. Theme is switchable (light/dark mode) via menu or settings. | Complete Witcher 2 Base Features |
+| 35 | Allow users to see addtional metadata about quests / decisions in manager | | Display quest name, subquest names, status, quest logs, timestamps (if possible) for each save. Show metadata in a dedicated panel or expandable section next to each save file. Display quest/decision info as a table or expandable list, with icons for status. Allow users to filter/search saves by metadata. Allow export/import of metadata as CSV or JSON. Support Witcher 2 only for now. | Complete Witcher 2 Save Smart Save States |
+| 33 | Come up with recommendations for save file deletions | | Recommendations focus on saves made before key decisions (branch points, major quests, endings). For Witcher 3, only Manual saves can be imported—highlight this in UI and recommendations. Suggest deleting redundant autosaves and quicksaves not near decision points; keep at least one manual save per major quest/decision. If a recommended deletion is not backed up, prompt user to back it up before deletion. Always prompt for backup if not already backed up. | Complete Witcher 2 Save Smart Save States |
+| 32 | Figure out how to parse Witcher 3 save files | | Extract player stats, quest progress, decisions, and timestamps from Witcher 3 save files. Support parsing all save types (manual, autosave, quicksave), but highlight that only manual saves can be imported. Use an open-source library if available (e.g., Witcher3SaveEditor, or research best .NET options); otherwise, implement a custom parser. Display extracted data in the UI, organized by save file. If parsing fails, log the error, show a user-friendly message, and prompt to back up the file before retrying or deleting. | Add Witcher 1 and 3 Support |
+| 31 | Figure out how to parse Witcher 1 save files | | Extract player stats, quest progress, decisions, and timestamps from Witcher 1 save files (same as Witcher 2). Support parsing all save types. Research and recommend the best available tool/library for parsing Witcher 1 saves; implement a custom parser if none exist. Display extracted data in the UI, organized by save file. If parsing fails, log the error, show a user-friendly message, and prompt to back up the file before retrying or deleting. | Add Witcher 1 and 3 Support |
+| 30 | Figure out how to parse Witcher 2 save files | Figure out how to install and use Gibbed Red Tool.  Parse Save and w2strings files for plot variables and quest information. Decide how to store the data. | Extract player stats, quest progress, decisions, and timestamps from Witcher 2 save files. Support parsing all save types. Use Gibbed Red Tool for parsing; document installation and usage steps. Display extracted data in the UI, organized by save file. If parsing fails, log the error, show a user-friendly message, and prompt to back up the file before retrying or deleting. | Complete Witcher 2 Save Smart Save States |
+| 29 | Create Tab for Witcher 3 | As a user, I want to be able to manage my files for Witcher 3 | Tab lists all Witcher 3 saves (manual, autosave, quicksave) and supports viewing metadata, deleting, backing up, restoring, importing/exporting saves. UI should clearly indicate it is for Witcher 3 (distinct label, icon, or color). Filtering, sorting, and searching saves recommended. All features and integrations (cloud, metadata, backup, etc.) should match Witcher 2 tab functionality. | Add Witcher 1 and 3 Support |
+| 28 | Create Tab for Witcher 1 | As a user, I want to be able to manage my Witcher 1 saves. | Tab lists all Witcher 1 saves (all save types) and supports viewing metadata, deleting, backing up, restoring, importing/exporting saves. UI should clearly indicate it is for Witcher 1 (distinct label, icon, or color). Filtering, sorting, and searching saves should match Witcher 2 tab. All features and integrations (cloud, metadata, backup, etc.) should match Witcher 2 tab functionality. | Add Witcher 1 and 3 Support |
