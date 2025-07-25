@@ -14,9 +14,13 @@ Current Version: v0.1
 
 ---
 
-### 🪟 C# (.NET WinForms GUI)
-- Windows-native desktop application.
-- Integrated service layer for managing files
+## 🧱 Architecture
+
+* Follow **MVVM** (Model-View-ViewModel) for all WPF UI components.
+* All save game logic must reside in services – never in the UI code.
+* UI updates must happen via bindings to ViewModels only.
+* Use **dependency injection** for all services and utilities.
+* No tight coupling between components – keep them modular.
 
 ---
 
@@ -41,7 +45,7 @@ dotnet run
 ## 📦 Folder Structure
 
 ```
-frontend/        → C# WinForms frontend
+frontend/        → C# WPF frontend
 .github/         → CI and PR templates
 docs/            → Planning docs (e.g. Trello CSV)
 ```
