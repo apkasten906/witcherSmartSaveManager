@@ -5,28 +5,6 @@ Thumbs.db
 *.tmp
 *.bak
 
-# === Python ===
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-.env
-.venv/
-venv/
-env/
-*.egg-info/
-pip-log.txt
-*.sqlite3
-
-# Jupyter / IPython
-.ipynb_checkpoints/
-
-# PyInstaller builds
-/dist/
-/build/
-/
-
 # Visual Studio Artifacts
 .vs/
 bin/
