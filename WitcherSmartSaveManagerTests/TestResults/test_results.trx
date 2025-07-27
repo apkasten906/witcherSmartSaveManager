@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="4f46e32f-4a89-4124-9536-3774cfbf81ac" name="apkas@AKASTEN_NOTEBOO 2025-07-26 10:56:24" runUser="AKASTEN_NOTEBOO\apkas" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-07-26T10:56:24.8958991+02:00" queuing="2025-07-26T10:56:24.8958992+02:00" start="2025-07-26T10:56:24.2708603+02:00" finish="2025-07-26T10:56:24.8997877+02:00" />
+  <TestSettings name="default" id="cca9d69c-dc0a-417f-bb34-ca7310406a7d">
+    <Deployment runDeploymentRoot="apkas_AKASTEN_NOTEBOO_2025-07-26_10_56_24" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="9ccb619d-2d81-4830-aaf1-012102dc2422" testId="7ac47cf1-46c8-7192-fbd5-a4371921a3fb" testName="BackupSaveFile_CopiesSaveFile_ReturnsTrue" computerName="AKASTEN_NOTEBOO" duration="00:00:00.0055410" startTime="2025-07-26T10:56:24.8075651+02:00" endTime="2025-07-26T10:56:24.8131059+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9ccb619d-2d81-4830-aaf1-012102dc2422" />
+    <UnitTestResult executionId="aec65f3e-f9ab-4a1e-858c-1755e4ee77fc" testId="2887f530-7ad9-e53e-f51a-c3343131b7a8" testName="BackupSaveFile_AlreadyExistsWithoutOverwrite_ReturnsFalse" computerName="AKASTEN_NOTEBOO" duration="00:00:00.0179660" startTime="2025-07-26T10:56:24.7880866+02:00" endTime="2025-07-26T10:56:24.8058835+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aec65f3e-f9ab-4a1e-858c-1755e4ee77fc" />
+    <UnitTestResult executionId="3fd665d5-6c72-416a-ad92-b28752e2d7a4" testId="14a705d2-18e5-0380-a112-7e78665b3ad0" testName="DeleteSaveFile_FileDoesNotExist_ThrowsFileNotFoundException" computerName="AKASTEN_NOTEBOO" duration="00:00:00.0022090" startTime="2025-07-26T10:56:24.8131479+02:00" endTime="2025-07-26T10:56:24.8153566+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3fd665d5-6c72-416a-ad92-b28752e2d7a4" />
+    <UnitTestResult executionId="1279db7b-310a-49c4-b141-1845830a4534" testId="6da860d8-23d3-ec66-8dc0-f250c2d7090f" testName="DeleteSaveFile_RemovesSaveAndScreenshot_ReturnsTrue" computerName="AKASTEN_NOTEBOO" duration="00:00:00.0016720" startTime="2025-07-26T10:56:24.8153722+02:00" endTime="2025-07-26T10:56:24.8170440+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1279db7b-310a-49c4-b141-1845830a4534" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="DeleteSaveFile_FileDoesNotExist_ThrowsFileNotFoundException" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\witcherguiapp.tests.dll" id="14a705d2-18e5-0380-a112-7e78665b3ad0">
+      <Execution id="3fd665d5-6c72-416a-ad92-b28752e2d7a4" />
+      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherGuiApp.Tests.WitcherSaveFileServiceTests" name="DeleteSaveFile_FileDoesNotExist_ThrowsFileNotFoundException" />
+    </UnitTest>
+    <UnitTest name="BackupSaveFile_AlreadyExistsWithoutOverwrite_ReturnsFalse" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\witcherguiapp.tests.dll" id="2887f530-7ad9-e53e-f51a-c3343131b7a8">
+      <Execution id="aec65f3e-f9ab-4a1e-858c-1755e4ee77fc" />
+      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherGuiApp.Tests.WitcherSaveFileServiceTests" name="BackupSaveFile_AlreadyExistsWithoutOverwrite_ReturnsFalse" />
+    </UnitTest>
+    <UnitTest name="BackupSaveFile_CopiesSaveFile_ReturnsTrue" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\witcherguiapp.tests.dll" id="7ac47cf1-46c8-7192-fbd5-a4371921a3fb">
+      <Execution id="9ccb619d-2d81-4830-aaf1-012102dc2422" />
+      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherGuiApp.Tests.WitcherSaveFileServiceTests" name="BackupSaveFile_CopiesSaveFile_ReturnsTrue" />
+    </UnitTest>
+    <UnitTest name="DeleteSaveFile_RemovesSaveAndScreenshot_ReturnsTrue" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\witcherguiapp.tests.dll" id="6da860d8-23d3-ec66-8dc0-f250c2d7090f">
+      <Execution id="1279db7b-310a-49c4-b141-1845830a4534" />
+      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherGuiApp.Tests.WitcherSaveFileServiceTests" name="DeleteSaveFile_RemovesSaveAndScreenshot_ReturnsTrue" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="7ac47cf1-46c8-7192-fbd5-a4371921a3fb" executionId="9ccb619d-2d81-4830-aaf1-012102dc2422" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2887f530-7ad9-e53e-f51a-c3343131b7a8" executionId="aec65f3e-f9ab-4a1e-858c-1755e4ee77fc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="14a705d2-18e5-0380-a112-7e78665b3ad0" executionId="3fd665d5-6c72-416a-ad92-b28752e2d7a4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6da860d8-23d3-ec66-8dc0-f250c2d7090f" executionId="1279db7b-310a-49c4-b141-1845830a4534" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Ergebnisse nicht in einer Liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Alle geladenen Ergebnisse" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="4" executed="4" passed="4" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 5.0.0.0: Test execution started&#xD;
+Running selected tests in C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll&#xD;
+   NUnit3TestExecutor discovered 4 of 4 NUnit test cases using Current Discovery mode, Non-Explicit run&#xD;
+NUnit Adapter 5.0.0.0: Test execution complete&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

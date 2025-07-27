@@ -1,8 +1,0 @@
-[witcher1]
-save_path = "%USERPROFILE%\\Documents\\The Witcher\\saves"
-
-[witcher2]
-save_path = "%USERPROFILE%\\Documents\\Witcher 2\\gamesaves"
-
-[witcher3]
-save_path = "%USERPROFILE%\\Documents\\The Witcher 3\\gamesaves"

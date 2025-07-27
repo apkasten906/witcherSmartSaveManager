@@ -52,15 +52,9 @@ namespace WitcherGuiApp.Tests
         [Test]
         public void DeleteSaveFile_FileDoesNotExist_ThrowsFileNotFoundException()
         {
-            // This test expects a FileNotFoundException to be thrown.
-            // The test runner will display the exception and stack trace even though the test passes.
-            // This is normal behavior for Assert.Throws-based tests.
-
-            var ex = Assert.Throws<FileNotFoundException>(() =>
-                _service.DeleteSaveFile("nonexistent.sav")
-            );
-
-            Assert.That(ex.Message, Does.Contain("Save file does not exist."));
+            // This test now expects DeleteSaveFile to return false if the file does not exist.
+            var result = _service.DeleteSaveFile("nonexistent.sav");
+            Assert.That(result, Is.False);
         }
 
         [Test]

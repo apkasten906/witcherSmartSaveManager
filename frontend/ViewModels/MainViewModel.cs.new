@@ -1,0 +1,250 @@
+using System.Globalization;
+using System.Threading;
+using WitcherGuiApp.Models;
+using WitcherGuiApp.Services;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using WitcherGuiApp.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+
+namespace WitcherGuiApp.ViewModels
+{
+    public class MainViewModel : INotifyPropertyChanged
+    {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private readonly WitcherSaveFileService _saveFileService;
+        private readonly GameKey _gameKey;
+        private string _statusMessage;
+        private string _backupFilePath;
+        private string _selectedLanguage = "en";
+        
+        public ObservableCollection<SaveFileViewModel> Saves { get; set; } = new();
+
+        public string SelectedLanguage
+        {
+            get => _selectedLanguage;
+            set
+            {
+                if (_selectedLanguage != value)
+                {
+                    _selectedLanguage = value;
+                    SetLanguage(_selectedLanguage);
+                    OnPropertyChanged();
+                    // Raise property changed for all localized properties if needed
+                }
+            }
+        }
+
+        public ICommand ChangeLanguageCommand { get; }
+
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set
+            {
+                if (_statusMessage != value)
+                {
+                    _statusMessage = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string BackupFilePath
+        {
+            get => _backupFilePath;
+            set
+            {
+                if (_backupFilePath != value)
+                {
+                    _backupFilePath = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool AreAllSelected
+        {
+            get => Saves.Count > 0 && Saves.All(s => s.IsSelected);
+            set
+            {
+                foreach (var save in Saves)
+                {
+                    save.IsSelected = value;
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand CustomSaveFolderPickerCommand { get; }
+        public ICommand DeleteSelectedCommand { get; }
+        public ICommand BackupSelectedCommand { get; }
+        public ICommand BackupLocationPickerCommand { get; }
+
+        public string CustomSaveFolderPath { get; set; }
+
+        public MainViewModel()
+        {
+            Logger.Info("MainViewModel initialized.");
+            StatusMessage = App.ConfigStatusMessage;
+            if (!App.ConfigInitialized)
+            {
+                return;
+            }
+            _gameKey = GameKey.Witcher2;
+            _saveFileService = new WitcherSaveFileService(_gameKey);
+            _backupFilePath = SavePathResolver.GetDefaultBackupPath(_gameKey);
+            CustomSaveFolderPath = SavePathResolver.GetSavePath(_gameKey);
+            DeleteSelectedCommand = new RelayCommand(_ => DeleteSelectedSaves(), _ => Saves.Any(s => s.IsSelected));
+            BackupSelectedCommand = new RelayCommand(_ => BackupSelectedSaves(), _ => Saves.Any(s => s.IsSelected));
+            BackupLocationPickerCommand = new RelayCommand(_ => SelectBackupFolder());
+            CustomSaveFolderPickerCommand = new RelayCommand(_ => SelectCustomSaveFolder());
+            ChangeLanguageCommand = new RelayCommand(lang => SelectedLanguage = lang?.ToString());
+            SetLanguage(_selectedLanguage);
+        }
+
+        private void SetLanguage(string lang)
+        {
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(lang);
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(lang);
+            // Optionally raise property changed for all localized properties
+            OnPropertyChanged(nameof(StatusMessage));
+        }
+
+        public async Task LoadSavesAsync()
+        {
+            try
+            {
+                // Simulate async load (replace with actual async service if available)
+                await Task.Run(() =>
+                {
+                    var saves = _saveFileService.GetSaveFiles();
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        Saves.Clear();
+                        foreach (var save in saves)
+                        {
+                            Saves.Add(new SaveFileViewModel(save));
+                        }
+                    });
+                });
+                StatusMessage = $"Loaded {Saves.Count} save(s).";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error loading saves: {ex.Message}";
+            }
+        }
+
+        public void BackupSelectedSaves()
+        {
+            try
+            {
+                var selected = Saves.Where(s => s.IsSelected).ToList();
+                foreach (var save in selected)
+                {
+                    var backupResult = _saveFileService.BackupSaveFile(save.SaveFile, true);
+                    if (backupResult)
+                    {
+                        save.BackupExists = true;
+                    }
+                }
+                StatusMessage = $"{selected.Count} save(s) backed up.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error backing up saves: {ex.Message}";
+            }
+        }
+
+        private void UpdateUserPathsJson(string folderPath)
+        {
+            var jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "userpaths.json");
+            dynamic jsonObj;
+            if (File.Exists(jsonPath))
+            {
+                var json = File.ReadAllText(jsonPath);
+                jsonObj = JsonConvert.DeserializeObject<dynamic>(json);
+            }
+            else
+            {
+                jsonObj = new JObject();
+            }
+            if (jsonObj["SavePaths"] == null)
+                jsonObj["SavePaths"] = new JObject();
+            jsonObj["SavePaths"]["Witcher2"] = folderPath;
+            File.WriteAllText(jsonPath, JsonConvert.SerializeObject(jsonObj, Formatting.Indented));
+        }
+
+        private void SelectCustomSaveFolder()
+        {
+            var dlg = new CommonOpenFileDialog();
+            dlg.IsFolderPicker = true;
+            dlg.Title = "Select Witcher 2 Save Folder";
+            dlg.EnsurePathExists = true;
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var selectedPath = dlg.FileName;
+                var hasSaveFiles = Directory.EnumerateFiles(selectedPath, "*.save", SearchOption.TopDirectoryOnly).Any();
+                if (!hasSaveFiles)
+                {
+                    StatusMessage = "Selected folder does not contain Witcher 2 save files.";
+                    return;
+                }
+                CustomSaveFolderPath = selectedPath;
+                UpdateUserPathsJson(selectedPath);
+                StatusMessage = "Custom save folder set.";
+            }
+        }
+
+        private void DeleteSelectedSaves()
+        {
+            try
+            {
+                var selected = Saves.Where(s => s.IsSelected).ToList();
+                foreach (var save in selected.ToList())
+                {
+                    var deleteResult = _saveFileService.DeleteSaveFile(save.SaveFile);
+                    if (deleteResult)
+                    {
+                        Saves.Remove(save);
+                        StatusMessage = $"Save deleted.";
+                    }
+                }
+                StatusMessage = $"{selected.Count} save(s) deleted.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error deleting saves: {ex.Message}";
+            }
+        }
+
+        private void SelectBackupFolder()
+        {
+            var dlg = new CommonOpenFileDialog();
+            dlg.IsFolderPicker = true;
+            dlg.Title = "Select Backup Folder";
+            dlg.EnsurePathExists = true;
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                BackupFilePath = dlg.FileName;
+                StatusMessage = "Backup folder set.";
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+    }
+}
