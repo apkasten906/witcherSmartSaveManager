@@ -6,10 +6,18 @@ This repository includes Git hooks to ensure code quality. These hooks run autom
 
 ### Pre-commit Hook
 The pre-commit hook runs before each commit and performs these checks:
-- Compiles the solution to ensure there are no build errors
-- Runs unit tests to ensure all tests pass
+1. **Branch Naming Convention**: Validates that feature branches follow the pattern `feat/{issue-number}-{description}` to ensure proper GitHub issue linking
+2. **Code Compilation**: Compiles the solution to ensure there are no build errors
+3. **Unit Tests**: Runs unit tests to ensure all tests pass
 
-If either the build fails or tests fail, the commit will be blocked until the issues are fixed.
+If any of these checks fail, the commit will be blocked until the issues are fixed.
+
+#### Branch Naming Requirements
+- **Feature branches**: Must follow `feat/{issue-number}-{description}` format
+  - ✅ Valid: `feat/56-link-branch-to-issue`, `feat/123-add-new-feature`
+  - ❌ Invalid: `feat/my-feature`, `feature/56-something`, `feat/no-number`
+- **Special branches**: `main`, `dev`, `master`, and `hotfix/*` are exempt from naming validation
+- **Purpose**: Ensures automatic linking between branches and GitHub issues for better project tracking
 
 ## Installation
 
