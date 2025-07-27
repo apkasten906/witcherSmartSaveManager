@@ -60,6 +60,18 @@ Avoid using hardcoded strings for programmatic decision making. This ensures the
 * Link this document in `README.md`.
 * Keep project layout, file responsibilities, and patterns clear for future contributors.
 
+## 🔗 Git Workflow
+
+* **Branch Naming**: All feature branches must follow `feat/{issue-number}-{description}` format
+  - Examples: `feat/56-link-branch-to-issue`, `feat/123-add-new-feature`
+  - This ensures automatic linking to GitHub issues for project tracking
+* **Commit Messages**: Use conventional commit format with clear, descriptive messages
+* **Pre-commit Hooks**: Always install Git hooks (`.\Install-GitHooks.ps1`) for:
+  - Branch naming validation
+  - Code compilation verification
+  - Unit test execution
+* **Special Branches**: `main`, `dev`, `master`, and `hotfix/*` are exempt from naming validation
+
 ---
 
 > 🧠 "Write code as if the next person to maintain it knows nothing — and might be you in six months."

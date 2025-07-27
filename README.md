@@ -79,9 +79,13 @@ docs/            → Planning docs (e.g. Trello CSV)
 Want to help build a better way to manage Geralt's journey?
 
 1. Fork and clone the repo
-2. Create a feature branch (`feature/xyz`)
-3. Open a pull request — PR template is in `.github/pull_request_template.md`
-4. Use the Trello board for reference (`docs/witcher_save_manager_user_stories.csv`)
+2. Install Git hooks: `.\Install-GitHooks.ps1` (ensures code quality)
+3. Create a feature branch following the naming convention: `feat/{issue-number}-{description}`
+   - ✅ Example: `feat/56-link-branch-to-issue`, `feat/123-add-new-feature`
+   - This ensures automatic linking to GitHub issues for better project tracking
+4. Make your changes (hooks will validate code quality on commit)
+5. Open a pull request — PR template is in `.github/pull_request_template.md`
+6. Use the Trello board for reference (`docs/witcher_save_manager_user_stories.csv`)
 
 ---
 
@@ -93,4 +97,4 @@ MIT — do what you want, but don’t sell this to the Wild Hunt.
 
 ## 👑 Credits
 
-Project by [@apkasten906](https://github.com/apkasten906). Built with 🐍 Python, 🪟 C#, and a love for narrative-driven RPGs.
+Project by [@apkasten906](https://github.com/apkasten906). Built with 🪟 C# and a love for narrative-driven RPGs.
