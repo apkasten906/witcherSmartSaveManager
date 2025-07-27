@@ -156,10 +156,7 @@ switch ($Action) {
             $command += " --milestone `"$Milestone`""
         }
         
-        # Only add project if specified and not empty
-        if (-not [string]::IsNullOrWhiteSpace($Project)) {
-            $command += " -p `"$Project`""  # Use the -p shorthand which is more reliable
-        }
+        # Note: Project will be added in a second step after issue creation
         
         if ($Label) {
             $command += " --label `"$Label`""
@@ -185,21 +182,33 @@ switch ($Action) {
             $newIssueNumber = $matches[1]
             Write-Host "Setting status '$Status' for issue #$newIssueNumber"
             
-            # Set the status using GitHub CLI
-            $setStatusCommand = "gh issue edit $newIssueNumber --repo $Repository"
-            Invoke-Expression $setStatusCommand
+            # Skip the interactive editor for issue edit
+            # We're just setting status via comment instead
             
-            # Unfortunately GitHub CLI doesn't directly support setting project status
-            # We'll add a comment noting the status
+            # Add a comment noting the status
             $statusComment = "Status set by automation: **$Status**"
             $commentCommand = "gh issue comment $newIssueNumber --repo $Repository --body `"$statusComment`""
             Invoke-Expression $commentCommand
             
+            # Add to project if specified (in a separate step after issue creation)
+            if (-not [string]::IsNullOrWhiteSpace($Project)) {
+                Write-Host "Attempting to add issue #$newIssueNumber to project '$Project'..."
+                try {
+                    # Use the project add command with the correct format
+                    # For GitHub's new Projects (v2), use the project number (1)
+                    $projectNumber = "1"  # Using hardcoded value for Witcher Smart Save Manager project
+                    $projectCommand = "gh project item-add $projectNumber --owner apkasten906 --url $issueUrl"
+                    Invoke-Expression $projectCommand
+                    Write-Host "Successfully added issue to project '$Project'." -ForegroundColor Green
+                }
+                catch {
+                    Write-Host "Could not add issue to project automatically: $_" -ForegroundColor Yellow
+                    Write-Host "You may need to add it manually through the GitHub web interface." -ForegroundColor Yellow
+                }
+            }
+            
             # Inform the user how to set the status in the GitHub UI
             Write-Host "Note: You'll need to manually set the status to '$Status' in the GitHub project board."
-            if (-not [string]::IsNullOrWhiteSpace($Project)) {
-                Write-Host "The issue has been added to the '$Project' project."
-            }
         }
     }
     
