@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <data name="App_Title" xml:space="preserve">
+  <data name="AppTitle" xml:space="preserve">
     <value>Witcher Smart Save Manager</value>
   </data>
   <data name="Status_Ready" xml:space="preserve">
@@ -9,22 +9,22 @@
   <data name="Error_Generic" xml:space="preserve">
     <value>Ein Fehler ist aufgetreten.</value>
   </data>
-  <data name="SaveFolder_Label" xml:space="preserve">
+  <data name="CustomSaveFolder" xml:space="preserve">
     <value>Witcher 2 Spielstand-Ordner</value>
   </data>
-  <data name="BackupLocation_Label" xml:space="preserve">
+  <data name="BackupLocation" xml:space="preserve">
     <value>Backup Speicherort</value>
   </data>
-  <data name="BackupButton_Label" xml:space="preserve">
+  <data name="BackupSelected" xml:space="preserve">
     <value>Ausgewählte Dateien sichern</value>
   </data>
-  <data name="DeleteButton_Label" xml:space="preserve">
+  <data name="DeleteSelected" xml:space="preserve">
     <value>Ausgewählte Dateien löschen</value>
   </data>
   <data name="Language_Label" xml:space="preserve">
     <value>Sprache:</value>
   </data>
-  <data name="FindSaves_Label" xml:space="preserve">
+  <data name="FindSaves" xml:space="preserve">
     <value>Witcher Speicherstände finden</value>
   </data>
 </root>
