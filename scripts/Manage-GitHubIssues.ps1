@@ -1,37 +1,37 @@
 param(
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [ValidateSet('create', 'close', 'comment', 'label', 'milestone', 'list', 'branch', 'search', 'status', 'link')]
     [string]$Action = 'create',
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]$Title,
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]$Description,
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]$IssueNumber,
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]$Comment,
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]$Label,
     
-    [Parameter(Mandatory=$false)]
-    [string]$Milestone = "Complete Witcher 2 Base Features",
+    [Parameter(Mandatory = $false)]
+    [string]$Milestone,
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [ValidateSet('feature', 'bug', 'enhancement', 'documentation')]
     [string]$IssueType = 'feature',
 
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]$Repository = "apkasten906/witcherSmartSaveManager",
     
-    [Parameter(Mandatory=$false)]
-    [string]$Project = "Witcher Smart Save Manager",
+    [Parameter(Mandatory = $false)]
+    [string]$Project = "",
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [ValidateSet('Todo', 'In Progress', 'Done')]
     [string]$Status = "Todo"
 )
@@ -42,16 +42,18 @@ $ErrorActionPreference = "Stop"
 try {
     $ghVersion = gh --version
     Write-Host "Using GitHub CLI: $ghVersion"
-} catch {
+}
+catch {
     Write-Error "GitHub CLI not found. Please install it from https://cli.github.com/"
     exit 1
 }
 
 # Check authentication status
 try {
-    $null = gh auth status
+    gh auth status | Out-Null
     Write-Host "GitHub authentication verified."
-} catch {
+}
+catch {
     Write-Error "GitHub authentication failed. Please run 'gh auth login' first."
     exit 1
 }
@@ -147,14 +149,36 @@ switch ($Action) {
         $body = Get-IssueTemplate -Type $IssueType -Description $Description
         
         Write-Host "Creating issue: $Title"
-        $command = "gh issue create --repo $Repository --title `"$Title`" --body `"$body`" --milestone `"$Milestone`" --assignee `"@me`" --project `"$Project`""
+        $command = "gh issue create --repo $Repository --title `"$Title`" --body `"$body`" --assignee `"@me`""
+        
+        # Only add milestone if specified and not empty
+        if (-not [string]::IsNullOrWhiteSpace($Milestone)) {
+            $command += " --milestone `"$Milestone`""
+        }
+        
+        # Only add project if specified and not empty
+        if (-not [string]::IsNullOrWhiteSpace($Project)) {
+            $command += " -p `"$Project`""  # Use the -p shorthand which is more reliable
+        }
         
         if ($Label) {
             $command += " --label `"$Label`""
         }
         
-        # Create the issue
-        $issueUrl = Invoke-Expression $command
+        # Create the issue with error handling
+        try {
+            $issueUrl = Invoke-Expression $command
+            if (-not $issueUrl) {
+                Write-Host "Command was: $command" -ForegroundColor Yellow
+                Write-Error "GitHub CLI failed to create issue (no URL returned)"
+                exit 1
+            }
+        }
+        catch {
+            Write-Host "Command was: $command" -ForegroundColor Yellow
+            Write-Error "Error: $_"
+            exit 1
+        }
         
         # Extract issue number from the URL
         if ($issueUrl -match '\/issues\/(\d+)$') {
@@ -167,13 +191,15 @@ switch ($Action) {
             
             # Unfortunately GitHub CLI doesn't directly support setting project status
             # We'll add a comment noting the status
-            $statusComment = "Status: $Status"
+            $statusComment = "Status set by automation: **$Status**"
             $commentCommand = "gh issue comment $newIssueNumber --repo $Repository --body `"$statusComment`""
             Invoke-Expression $commentCommand
             
             # Inform the user how to set the status in the GitHub UI
             Write-Host "Note: You'll need to manually set the status to '$Status' in the GitHub project board."
-            Write-Host "The issue has been added to the '$Project' project."
+            if (-not [string]::IsNullOrWhiteSpace($Project)) {
+                Write-Host "The issue has been added to the '$Project' project."
+            }
         }
     }
     
@@ -190,7 +216,8 @@ switch ($Action) {
         Write-Host "Closing issue #$IssueNumber"
         if ($Comment) {
             $command = "gh issue close $IssueNumber --repo $Repository --comment `"$Comment`""
-        } else {
+        }
+        else {
             $command = "gh issue close $IssueNumber --repo $Repository"
         }
         
@@ -312,7 +339,10 @@ switch ($Action) {
         
         Write-Host "Setting status '$Status' for issue #$IssueNumber"
         # Add a comment with the status since GitHub CLI doesn't directly support setting project item status
-        $statusComment = "Status updated to: $Status"
+        $statusComment = "## Status Update
+Status changed to: **$Status**
+
+*Updated via Manage-GitHubIssues script*"
         $command = "gh issue comment $IssueNumber --repo $Repository --body `"$statusComment`""
         Invoke-Expression $command
         
