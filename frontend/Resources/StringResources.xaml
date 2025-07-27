@@ -1,0 +1,26 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!-- Default (English) string resources -->
+    <system:String x:Key="App_Title">Witcher Smart Save Manager</system:String>
+    <system:String x:Key="Status_Ready">Ready</system:String>
+    <system:String x:Key="Status_ConfigFound">Config file found at: {0}</system:String>
+    <system:String x:Key="Status_ConfigNotFound">Config file not found. Using default settings.</system:String>
+    <system:String x:Key="Status_SavesLoaded">Loaded {0} save(s).</system:String>
+    <system:String x:Key="Status_BackupComplete">{0} save(s) backed up.</system:String>
+    <system:String x:Key="Status_DeleteComplete">{0} save(s) deleted.</system:String>
+    <system:String x:Key="Status_SaveDeleted">Save deleted.</system:String>
+    <system:String x:Key="Status_BackupFolderSet">Backup folder set.</system:String>
+    <system:String x:Key="Status_CustomSaveFolderSet">Custom save folder set.</system:String>
+    <system:String x:Key="Status_NoSaveFiles">Selected folder does not contain Witcher 2 save files.</system:String>
+    <system:String x:Key="Error_Generic">An error occurred.</system:String>
+    <system:String x:Key="Error_LoadingSaves">Error loading saves: {0}</system:String>
+    <system:String x:Key="Error_BackupSaves">Error backing up saves: {0}</system:String>
+    <system:String x:Key="Error_DeletingSaves">Error deleting saves: {0}</system:String>
+    <system:String x:Key="SaveFolder_Label">Witcher 2 Game Save folder</system:String>
+    <system:String x:Key="BackupLocation_Label">Backup Location</system:String>
+    <system:String x:Key="BackupButton_Label">Backup Selected Files</system:String>
+    <system:String x:Key="DeleteButton_Label">Delete Selected Files</system:String>
+    <system:String x:Key="Language_Label">Language:</system:String>
+    <system:String x:Key="FindSaves_Label">Find Witcher Save Games</system:String>
+</ResourceDictionary>

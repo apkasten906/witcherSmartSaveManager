@@ -11,8 +11,13 @@ namespace WitcherGuiApp.Services
 {
     public class WitcherSaveFileService
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly GameKey gameKey;
         private readonly string _saveFolder;
+        public string GetSaveFolder()
+        {
+            return _saveFolder;
+        }
         private readonly string _backupSaveFolder;
 
         public WitcherSaveFileService(GameKey gameKey)
@@ -33,35 +38,45 @@ namespace WitcherGuiApp.Services
         public List<WitcherSaveFile> GetSaveFiles()
         {
             if (!Directory.Exists(_saveFolder))
+            {
+                Logger.Warn($"Save folder does not exist: {_saveFolder}");
                 return new List<WitcherSaveFile>();
+            }
 
             string extensionPattern = GameSaveExtensions.GetExtensionForGame(gameKey);
 
-            var files = Directory.EnumerateFiles(_saveFolder, extensionPattern, SearchOption.TopDirectoryOnly);
-
-            return files.Select(file =>
+            try
             {
-                var info = new FileInfo(file);
-                var saveName = Path.GetFileNameWithoutExtension(info.Name);
-                var screenshotName = saveName + "_640x360.bmp"; // Assuming the screenshot follows this naming convention
-                var screenshotPath = Path.Combine(_saveFolder, screenshotName);
-                var backupPath = Path.Combine(_backupSaveFolder, info.Name);
-                var backupScreenshotPath = Path.Combine(_backupSaveFolder, screenshotName);
-
-
-                return new WitcherSaveFile
+                var files = Directory.EnumerateFiles(_saveFolder, extensionPattern, SearchOption.TopDirectoryOnly);
+                Logger.Info($"Enumerating save files in {_saveFolder}");
+                return files.Select(file =>
                 {
-                    Game = gameKey,
-                    FileName = info.Name,
-                    ModifiedTime = new DateTimeOffset(info.LastWriteTimeUtc).ToUnixTimeSeconds(),
-                    ModifiedTimeIso = info.LastWriteTimeUtc.ToString("o"),
-                    Size = (int)info.Length,
-                    FullPath = info.FullName,
-                    ScreenshotPath = File.Exists(screenshotPath) ? screenshotPath : string.Empty,
-                    BackupExists = File.Exists(backupPath),
-                    Metadata = MetadataExtractor.GetMetadata(file)
-                };
-            }).ToList();
+                    var info = new FileInfo(file);
+                    var saveName = Path.GetFileNameWithoutExtension(info.Name);
+                    var screenshotName = saveName + "_640x360.bmp";
+                    var screenshotPath = Path.Combine(_saveFolder, screenshotName);
+                    var backupPath = Path.Combine(_backupSaveFolder, info.Name);
+                    var backupScreenshotPath = Path.Combine(_backupSaveFolder, screenshotName);
+                    Logger.Debug($"Found save: {info.Name}, Modified: {info.LastWriteTimeUtc}");
+                    return new WitcherSaveFile
+                    {
+                        Game = gameKey,
+                        FileName = info.Name,
+                        ModifiedTime = new DateTimeOffset(info.LastWriteTimeUtc).ToUnixTimeSeconds(),
+                        ModifiedTimeIso = info.LastWriteTimeUtc.ToString("o"),
+                        Size = (int)info.Length,
+                        FullPath = info.FullName,
+                        ScreenshotPath = File.Exists(screenshotPath) ? screenshotPath : string.Empty,
+                        BackupExists = File.Exists(backupPath),
+                        Metadata = MetadataExtractor.GetMetadata(file)
+                    };
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error enumerating save files.");
+                return new List<WitcherSaveFile>();
+            }
         }
 
 
@@ -77,27 +92,30 @@ namespace WitcherGuiApp.Services
         {
             bool result = false;
             if (string.IsNullOrWhiteSpace(fullPath) || !File.Exists(fullPath))
-                throw new FileNotFoundException("Save file does not exist.", fullPath);
+                return false;
 
             File.Delete(fullPath);
+            result = true;
 
             // Attempt to delete corresponding .bmp screenshot                
-            if (File.Exists(screenshotPath))
+            if (!string.IsNullOrWhiteSpace(screenshotPath) && File.Exists(screenshotPath))
             {
                 File.Delete(screenshotPath);
-                result = true;
             }
             return result;
         }
 
         public bool BackupSaveFile(WitcherSaveFile save, bool overwrite = false)
         {
+            Logger.Info($"Backing up save file: {save?.FullPath}");
             if (save == null)
                 throw new ArgumentNullException(nameof(save), "Save file cannot be null.");
             return BackupSaveFile(save.FullPath, save.ScreenshotPath, overwrite);
         }
 
         public bool BackupSaveFile(string fullPath, string screenshotPath = "", bool overwrite = false)
+        {
+            Logger.Info($"BackupSaveFile called for: {fullPath}, overwrite={overwrite}");
         {
             if (string.IsNullOrWhiteSpace(fullPath) || !File.Exists(fullPath))
                 throw new FileNotFoundException("Save file does not exist.", fullPath);
@@ -126,5 +144,6 @@ namespace WitcherGuiApp.Services
         }
 
     }
+}
 }
 
