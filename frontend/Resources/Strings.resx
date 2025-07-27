@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+  </resheader>
+  <!-- Add your default (neutral) string resources here -->
+  <data name="App_Title" xml:space="preserve">
+    <value>Witcher Smart Save Manager</value>
+  </data>
+  <data name="Status_Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Error_Generic" xml:space="preserve">
+    <value>An error occurred.</value>
+  </data>
+  <data name="SaveFolder_Label" xml:space="preserve">
+    <value>Witcher 2 Game Save folder</value>
+  </data>
+  <data name="BackupLocation_Label" xml:space="preserve">
+    <value>Backup Location</value>
+  </data>
+  <data name="BackupButton_Label" xml:space="preserve">
+    <value>Backup Selected Files</value>
+  </data>
+  <data name="DeleteButton_Label" xml:space="preserve">
+    <value>Delete Selected Files</value>
+  </data>
+  <data name="Language_Label" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  <data name="FindSaves_Label" xml:space="preserve">
+    <value>Find Witcher Save Games</value>
+  </data>
+</root>

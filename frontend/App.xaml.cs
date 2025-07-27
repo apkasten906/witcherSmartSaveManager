@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 using WitcherGuiApp.Utils;
 
@@ -14,6 +16,10 @@ namespace WitcherGuiApp
 
             ConfigInitialized = ConfigBootstrapper.EnsureConfigFileExists(out var message);
             ConfigStatusMessage = message;
+            
+            // Set default culture (will be overridden by language selection)
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CurrentCulture;
         }
     }
 }

@@ -1,21 +1,33 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
-  "terminal.integrated.profiles.windows": {
-    "PowerShell (venv)": {
-      "path": "powershell.exe",
-      "args": [
-        "-NoExit",
-        "-Command", ". '${workspaceFolder}/venv/Scripts/Activate.ps1'"
-      ]
-    }
-  },
-  "terminal.integrated.defaultProfile.windows": "PowerShell (venv)",
-  "python.linting.enabled": true,
-  "python.linting.flake8Enabled": true,
-  "python.linting.flake8Path": "${workspaceFolder}/venv/Scripts/flake8",  // Adjust path if needed
-  "python.linting.flake8Args": [
-    "--max-line-length=79"
-  ],
-  "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": false
+    // C# language settings
+    "omnisharp.enableRoslynAnalyzers": true,
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.organizeImportsOnFormat": true,
+    // Editor settings for C# code
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false,
+    // C# code style preferences
+    "csharp.format.enable": true,
+    "csharp.semanticHighlighting.enabled": true,
+    // IntelliSense and navigation
+    "editor.suggestSelection": "first",
+    "editor.quickSuggestionsDelay": 0,
+    // Testing
+    "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj",
+    "dotnet-test-explorer.autoWatch": true,
+    "dotnet-test-explorer.showCodeLens": true,
+    "dotnet-test-explorer.testArguments": "/p:CollectCoverage=true",
+    // Code lens features
+    "editor.codeLens": true,
+    // Problem detection
+    "omnisharp.enableImportCompletion": true,
+    "csharp.referencesCodeLens.enabled": true,
+    "problems.decorations.enabled": true,
+    // Git integration
+    "git.enableSmartCommit": false,
+    "git.confirmSync": true,
+    "git.autofetch": true
 }

@@ -21,27 +21,55 @@
 
         <!-- Status + Buttons container -->
         <StackPanel Orientation="Vertical" Grid.Row="0">
+            <!-- Language Selector -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <Label Content="{DynamicResource Language_Label}" Width="70"/>
+                <ComboBox Width="120"
+                          SelectedValue="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValuePath="Tag"
+                          SelectionChanged="LanguageSelector_Changed">
+                    <ComboBoxItem Content="English" Tag="en" />
+                    <ComboBoxItem Content="Deutsch" Tag="de" />
+                </ComboBox>
+            </StackPanel>
 
-            <Button Content="Find Witcher Save Games"
+            <Button Content="{DynamicResource FindSaves_Label}"
                     Click="FetchSaves_Click"
                     Width="180"
                     Margin="0,0,0,5"
                     HorizontalAlignment="Left"/>
 
+            <!-- Steam Cloud Status and Controls -->
+
+            <!-- GOG Cloud Status and Controls -->
+
+            <!-- Custom Save Folder Selection -->
+            <Label HorizontalAlignment="Left" x:Name="SaveFolderLabel" Content="{DynamicResource SaveFolder_Label}" />
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBox Text="{Binding CustomSaveFolderPath}" TextWrapping="Wrap" Width="500" HorizontalAlignment="Left"/>
+                <Button Command="{Binding CustomSaveFolderPickerCommand}" Content="..." Width="20" HorizontalAlignment="Left" Margin="10,0,0,0" />
+            </StackPanel>
+
             <!--Backup Folder Location Input-->
-            <Label HorizontalAlignment="Left">Backup Location</Label>
+            <Label HorizontalAlignment="Left" x:Name="BackupLocationLabel" Content="{DynamicResource BackupLocation_Label}" />
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <TextBox Text="{Binding BackupFilePath}"  TextWrapping="Wrap" Width="500" HorizontalAlignment="Left"/>
                 <Button Command="{Binding BackupLocationPickerCommand}" Content="..." Width="20" HorizontalAlignment="Left" Margin="10,0,0,0" />
             </StackPanel>
                 
-            <Button Command="{Binding BackupSelectedCommand}" Content="Backup Selected Files" Width="120" HorizontalAlignment="Left" Margin="0,0,0,10"/>
+            <Button Command="{Binding BackupSelectedCommand}" 
+                    Content="{DynamicResource BackupButton_Label}" 
+                    Width="150" 
+                    HorizontalAlignment="Left" 
+                    Margin="0,0,0,10" 
+                    x:Name="BackupButton"/>
             
                 
-            <Button Content="Delete Selected Files"
+            <Button Content="{DynamicResource DeleteButton_Label}"
                     Command="{Binding DeleteSelectedCommand}"
-                    Width="120"
-                    HorizontalAlignment="Left"/>
+                    Width="150"
+                    HorizontalAlignment="Left"
+                    x:Name="DeleteButton"/>
             
             <TextBlock Text="{Binding StatusMessage}"
                        FontWeight="Bold"

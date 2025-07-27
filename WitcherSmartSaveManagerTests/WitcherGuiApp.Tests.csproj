@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net8.0-windows7.0</TargetFramework>
+  <TargetFramework>net8.0-windows7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy $(SolutionDir)frontend\App.config $(ProjectDir)WitcherGuiApp.Tests.config" />
+    <Exec Command="copy ..\frontend\App.config WitcherGuiApp.Tests.config" />
   </Target>
 
 </Project>

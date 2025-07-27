@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Pre-commit hook that runs compilation and unit tests
+# Prevents commits if compilation fails or tests fail
+#
+
+# Store the current directory
+CURRENT_DIR=$(pwd)
+echo "Running pre-commit hook to verify code quality..."
+
+# Exit with non-zero status if any command fails
+set -e
+
+# Build the solution to ensure it compiles
+echo "Building solution to verify compilation..."
+dotnet build
+if [ $? -ne 0 ]; then
+    echo "❌ Commit failed: Code does not compile. Please fix the errors and try again."
+    exit 1
+fi
+echo "✅ Compilation successful!"
+
+# Run unit tests
+echo "Running unit tests..."
+dotnet test WitcherSmartSaveManagerTests/WitcherGuiApp.Tests.csproj
+if [ $? -ne 0 ]; then
+    echo "❌ Commit failed: Unit tests failed. Please fix the failing tests and try again."
+    exit 1
+fi
+echo "✅ All tests passed!"
+
+# If we got here, everything succeeded
+echo "✅ Pre-commit checks passed! Proceeding with commit."
+exit 0

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "N5boI12FEPQ=",
+  "dgSpecHash": "Daz9f/qIbt4=",
   "success": true,
   "projectFilePath": "C:\\Development\\witcherSmartSaveManager\\frontend\\WitcherGuiApp.csproj",
   "expectedPackageFiles": [
@@ -14,6 +14,8 @@
     "C:\\Users\\apkas\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\9.0.7\\microsoft.extensions.fileproviders.physical.9.0.7.nupkg.sha512",
     "C:\\Users\\apkas\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\9.0.7\\microsoft.extensions.filesystemglobbing.9.0.7.nupkg.sha512",
     "C:\\Users\\apkas\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.7\\microsoft.extensions.primitives.9.0.7.nupkg.sha512",
+    "C:\\Users\\apkas\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\apkas\\.nuget\\packages\\nlog\\6.0.2\\nlog.6.0.2.nupkg.sha512",
     "C:\\Users\\apkas\\.nuget\\packages\\system.io.pipelines\\9.0.7\\system.io.pipelines.9.0.7.nupkg.sha512",
     "C:\\Users\\apkas\\.nuget\\packages\\system.text.encodings.web\\9.0.7\\system.text.encodings.web.9.0.7.nupkg.sha512",
     "C:\\Users\\apkas\\.nuget\\packages\\system.text.json\\9.0.7\\system.text.json.9.0.7.nupkg.sha512"
