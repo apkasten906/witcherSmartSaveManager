@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Witcher Smart Save Manager</value>
+  </data>
+  <data name="FindSaves" xml:space="preserve">
+    <value>Find Witcher Save Games</value>
+  </data>
+  <data name="CustomSaveFolder" xml:space="preserve">
+    <value>Custom Save Folder (Witcher 2)</value>
+  </data>
+  <data name="BackupLocation" xml:space="preserve">
+    <value>Backup Location</value>
+  </data>
+  <data name="BackupSelected" xml:space="preserve">
+    <value>Backup Selected Files</value>
+  </data>
+  <data name="DeleteSelected" xml:space="preserve">
+    <value>Delete Selected Files</value>
+  </data>
+  <data name="SyncSteamCloud" xml:space="preserve">
+    <value>Sync to Steam Cloud</value>
+  </data>
+  <data name="DownloadSteamCloud" xml:space="preserve">
+    <value>Download from Steam Cloud</value>
+  </data>
+  <data name="SyncGogCloud" xml:space="preserve">
+    <value>Sync to GOG Cloud</value>
+  </data>
+  <data name="DownloadGogCloud" xml:space="preserve">
+    <value>Download from GOG Cloud</value>
+  </data>
+</root>

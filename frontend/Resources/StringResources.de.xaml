@@ -1,0 +1,26 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!-- German string resources -->
+    <system:String x:Key="App_Title">Witcher Smart Save Manager</system:String>
+    <system:String x:Key="Status_Ready">Bereit</system:String>
+    <system:String x:Key="Status_ConfigFound">Konfigurationsdatei gefunden unter: {0}</system:String>
+    <system:String x:Key="Status_ConfigNotFound">Konfigurationsdatei nicht gefunden. Standardeinstellungen werden verwendet.</system:String>
+    <system:String x:Key="Status_SavesLoaded">{0} Spielstand(e) geladen.</system:String>
+    <system:String x:Key="Status_BackupComplete">{0} Spielstand(e) gesichert.</system:String>
+    <system:String x:Key="Status_DeleteComplete">{0} Spielstand(e) gelöscht.</system:String>
+    <system:String x:Key="Status_SaveDeleted">Spielstand gelöscht.</system:String>
+    <system:String x:Key="Status_BackupFolderSet">Backup-Ordner festgelegt.</system:String>
+    <system:String x:Key="Status_CustomSaveFolderSet">Benutzerdefinierter Spielstand-Ordner festgelegt.</system:String>
+    <system:String x:Key="Status_NoSaveFiles">Der ausgewählte Ordner enthält keine Witcher 2 Spielstände.</system:String>
+    <system:String x:Key="Error_Generic">Ein Fehler ist aufgetreten.</system:String>
+    <system:String x:Key="Error_LoadingSaves">Fehler beim Laden der Spielstände: {0}</system:String>
+    <system:String x:Key="Error_BackupSaves">Fehler beim Sichern der Spielstände: {0}</system:String>
+    <system:String x:Key="Error_DeletingSaves">Fehler beim Löschen der Spielstände: {0}</system:String>
+    <system:String x:Key="SaveFolder_Label">Witcher 2 Spielstand-Ordner</system:String>
+    <system:String x:Key="BackupLocation_Label">Backup Speicherort</system:String>
+    <system:String x:Key="BackupButton_Label">Ausgewählte Dateien sichern</system:String>
+    <system:String x:Key="DeleteButton_Label">Ausgewählte Dateien löschen</system:String>
+    <system:String x:Key="Language_Label">Sprache:</system:String>
+    <system:String x:Key="FindSaves_Label">Witcher Speicherstände finden</system:String>
+</ResourceDictionary>
