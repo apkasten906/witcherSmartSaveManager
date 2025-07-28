@@ -1,10 +1,10 @@
 using NUnit.Framework;
-using WitcherGuiApp.Services;
-using WitcherGuiApp.Models;
+using WitcherSmartSaveManager.Services;
+using WitcherSmartSaveManager.Models;
 using System.IO;
 using System;
 
-namespace WitcherGuiApp.Tests
+namespace WitcherSmartSaveManager.Tests
 {
     [TestFixture]
     public class WitcherSaveFileServiceLoggingTests

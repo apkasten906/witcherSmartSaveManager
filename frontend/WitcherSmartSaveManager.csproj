@@ -3,7 +3,9 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>	
+    <UseWPF>true</UseWPF>
+    <AssemblyName>WitcherSmartSaveManager</AssemblyName>
+    <ApplicationIcon>Views\Assets\icon_wolf_save.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

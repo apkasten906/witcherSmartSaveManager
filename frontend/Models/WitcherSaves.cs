@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace WitcherGuiApp.Models
+namespace WitcherSmartSaveManager.Models
 {
     public class WitcherSaveFile
     {

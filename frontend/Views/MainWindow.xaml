@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:viewmodels="clr-namespace:WitcherGuiApp.ViewModels"
+        xmlns:viewmodels="clr-namespace:WitcherSmartSaveManager.ViewModels"
         av:DataContext="{av:DesignInstance Type=viewmodels:MainViewModel}" 
         mc:Ignorable="av" 
-        x:Class="WitcherGuiApp.Views.MainWindow"
+        x:Class="WitcherSmartSaveManager.Views.MainWindow"
         x:Name="MainWindowRoot"
         Title="Witcher Save Manager" Height="450" Width="800"
         Icon="/Views/Assets/icon_wolf_save.ico">

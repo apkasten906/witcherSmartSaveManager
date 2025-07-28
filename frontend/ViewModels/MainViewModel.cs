@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Threading;
-using WitcherGuiApp.Models;
-using WitcherGuiApp.Services;
+using WitcherSmartSaveManager.Models;
+using WitcherSmartSaveManager.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,12 +11,12 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using WitcherGuiApp.Utils;
+using WitcherSmartSaveManager.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
-namespace WitcherGuiApp.ViewModels
+namespace WitcherSmartSaveManager.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {

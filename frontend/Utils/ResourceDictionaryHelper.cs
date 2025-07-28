@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 
-namespace WitcherGuiApp.Utils
+namespace WitcherSmartSaveManager.Utils
 {
     /// <summary>
     /// Utility class to help with dynamically loading resource dictionaries

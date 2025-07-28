@@ -47,7 +47,7 @@ echo [92m✅ Compilation successful![0m
 
 REM Run unit tests
 echo Running unit tests...
-dotnet test WitcherSmartSaveManagerTests\WitcherGuiApp.Tests.csproj
+dotnet test WitcherSmartSaveManagerTests\WitcherSmartSaveManager.Tests.csproj
 if %ERRORLEVEL% NEQ 0 (
     echo [91m❌ Commit failed: Unit tests failed. Please fix the failing tests and try again.[0m
     exit /b 1

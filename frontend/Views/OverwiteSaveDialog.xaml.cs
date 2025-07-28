@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WitcherGuiApp.Views
+namespace WitcherSmartSaveManager.Views
 {
     /// <summary>
     /// Interaktionslogik für OverwiteSaveDialog.xaml

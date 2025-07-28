@@ -1,7 +1,7 @@
 using System;
 using System.Windows;
 
-namespace WitcherGuiApp
+namespace WitcherSmartSaveManager
 {
     public partial class App : Application
     {

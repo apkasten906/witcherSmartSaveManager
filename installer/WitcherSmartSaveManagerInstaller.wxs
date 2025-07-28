@@ -1,39 +1,189 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="Witcher Smart Save Manager" Language="1033" Version="1.0.0.0" Manufacturer="YourCompany" UpgradeCode="PUT-GUID-HERE">
-    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  
+  <Package Name="Witcher Smart Save Manager" 
+           Language="1033" 
+           Version="1.0.0.0" 
+           Manufacturer="Witcher Smart Save Manager Team" 
+           UpgradeCode="{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}"
+           InstallerVersion="500" 
+           Compressed="yes" 
+           Scope="perMachine">
+    
     <MajorUpgrade DowngradeErrorMessage="A newer version of Witcher Smart Save Manager is already installed." />
-    <MediaTemplate />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Installer Icon -->
+    <Icon Id="WitcherIcon" SourceFile="icon_wolf_save.ico" />
+    <Property Id="ARPPRODUCTICON" Value="WitcherIcon" />
+
+    <!-- Custom installation directory property -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+
+    <!-- .NET 8.0 Runtime Prerequisites -->
+    <Property Id="NETCORECHECK">
+      <RegistrySearch Id="CheckNetCore8" Root="HKLM" Key="SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.WindowsDesktop.App" Name="8.0" Type="raw" />
+    </Property>
+    <Launch Message="This application requires .NET 8.0 Desktop Runtime. Please install .NET 8.0 Desktop Runtime and run this installer again." Condition="NOT (Installed OR NETCORECHECK)" />
+
+    <!-- Support for silent installation -->
+    <Property Id="ARPNOMODIFY" Value="1" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/apkasten906/witcherSmartSaveManager" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/apkasten906/witcherSmartSaveManager" />
 
     <Feature Id="ProductFeature" Title="Witcher Smart Save Manager" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="ConfigComponents" />
+      <ComponentGroupRef Id="DocumentationComponents" />
     </Feature>
 
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
-    <UI>
-      <UIRef Id="WixUI_InstallDir" />
-    </UI>
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLFOLDER" Name="WitcherSmartSaveManager" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Witcher Smart Save Manager" />
+    </StandardDirectory>
+    <StandardDirectory Id="DesktopFolder" />
 
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="WitcherSmartSaveManager">
-          <!-- Files will be added here -->
-        </Directory>
-      </Directory>
-    </Directory>
-
+    <!-- Main Application Components -->
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="MainExe" Guid="PUT-GUID-HERE">
-        <File Source="..\frontend\bin\Release\WitcherGuiApp.exe" KeyPath="yes" />
-        <File Source="..\frontend\bin\Release\WitcherGuiApp.dll" />
-        <File Source="..\frontend\userpaths.json" />
-        <File Source="..\frontend\App.config" />
-        <File Source="..\frontend\WitcherGuiApp.exe.config" />
-        <File Source="..\README.md" />
-        <!-- Add other essential files as needed -->
-        <RegistryValue Root="HKLM" Key="Software\WitcherSmartSaveManager" Name="InstallPath" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
-        <RegistryValue Root="HKLM" Key="Software\WitcherSmartSaveManager" Name="Version" Type="string" Value="1.0.0.0" />
+      <Component Id="MainExe" Guid="{A1B2C3D4-E5F6-7890-ABCD-123456789ABC}">
+        <File Id="WitcherSmartSaveManager.exe" 
+              Source="..\frontend\bin\Release\net8.0-windows\WitcherSmartSaveManager.exe" 
+              KeyPath="yes" />
+        <File Id="WitcherSmartSaveManager.dll" 
+              Source="..\frontend\bin\Release\net8.0-windows\WitcherSmartSaveManager.dll" />
+        <File Id="WitcherSmartSaveManager.deps.json" 
+              Source="..\frontend\bin\Release\net8.0-windows\WitcherSmartSaveManager.deps.json" />
+        <File Id="WitcherSmartSaveManager.runtimeconfig.json" 
+              Source="..\frontend\bin\Release\net8.0-windows\WitcherSmartSaveManager.runtimeconfig.json" />
+        
+        <!-- Registry entries for installation tracking and Windows integration -->
+        <RegistryValue Root="HKLM" 
+                       Key="Software\WitcherSmartSaveManager" 
+                       Name="InstallPath" 
+                       Type="string" 
+                       Value="[INSTALLFOLDER]" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\WitcherSmartSaveManager" 
+                       Name="Version" 
+                       Type="string" 
+                       Value="1.0.0.0" />
+        
+        <!-- Standard Windows uninstall registry entries -->
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="DisplayName" 
+                       Type="string" 
+                       Value="Witcher Smart Save Manager" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="UninstallString" 
+                       Type="string" 
+                       Value="msiexec /x {8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="DisplayVersion" 
+                       Type="string" 
+                       Value="1.0.0.0" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="Publisher" 
+                       Type="string" 
+                       Value="Witcher Smart Save Manager Team" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="InstallLocation" 
+                       Type="string" 
+                       Value="[INSTALLFOLDER]" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="NoModify" 
+                       Type="integer" 
+                       Value="1" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="NoRepair" 
+                       Type="integer" 
+                       Value="1" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="HelpLink" 
+                       Type="string" 
+                       Value="https://github.com/apkasten906/witcherSmartSaveManager" />
+        <RegistryValue Root="HKLM" 
+                       Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D}" 
+                       Name="URLInfoAbout" 
+                       Type="string" 
+                       Value="https://github.com/apkasten906/witcherSmartSaveManager" />
+      </Component>
+
+      <!-- Dependencies and Runtime Files -->
+      <Component Id="Dependencies" Guid="{6C4CEE00-C9DD-42F6-AAE2-9E3397145BB9}">
+        <!-- Additional dependency files can be added here -->
+      </Component>
+
+      <!-- Start Menu Shortcuts -->
+      <Component Id="StartMenuShortcuts" Directory="ApplicationProgramsFolder" Guid="{BD809A62-B4AA-4944-A698-B2DE2205C71C}">
+        <Shortcut Id="StartMenuShortcut"
+                  Name="Witcher Smart Save Manager"
+                  Target="[#WitcherSmartSaveManager.exe]"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Description="Intelligent save game manager for The Witcher series"
+                  Icon="WitcherIcon" />
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" 
+                       Key="Software\WitcherSmartSaveManager" 
+                       Name="StartMenuShortcut" 
+                       Type="integer" 
+                       Value="1" 
+                       KeyPath="yes" />
+      </Component>
+
+      <!-- Desktop Shortcut (Optional) -->
+      <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="{60D28596-FB35-4855-955C-E460BBC0E8A2}">
+        <Shortcut Id="DesktopShortcut"
+                  Name="Witcher Smart Save Manager"
+                  Target="[#WitcherSmartSaveManager.exe]"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Description="Intelligent save game manager for The Witcher series"
+                  Icon="WitcherIcon" />
+        <RegistryValue Root="HKCU" 
+                       Key="Software\WitcherSmartSaveManager" 
+                       Name="DesktopShortcut" 
+                       Type="integer" 
+                       Value="1" 
+                       KeyPath="yes" />
       </Component>
     </ComponentGroup>
-  </Product>
+
+    <!-- Configuration Files -->
+    <ComponentGroup Id="ConfigComponents" Directory="INSTALLFOLDER">
+      <Component Id="ConfigFiles" Guid="{4352B0CE-A6AE-4E3B-96CF-35F1566F06CF}">
+        <File Source="..\frontend\userpaths.json" />
+        <File Source="..\frontend\App.config" />
+        <File Source="..\frontend\NLog.config" />
+      </Component>
+      
+      <!-- Resource Files -->
+      <Component Id="ResourceFiles" Guid="{FEFA2674-0E8B-4A2C-9D1C-9A57DEB38DD2}">
+        <File Source="..\frontend\Resources\Strings.resx" />
+        <File Source="..\frontend\Resources\Strings.en.resx" />
+        <File Source="..\frontend\Resources\Strings.de.resx" />
+        <File Source="..\frontend\Resources\StringResources.xaml" />
+        <File Source="..\frontend\Resources\StringResources.de.xaml" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Documentation and Support Files -->
+    <ComponentGroup Id="DocumentationComponents" Directory="INSTALLFOLDER">
+      <Component Id="Documentation" Guid="{BBEA34C0-EC8D-4D0A-B239-D642101815B5}">
+        <File Source="..\README.md" />
+        <File Source="..\PRINCIPLES.md" />
+        <File Source="..\.githooks\README.md" Name="GitHooksReadme.md" />
+      </Component>
+    </ComponentGroup>
+
+  </Package>
 </Wix>

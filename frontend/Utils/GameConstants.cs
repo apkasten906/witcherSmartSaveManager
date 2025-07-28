@@ -1,6 +1,6 @@
 using System;
 
-namespace WitcherGuiApp.Utils
+namespace WitcherSmartSaveManager.Utils
 {
     public static class GameConstants
     {

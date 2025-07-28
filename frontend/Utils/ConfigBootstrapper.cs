@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
-using WitcherGuiApp.Models;
+using WitcherSmartSaveManager.Models;
 
-namespace WitcherGuiApp.Utils
+namespace WitcherSmartSaveManager.Utils
 {
     public static class ConfigBootstrapper
     {
