@@ -1,24 +1,35 @@
 # Witcher Smart Save Manager - Windows Installer
 
-This directory contains the WiX-based Windows installer for the Witcher Smart Save Manager application.
+This directory contains the **WiX v6**-based Windows installer for the Witcher Smart Save Manager application.
 
 ## 🚀 Quick Build
 
 ```powershell
 # From the installer directory
-.\Build-Installer.ps1
+# Option A: Use build script (if working)
+.\Build-WixInstaller.ps1
+
+# Option B: Direct WiX v6 command (recommended)
+wix build -arch x64 -d SourceDir="C:\Development\witcherSmartSaveManager\" -o bin\WitcherSmartSaveManagerInstaller.msi WitcherSmartSaveManagerInstaller.v6-simple.wxs
 ```
 
 ## 📋 Requirements
 
 ### For Building
-- **WiX Toolset v3.11+** - Download from [WiX Toolset Releases](https://wixtoolset.org/releases/)
+- **WiX Toolset v6** - Install as .NET global tool: `dotnet tool install --global wix`
 - **PowerShell 5.1+** (included with Windows 10/11)
 - **.NET SDK 8.0+** (for building the main application)
 
 ### For Installation
-- **Windows 10/11** (64-bit)
-- **.NET Framework 4.8+** (installer will check and prompt if missing)
+- **Windows 10 (version 1607+) or Windows 11** (64-bit)
+- **Windows Server 2016/2019/2022** (64-bit) 
+- **.NET 8.0 Desktop Runtime** (installer will check and prompt if missing)
+- **No restart required** - registry entries are non-system data storage only
+
+### Compatibility Notes
+- **Not supported**: Windows 7, 8, 8.1, or Server 2012 (due to .NET 8.0 requirements)
+- **Architecture**: 64-bit Windows required for .NET 8.0 Desktop Runtime
+- **Privileges**: Administrator privileges required for installation to Program Files
 
 ## 🔧 Build Options
 
@@ -83,7 +94,18 @@ msiexec /i WitcherSmartSaveManagerInstaller.msi /quiet /l*v install.log
 
 ### Uninstall
 ```cmd
+# Via Windows Settings/Control Panel (Recommended)
+# Windows 10/11: Settings → Apps → "Witcher Smart Save Manager" → Uninstall
+# Windows 10: Control Panel → Programs → "Witcher Smart Save Manager" → Uninstall
+
+# Silent uninstall via command line
 msiexec /x WitcherSmartSaveManagerInstaller.msi /quiet
+
+# Interactive uninstall via command line  
+msiexec /x WitcherSmartSaveManagerInstaller.msi
+
+# Using Product GUID
+msiexec /x {8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D} /quiet
 ```
 
 ## 🛠 Customization
@@ -145,6 +167,20 @@ Run with `-Verbose` flag for detailed output:
 1. Use Windows "Add or Remove Programs"
 2. Or run: `msiexec /x WitcherSmartSaveManagerInstaller.msi`
 3. Verify all files and registry entries are removed
+
+### What Gets Removed During Uninstall
+- **Application Files**: All installed program files in `C:\Program Files\WitcherSmartSaveManager`
+- **Start Menu Shortcuts**: Application shortcuts and folder
+- **Desktop Shortcut**: If created during installation
+- **Registry Entries**: All installation tracking and uninstall registry entries
+- **Windows Integration**: Removes from "Add or Remove Programs" list
+
+### What Remains After Uninstall (By Design)
+- **User Settings**: Any saved user preferences or custom save locations
+- **User-Created Backups**: Backup files created by the application
+- **Application Data**: Logs or temporary files in user directories
+
+This follows Windows installer best practices - user data is preserved during uninstall.
 
 ## 📋 Checklist for Issue #51
 

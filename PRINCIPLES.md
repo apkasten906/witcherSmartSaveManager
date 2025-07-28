@@ -1,5 +1,12 @@
 # Witcher Smart Save Manager – Development Principles
 
+## 🖥️ Platform Requirements
+
+* **Target Platform**: Windows 10 (version 1607+) and Windows 11 (64-bit)
+* **.NET Runtime**: .NET 8.0 Desktop Runtime
+* **Legacy Support**: Windows 7/8/8.1 not supported (due to .NET 8.0 requirements)
+* **Installation**: No restart required - registry entries are data storage only
+
 ## 🧱 Architecture
 
 * Follow **MVVM** for all WPF UI components.
