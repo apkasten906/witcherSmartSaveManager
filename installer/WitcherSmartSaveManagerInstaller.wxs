@@ -13,6 +13,13 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of Witcher Smart Save Manager is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
+    <!-- Installer Icon -->
+    <Icon Id="WitcherIcon" SourceFile="icon_wolf_save.ico" />
+    <Property Id="ARPPRODUCTICON" Value="WitcherIcon" />
+
+    <!-- Custom installation directory property -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+
     <!-- .NET 8.0 Runtime Prerequisites -->
     <Property Id="NETCORECHECK">
       <RegistrySearch Id="CheckNetCore8" Root="HKLM" Key="SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.WindowsDesktop.App" Name="8.0" Type="raw" />
@@ -42,15 +49,15 @@
     <!-- Main Application Components -->
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component Id="MainExe" Guid="{A1B2C3D4-E5F6-7890-ABCD-123456789ABC}">
-        <File Id="WitcherGuiApp.exe" 
-              Source="..\frontend\bin\Release\net8.0-windows\WitcherGuiApp.exe" 
+        <File Id="WitcherSmartSaveManager.exe" 
+              Source="..\frontend\bin\Release\net8.0-windows\WitcherSmartSaveManager.exe" 
               KeyPath="yes" />
-        <File Id="WitcherGuiApp.dll" 
-              Source="..\frontend\bin\Release\net8.0-windows\WitcherGuiApp.dll" />
-        <File Id="WitcherGuiApp.deps.json" 
-              Source="..\frontend\bin\Release\net8.0-windows\WitcherGuiApp.deps.json" />
-        <File Id="WitcherGuiApp.runtimeconfig.json" 
-              Source="..\frontend\bin\Release\net8.0-windows\WitcherGuiApp.runtimeconfig.json" />
+        <File Id="WitcherSmartSaveManager.dll" 
+              Source="..\frontend\bin\Release\net8.0-windows\WitcherSmartSaveManager.dll" />
+        <File Id="WitcherSmartSaveManager.deps.json" 
+              Source="..\frontend\bin\Release\net8.0-windows\WitcherSmartSaveManager.deps.json" />
+        <File Id="WitcherSmartSaveManager.runtimeconfig.json" 
+              Source="..\frontend\bin\Release\net8.0-windows\WitcherSmartSaveManager.runtimeconfig.json" />
         
         <!-- Registry entries for installation tracking and Windows integration -->
         <RegistryValue Root="HKLM" 
@@ -114,18 +121,17 @@
 
       <!-- Dependencies and Runtime Files -->
       <Component Id="Dependencies" Guid="{6C4CEE00-C9DD-42F6-AAE2-9E3397145BB9}">
-        <File Source="..\frontend\bin\Release\net8.0-windows\WitcherGuiApp.deps.json" />
-        <File Source="..\frontend\bin\Release\net8.0-windows\WitcherGuiApp.runtimeconfig.json" />
-        <!-- Add specific dependency files as needed -->
+        <!-- Additional dependency files can be added here -->
       </Component>
 
       <!-- Start Menu Shortcuts -->
       <Component Id="StartMenuShortcuts" Directory="ApplicationProgramsFolder" Guid="{BD809A62-B4AA-4944-A698-B2DE2205C71C}">
         <Shortcut Id="StartMenuShortcut"
                   Name="Witcher Smart Save Manager"
-                  Target="[#WitcherGuiApp.exe]"
+                  Target="[#WitcherSmartSaveManager.exe]"
                   WorkingDirectory="INSTALLFOLDER"
-                  Description="Intelligent save game manager for The Witcher series" />
+                  Description="Intelligent save game manager for The Witcher series"
+                  Icon="WitcherIcon" />
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
         <RegistryValue Root="HKCU" 
                        Key="Software\WitcherSmartSaveManager" 
@@ -139,9 +145,10 @@
       <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="{60D28596-FB35-4855-955C-E460BBC0E8A2}">
         <Shortcut Id="DesktopShortcut"
                   Name="Witcher Smart Save Manager"
-                  Target="[#WitcherGuiApp.exe]"
+                  Target="[#WitcherSmartSaveManager.exe]"
                   WorkingDirectory="INSTALLFOLDER"
-                  Description="Intelligent save game manager for The Witcher series" />
+                  Description="Intelligent save game manager for The Witcher series"
+                  Icon="WitcherIcon" />
         <RegistryValue Root="HKCU" 
                        Key="Software\WitcherSmartSaveManager" 
                        Name="DesktopShortcut" 

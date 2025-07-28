@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualBasic;
 using System.ComponentModel;
 using System.Windows.Input;
-using WitcherGuiApp.Models;
+using WitcherSmartSaveManager.Models;
 
-namespace WitcherGuiApp.ViewModels
+namespace WitcherSmartSaveManager.ViewModels
 {
     public class SaveFileViewModel : INotifyPropertyChanged
     {

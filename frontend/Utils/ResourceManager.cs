@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Windows;
 
-namespace WitcherGuiApp.Utils
+namespace WitcherSmartSaveManager.Utils
 {
     /// <summary>
     /// Utility class for managing resources and language switching

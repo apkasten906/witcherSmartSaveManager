@@ -1,9 +1,9 @@
 ﻿#nullable enable
 using System;
 using Microsoft.Extensions.Configuration;
-using WitcherGuiApp.Models;
+using WitcherSmartSaveManager.Models;
 
-namespace WitcherGuiApp.Utils
+namespace WitcherSmartSaveManager.Utils
 {
     public static class SavePathResolver
     {

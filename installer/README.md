@@ -50,7 +50,7 @@ wix build -arch x64 -d SourceDir="C:\Development\witcherSmartSaveManager\" -o bi
 ## 📦 What Gets Installed
 
 ### Application Files
-- Main executable (`WitcherGuiApp.exe`)
+- Main executable (`WitcherSmartSaveManager.exe`)
 - Application DLL and dependencies
 - Runtime configuration files
 - Resource files (localization, themes)

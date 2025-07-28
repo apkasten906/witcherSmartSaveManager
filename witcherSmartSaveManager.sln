@@ -2,9 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherGuiApp", "frontend\WitcherGuiApp.csproj", "{CAA3D5FC-EAA0-7F48-C6CE-D49B24278CA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherSmartSaveManager", "frontend\WitcherSmartSaveManager.csproj", "{CAA3D5FC-EAA0-7F48-C6CE-D49B24278CA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherGuiApp.Tests", "WitcherSmartSaveManagerTests\WitcherGuiApp.Tests.csproj", "{1721F0C7-1363-4980-B670-71983AB5F1D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherSmartSaveManager.Tests", "WitcherSmartSaveManagerTests\WitcherSmartSaveManager.Tests.csproj", "{1721F0C7-1363-4980-B670-71983AB5F1D6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CAA3D5FC-EAA0-7F48-C6CE-D49B24278CA9} = {CAA3D5FC-EAA0-7F48-C6CE-D49B24278CA9}
 	EndProjectSection

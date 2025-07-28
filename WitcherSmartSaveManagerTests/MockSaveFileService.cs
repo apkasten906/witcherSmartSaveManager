@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using WitcherGuiApp.Models;
+using WitcherSmartSaveManager.Models;
 
-namespace WitcherGuiApp.Tests.Mocks
+namespace WitcherSmartSaveManager.Tests.Mocks
 {
     public class MockSaveFileService
     {

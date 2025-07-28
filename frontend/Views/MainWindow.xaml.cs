@@ -1,7 +1,7 @@
 using System.Windows;
-using WitcherGuiApp.ViewModels;
+using WitcherSmartSaveManager.ViewModels;
 
-namespace WitcherGuiApp.Views
+namespace WitcherSmartSaveManager.Views
 {
     public partial class MainWindow : Window
     {

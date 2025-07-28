@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using WitcherGuiApp.Models;
-using WitcherGuiApp.Utils;
+using WitcherSmartSaveManager.Models;
+using WitcherSmartSaveManager.Utils;
 
 
-namespace WitcherGuiApp.Services
+namespace WitcherSmartSaveManager.Services
 {
     public class WitcherSaveFileService
     {

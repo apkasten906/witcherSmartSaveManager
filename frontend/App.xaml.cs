@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Threading;
 using System.Windows;
-using WitcherGuiApp.Utils;
+using WitcherSmartSaveManager.Utils;
 
-namespace WitcherGuiApp
+namespace WitcherSmartSaveManager
 {
     public partial class App : Application
     {

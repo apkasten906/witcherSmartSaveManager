@@ -1,8 +1,9 @@
 using NUnit.Framework;
 using System.Globalization;
 using System.Resources;
+using WitcherSmartSaveManager;
 
-namespace WitcherGuiApp.Tests
+namespace WitcherSmartSaveManager.Tests
 {
     [TestFixture]
     public class LocalizationTests
@@ -10,7 +11,7 @@ namespace WitcherGuiApp.Tests
         [Test]
         public void EnglishResourceFile_ContainsExpectedStrings()
         {
-            var rm = new ResourceManager("WitcherGuiApp.Resources.Strings", typeof(App).Assembly);
+            var rm = new ResourceManager("WitcherSmartSaveManager.Resources.Strings", typeof(App).Assembly);
             Assert.That(rm.GetString("AppTitle", new CultureInfo("en")), Is.EqualTo("Witcher Smart Save Manager"));
             Assert.That(rm.GetString("FindSaves", new CultureInfo("en")), Is.EqualTo("Find Witcher Save Games"));
         }
@@ -18,7 +19,7 @@ namespace WitcherGuiApp.Tests
         [Test]
         public void GermanResourceFile_ContainsExpectedStrings()
         {
-            var rm = new ResourceManager("WitcherGuiApp.Resources.Strings", typeof(App).Assembly);
+            var rm = new ResourceManager("WitcherSmartSaveManager.Resources.Strings", typeof(App).Assembly);
             Assert.That(rm.GetString("FindSaves", new CultureInfo("de")), Is.EqualTo("Witcher Speicherstände finden"));
         }
     }

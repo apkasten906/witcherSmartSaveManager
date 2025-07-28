@@ -78,7 +78,7 @@ Get-ItemProperty "HKLM:\Software\WitcherSmartSaveManager"
 
 ### Test Application Launch
 1. **From Start Menu**: Launch "Witcher Smart Save Manager"
-2. **From Install Directory**: Run `WitcherGuiApp.exe`
+2. **From Install Directory**: Run `WitcherSmartSaveManager.exe`
 3. **Verify**: Application loads without errors
 
 ### Test Uninstallation

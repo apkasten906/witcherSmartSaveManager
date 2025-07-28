@@ -74,8 +74,8 @@ Write-Host "WiX Toolset found: v$WixVersion" -ForegroundColor Green
 Write-Host "`nStep 3: Verifying application files..." -ForegroundColor Green
 
 $RequiredFiles = @(
-    "WitcherGuiApp.exe",
-    "WitcherGuiApp.dll"
+    "WitcherSmartSaveManager.exe",
+    "WitcherSmartSaveManager.dll"
 )
 
 $BinPath = Join-Path $FrontendDir "bin\$Configuration\net8.0-windows"

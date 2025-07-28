@@ -1,7 +1,7 @@
 using System;
 using System.Windows;
 
-namespace WitcherGuiApp.Utils
+namespace WitcherSmartSaveManager.Utils
 {
     /// <summary>
     /// Helper class for retrieving localized resources

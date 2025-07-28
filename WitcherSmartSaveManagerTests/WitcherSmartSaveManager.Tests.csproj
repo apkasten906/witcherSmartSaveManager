@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\frontend\WitcherGuiApp.csproj" />
+    <ProjectReference Include="..\frontend\WitcherSmartSaveManager.csproj" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy ..\frontend\App.config WitcherGuiApp.Tests.config" />
+    <Exec Command="copy ..\frontend\App.config WitcherSmartSaveManager.Tests.config" />
   </Target>
 
 </Project>
