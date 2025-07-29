@@ -28,7 +28,7 @@ namespace WitcherSmartSaveManager.Models
 
         [JsonPropertyName("metadata")]
         public Dictionary<string, object> Metadata { get; set; }
-        
+
         [JsonPropertyName("BackupExists")]
         public bool BackupExists { get; internal set; }
     }

@@ -22,7 +22,7 @@ namespace WitcherSmartSaveManager.ViewModels
     {
         private string _selectedLanguage = "en";
         private string _originalConfigMessage; // Store the original config message
-        
+
         public string SelectedLanguage
         {
             get => _selectedLanguage;
@@ -39,7 +39,7 @@ namespace WitcherSmartSaveManager.ViewModels
         }
 
         public ICommand ChangeLanguageCommand { get; }
-    
+
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly WitcherSaveFileService _saveFileService;
@@ -99,13 +99,13 @@ namespace WitcherSmartSaveManager.ViewModels
             ChangeLanguageCommand = new RelayCommand(lang => SelectedLanguage = lang?.ToString());
 
             Logger.Info("MainViewModel initialized.");
-            
+
             // Store the original config message for later localization
             _originalConfigMessage = App.ConfigStatusMessage;
-            
+
             // Set initial status message
             UpdateConfigStatusMessage();
-            
+
             if (!App.ConfigInitialized)
             {
                 return;
@@ -126,7 +126,7 @@ namespace WitcherSmartSaveManager.ViewModels
             var culture = new CultureInfo(lang);
             Thread.CurrentThread.CurrentUICulture = culture;
             Thread.CurrentThread.CurrentCulture = culture;
-            
+
             // Notify that all bindable properties have changed to force UI refresh
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -134,22 +134,22 @@ namespace WitcherSmartSaveManager.ViewModels
                 {
                     // Load the appropriate resource dictionary for the selected language
                     Utils.ResourceDictionaryHelper.UpdateResourcesForCulture(culture);
-                    
+
                     // Update status message with localized text if it's a standard message
                     UpdateLocalizedStatusMessage();
-                    
+
                     // Explicitly update config status message when language changes
                     UpdateConfigStatusMessage();
-                    
+
                     // Force property changed notifications for all localized properties
                     OnPropertyChanged(nameof(StatusMessage));
-                    
+
                     // Refresh UI
                     foreach (Window window in Application.Current.Windows)
                     {
                         window.UpdateLayout();
                     }
-                    
+
                     // Log success
                     Logger.Info($"Language changed to: {lang}");
                 }
@@ -160,13 +160,13 @@ namespace WitcherSmartSaveManager.ViewModels
                 }
             });
         }
-        
+
         /// <summary>
         /// Updates the status message if it needs to be localized
         /// </summary>
         private void UpdateLocalizedStatusMessage()
         {
-            try 
+            try
             {
                 // If the status message is empty, set it to the default ready message
                 if (string.IsNullOrEmpty(_statusMessage))
@@ -174,10 +174,10 @@ namespace WitcherSmartSaveManager.ViewModels
                     StatusMessage = Utils.ResourceHelper.GetString("Status_Ready");
                     return;
                 }
-                
+
                 // Try to update known status message patterns
                 UpdateStatusMessageIfMatches();
-                
+
                 // Note: Config status message is handled separately by UpdateConfigStatusMessage
                 // to preserve the original config message format across language changes
             }
@@ -186,7 +186,7 @@ namespace WitcherSmartSaveManager.ViewModels
                 Logger.Error(ex, "Error updating localized status message");
             }
         }
-        
+
         /// <summary>
         /// Updates the status message if it matches one of our known patterns
         /// </summary>
@@ -241,7 +241,7 @@ namespace WitcherSmartSaveManager.ViewModels
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Error_DeletingSaves", errorMsg);
             }
         }
-        
+
         /// <summary>
         /// Updates the config status message based on the original stored message
         /// </summary>
@@ -249,7 +249,7 @@ namespace WitcherSmartSaveManager.ViewModels
         {
             if (_originalConfigMessage == null)
                 return;
-                
+
             if (_originalConfigMessage.StartsWith("Config file found at "))
             {
                 string path = _originalConfigMessage.Replace("Config file found at ", "").TrimEnd('.');
@@ -283,7 +283,7 @@ namespace WitcherSmartSaveManager.ViewModels
                         }
                     });
                 });
-                
+
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_SavesLoaded", Saves.Count);
             }
@@ -306,7 +306,7 @@ namespace WitcherSmartSaveManager.ViewModels
                         save.BackupExists = true;
                     }
                 }
-                
+
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_BackupComplete", selected.Count);
             }
@@ -352,7 +352,7 @@ namespace WitcherSmartSaveManager.ViewModels
                 }
                 CustomSaveFolderPath = selectedPath;
                 UpdateUserPathsJson(selectedPath);
-                
+
                 StatusMessage = Utils.ResourceHelper.GetString("Status_CustomSaveFolderSet");
             }
         }
@@ -371,7 +371,7 @@ namespace WitcherSmartSaveManager.ViewModels
                         StatusMessage = Utils.ResourceHelper.GetString("Status_SaveDeleted");
                     }
                 }
-                
+
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_DeleteComplete", selected.Count);
             }

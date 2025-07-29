@@ -24,7 +24,7 @@ namespace WitcherSmartSaveManager.Utils
                 return $"[{key}]"; // Return a placeholder if the resource is not found
             }
         }
-        
+
         /// <summary>
         /// Gets a formatted localized string from the resources
         /// </summary>

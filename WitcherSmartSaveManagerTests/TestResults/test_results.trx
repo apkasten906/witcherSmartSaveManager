@@ -11,21 +11,21 @@
     <UnitTestResult executionId="1279db7b-310a-49c4-b141-1845830a4534" testId="6da860d8-23d3-ec66-8dc0-f250c2d7090f" testName="DeleteSaveFile_RemovesSaveAndScreenshot_ReturnsTrue" computerName="AKASTEN_NOTEBOO" duration="00:00:00.0016720" startTime="2025-07-26T10:56:24.8153722+02:00" endTime="2025-07-26T10:56:24.8170440+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1279db7b-310a-49c4-b141-1845830a4534" />
   </Results>
   <TestDefinitions>
-    <UnitTest name="DeleteSaveFile_FileDoesNotExist_ThrowsFileNotFoundException" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\witcherguiapp.tests.dll" id="14a705d2-18e5-0380-a112-7e78665b3ad0">
+    <UnitTest name="DeleteSaveFile_FileDoesNotExist_ThrowsFileNotFoundException" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\WitcherSmartSaveManager.tests.dll" id="14a705d2-18e5-0380-a112-7e78665b3ad0">
       <Execution id="3fd665d5-6c72-416a-ad92-b28752e2d7a4" />
-      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherGuiApp.Tests.WitcherSaveFileServiceTests" name="DeleteSaveFile_FileDoesNotExist_ThrowsFileNotFoundException" />
+      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherSmartSaveManager.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherSmartSaveManager.Tests.WitcherSaveFileServiceTests" name="DeleteSaveFile_FileDoesNotExist_ThrowsFileNotFoundException" />
     </UnitTest>
-    <UnitTest name="BackupSaveFile_AlreadyExistsWithoutOverwrite_ReturnsFalse" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\witcherguiapp.tests.dll" id="2887f530-7ad9-e53e-f51a-c3343131b7a8">
+    <UnitTest name="BackupSaveFile_AlreadyExistsWithoutOverwrite_ReturnsFalse" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\WitcherSmartSaveManager.tests.dll" id="2887f530-7ad9-e53e-f51a-c3343131b7a8">
       <Execution id="aec65f3e-f9ab-4a1e-858c-1755e4ee77fc" />
-      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherGuiApp.Tests.WitcherSaveFileServiceTests" name="BackupSaveFile_AlreadyExistsWithoutOverwrite_ReturnsFalse" />
+      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherSmartSaveManager.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherSmartSaveManager.Tests.WitcherSaveFileServiceTests" name="BackupSaveFile_AlreadyExistsWithoutOverwrite_ReturnsFalse" />
     </UnitTest>
-    <UnitTest name="BackupSaveFile_CopiesSaveFile_ReturnsTrue" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\witcherguiapp.tests.dll" id="7ac47cf1-46c8-7192-fbd5-a4371921a3fb">
+    <UnitTest name="BackupSaveFile_CopiesSaveFile_ReturnsTrue" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\WitcherSmartSaveManager.tests.dll" id="7ac47cf1-46c8-7192-fbd5-a4371921a3fb">
       <Execution id="9ccb619d-2d81-4830-aaf1-012102dc2422" />
-      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherGuiApp.Tests.WitcherSaveFileServiceTests" name="BackupSaveFile_CopiesSaveFile_ReturnsTrue" />
+      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherSmartSaveManager.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherSmartSaveManager.Tests.WitcherSaveFileServiceTests" name="BackupSaveFile_CopiesSaveFile_ReturnsTrue" />
     </UnitTest>
-    <UnitTest name="DeleteSaveFile_RemovesSaveAndScreenshot_ReturnsTrue" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\witcherguiapp.tests.dll" id="6da860d8-23d3-ec66-8dc0-f250c2d7090f">
+    <UnitTest name="DeleteSaveFile_RemovesSaveAndScreenshot_ReturnsTrue" storage="c:\development\witchersmartsavemanager\witchersmartsavemanagertests\bin\debug\net8.0-windows7.0\WitcherSmartSaveManager.tests.dll" id="6da860d8-23d3-ec66-8dc0-f250c2d7090f">
       <Execution id="1279db7b-310a-49c4-b141-1845830a4534" />
-      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherGuiApp.Tests.WitcherSaveFileServiceTests" name="DeleteSaveFile_RemovesSaveAndScreenshot_ReturnsTrue" />
+      <TestMethod codeBase="C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherSmartSaveManager.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="WitcherSmartSaveManager.Tests.WitcherSaveFileServiceTests" name="DeleteSaveFile_RemovesSaveAndScreenshot_ReturnsTrue" />
     </UnitTest>
   </TestDefinitions>
   <TestEntries>
@@ -42,7 +42,7 @@
     <Counters total="4" executed="4" passed="4" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output>
       <StdOut>NUnit Adapter 5.0.0.0: Test execution started&#xD;
-Running selected tests in C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherGuiApp.Tests.dll&#xD;
+Running selected tests in C:\Development\witcherSmartSaveManager\WitcherSmartSaveManagerTests\bin\Debug\net8.0-windows7.0\WitcherSmartSaveManager.Tests.dll&#xD;
    NUnit3TestExecutor discovered 4 of 4 NUnit test cases using Current Discovery mode, Non-Explicit run&#xD;
 NUnit Adapter 5.0.0.0: Test execution complete&#xD;
 </StdOut>

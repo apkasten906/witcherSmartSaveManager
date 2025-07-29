@@ -12,7 +12,7 @@ namespace WitcherSmartSaveManager.Views
             InitializeComponent();
             DataContext = _viewModel;
         }
-        
+
         // This event handler is needed because we're not using Command binding for the ComboBox
         private void LanguageSelector_Changed(object sender, RoutedEventArgs e)
         {
@@ -23,7 +23,7 @@ namespace WitcherSmartSaveManager.Views
         private async void FetchSaves_Click(object sender, RoutedEventArgs e)
         {
             await _viewModel.LoadSavesAsync();
-        }        
+        }
     }
 }
 

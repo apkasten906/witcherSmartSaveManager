@@ -116,34 +116,34 @@ namespace WitcherSmartSaveManager.Services
         public bool BackupSaveFile(string fullPath, string screenshotPath = "", bool overwrite = false)
         {
             Logger.Info($"BackupSaveFile called for: {fullPath}, overwrite={overwrite}");
-        {
-            if (string.IsNullOrWhiteSpace(fullPath) || !File.Exists(fullPath))
-                throw new FileNotFoundException("Save file does not exist.", fullPath);
-
-            var destPath = Path.Combine(_backupSaveFolder, Path.GetFileName(fullPath));
-            if (!overwrite && File.Exists(destPath))
-                return false;  // fail cleanly if not allowed to overwrite
-
-            File.Copy(fullPath, destPath, overwrite);
-
-            if (!string.IsNullOrWhiteSpace(screenshotPath) && File.Exists(screenshotPath))
             {
-                var screenshotDestPath = Path.Combine(_backupSaveFolder, Path.GetFileName(screenshotPath));
-                if (!overwrite && File.Exists(screenshotDestPath))
+                if (string.IsNullOrWhiteSpace(fullPath) || !File.Exists(fullPath))
+                    throw new FileNotFoundException("Save file does not exist.", fullPath);
+
+                var destPath = Path.Combine(_backupSaveFolder, Path.GetFileName(fullPath));
+                if (!overwrite && File.Exists(destPath))
+                    return false;  // fail cleanly if not allowed to overwrite
+
+                File.Copy(fullPath, destPath, overwrite);
+
+                if (!string.IsNullOrWhiteSpace(screenshotPath) && File.Exists(screenshotPath))
                 {
-                    // optionally skip silently, or return false depending on design
-                    return false; // fail cleanly if not allowed to overwrite
+                    var screenshotDestPath = Path.Combine(_backupSaveFolder, Path.GetFileName(screenshotPath));
+                    if (!overwrite && File.Exists(screenshotDestPath))
+                    {
+                        // optionally skip silently, or return false depending on design
+                        return false; // fail cleanly if not allowed to overwrite
+                    }
+                    else
+                    {
+                        File.Copy(screenshotPath, screenshotDestPath, overwrite);
+                    }
                 }
-                else
-                {
-                    File.Copy(screenshotPath, screenshotDestPath, overwrite);
-                }
+
+                return true;
             }
 
-            return true;
         }
-
     }
-}
 }
 

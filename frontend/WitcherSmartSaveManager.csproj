@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,6 +6,13 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>WitcherSmartSaveManager</AssemblyName>
     <ApplicationIcon>Views\Assets\icon_wolf_save.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <InformationalVersion>1.0.0</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,22 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Utils\ConfigBootstrapper.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="Utils\GameSaveExtensions.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="Utils\MetaDataExtractor.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="Utils\SavePathResolver.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-  </ItemGroup>
-
-
-  <ItemGroup>
     <None Update="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -41,9 +32,13 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="./Views/Assets/icon_wolf_save.ico" />
-  </ItemGroup>
+  <Target Name="CleanPublishFolder" BeforeTargets="Build">
+    <Message Text="Cleaning publish folder: $(ProjectDir)..\publish" Importance="high" />
+    <RemoveDir Directories="$(ProjectDir)..\publish" />
+  </Target>
 
+  <ItemGroup>
+	<Resource Include="./Views/Assets/icon_wolf_save.ico" />
+  </ItemGroup>
 
 </Project>

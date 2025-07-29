@@ -8,9 +8,9 @@
                 <!-- Default resource dictionary (English) -->
                 <ResourceDictionary Source="/Resources/StringResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
             <!-- Global resources -->
-            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
