@@ -1,5 +1,5 @@
-# Build script for Witcher Smart Save Manager Installer
-# This script builds the WiX installer after ensuring the application is built
+# Build script for Witcher Smart Save Manager
+# This script builds the main application
 
 param(
     [Parameter(Mandatory = $false)]
@@ -10,7 +10,10 @@ param(
     [switch]$SkipBuild,
     
     [Parameter(Mandatory = $false)]
-    [switch]$VerboseOutput
+    [switch]$VerboseOutput,
+    
+    [Parameter(Mandatory = $false)]
+    [string]$Version = "1.0.0"
 )
 
 # Set error action preference
@@ -19,23 +22,29 @@ $ErrorActionPreference = "Stop"
 # Get script directory
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RootDir = Split-Path -Parent $ScriptDir
-$InstallerDir = $ScriptDir
 $FrontendDir = Join-Path $RootDir "frontend"
 
-Write-Host "Building Witcher Smart Save Manager Installer..." -ForegroundColor Cyan
+Write-Host "Building Witcher Smart Save Manager..." -ForegroundColor Cyan
 Write-Host "Configuration: $Configuration" -ForegroundColor Yellow
 
-# Step 1: Build the main application if not skipped
+# Check for administrative privileges
+Write-Host "Checking for administrative privileges..." -ForegroundColor Cyan
+$IsAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $IsAdmin) {
+    Write-Warning "This script is not running with administrative privileges. If you want to install to 'C:\Program Files (x86)', please rerun this script as an administrator."
+}
+
+# Step 1: Build the main application
 if (-not $SkipBuild) {
     Write-Host "`nStep 1: Building main application..." -ForegroundColor Green
     
     Push-Location $FrontendDir
     try {
         Write-Host "Restoring NuGet packages..." -ForegroundColor Yellow
-        dotnet restore
+        dotnet restore WitcherSmartSaveManager.csproj
         
         Write-Host "Building application in $Configuration mode..." -ForegroundColor Yellow
-        dotnet build --configuration $Configuration --no-restore
+        dotnet build WitcherSmartSaveManager.csproj --configuration $Configuration --no-restore
         
         if ($LASTEXITCODE -ne 0) {
             throw "Application build failed with exit code $LASTEXITCODE"
@@ -51,27 +60,36 @@ else {
     Write-Host "`nStep 1: Skipping application build..." -ForegroundColor Yellow
 }
 
-# Step 2: Verify WiX Toolset is installed
-Write-Host "`nStep 2: Checking WiX Toolset installation..." -ForegroundColor Green
+# Step 1.5: Publish the application
+Write-Host "`nStep 1.5: Publishing the application..." -ForegroundColor Green
 
-$WixPath = Get-Command "wix" -ErrorAction SilentlyContinue
-if (-not $WixPath) {
-    Write-Error @"
-WiX Toolset v6 not found! Please install WiX Toolset v6 as a .NET global tool:
-
-    dotnet tool install --global wix
-
-For more information, visit: https://wixtoolset.org/
-"@
-    exit 1
+$PublishDir = Join-Path $RootDir "publish"
+if (Test-Path -Path $PublishDir) {
+    Remove-Item -Path "$PublishDir/*" -Recurse -Force
 }
 
-# Check WiX version
-$WixVersion = & wix --version
-Write-Host "WiX Toolset found: v$WixVersion" -ForegroundColor Green
+Push-Location $FrontendDir
+try {
+    Write-Host "Publishing application to $PublishDir..." -ForegroundColor Yellow
+    dotnet publish WitcherSmartSaveManager.csproj --configuration $Configuration --output $PublishDir
 
-# Step 3: Check if application files exist
-Write-Host "`nStep 3: Verifying application files..." -ForegroundColor Green
+    if ($LASTEXITCODE -ne 0) {
+        throw "Application publish failed with exit code $LASTEXITCODE"
+    }
+
+    Write-Host "Application published successfully!" -ForegroundColor Green
+}
+finally {
+    Pop-Location
+}
+
+# Clean the publish folder before building
+if (Test-Path -Path "../publish") {
+    Remove-Item -Path "../publish/*" -Recurse -Force
+}
+
+# Step 2: Verify application files exist
+Write-Host "`nStep 2: Verifying application files..." -ForegroundColor Green
 
 $RequiredFiles = @(
     "WitcherSmartSaveManager.exe",
@@ -89,60 +107,45 @@ foreach ($File in $RequiredFiles) {
 
 Write-Host "All required application files found!" -ForegroundColor Green
 
-# Step 4: Build the installer
-Write-Host "`nStep 4: Building WiX installer..." -ForegroundColor Green
-
-Push-Location $InstallerDir
-try {
-    # Clean previous build
-    if (Test-Path "bin") {
-        Remove-Item "bin" -Recurse -Force
-    }
-    if (Test-Path "obj") {
-        Remove-Item "obj" -Recurse -Force
-    }
-    
-    # Create output directories
-    New-Item -ItemType Directory -Path "bin" -Force | Out-Null
-    
-    # Build installer using WiX v6
-    Write-Host "Building installer with WiX v6..." -ForegroundColor Yellow
-    
-    $WixArgs = @(
-        "build"
-        "-arch", "x64"
-        "-d", "SourceDir=$RootDir\"
-        "-o", "bin\WitcherSmartSaveManagerInstaller.msi"
-        "WitcherSmartSaveManagerInstaller.wxs"
-    )
-    
-    if ($VerboseOutput) {
-        $WixArgs += "-v"
-    }
-    
-    & wix @WixArgs
-    
-    if ($LASTEXITCODE -ne 0) {
-        throw "WiX build failed with exit code $LASTEXITCODE"
-    }
-    
-    Write-Host "`nInstaller built successfully!" -ForegroundColor Green
-    $OutputPath = Join-Path $InstallerDir "bin\WitcherSmartSaveManagerInstaller.msi"
-    Write-Host "Output: $OutputPath" -ForegroundColor Cyan
-    
-    # Display file size
-    $FileInfo = Get-Item $OutputPath
-    $FileSizeMB = [math]::Round($FileInfo.Length / 1MB, 2)
-    Write-Host "Size: $FileSizeMB MB" -ForegroundColor Cyan
-}
-catch {
-    Write-Error "Installer build failed: $_"
+# Extract version from Git tag
+Write-Host "Extracting version from Git tag..." -ForegroundColor Cyan
+$Version = git describe --tags --abbrev=0
+if (-not $Version) {
+    Write-Error "No Git tag found. Please create a tag for versioning."
     exit 1
 }
-finally {
-    Pop-Location
+
+# Remove 'v' prefix if present
+$Version = $Version -replace '^v', ''
+Write-Host "Version extracted: $Version" -ForegroundColor Green
+
+# Update version in .csproj
+$CsprojPath = Join-Path $FrontendDir "WitcherSmartSaveManager.csproj"
+(Get-Content $CsprojPath) -replace '<Version>.*</Version>', "<Version>$Version</Version>" |
+Set-Content $CsprojPath
+Write-Host "Updated project version to $Version" -ForegroundColor Green
+
+# Update version in setup.iss
+$SetupScriptPath = Join-Path $ScriptDir "setup.iss"
+(Get-Content $SetupScriptPath) -replace 'AppVersion=.*', "AppVersion=$Version" |
+Set-Content $SetupScriptPath
+Write-Host "Updated installer version to $Version" -ForegroundColor Green
+
+# Step 3: Generate the installer
+Write-Host "`nStep 3: Generating the installer..." -ForegroundColor Green
+
+$InnoSetupCompiler = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+if (-not (Test-Path $InnoSetupCompiler)) {
+    Write-Error "Inno Setup Compiler not found at $InnoSetupCompiler. Please install Inno Setup 6."
+    exit 1
 }
 
+& $InnoSetupCompiler $SetupScriptPath
+if ($LASTEXITCODE -ne 0) {
+    throw "Installer generation failed with exit code $LASTEXITCODE"
+}
+
+Write-Host "Installer generated successfully!" -ForegroundColor Green
+
 Write-Host "`n✅ Build completed successfully!" -ForegroundColor Green
-Write-Host "`nTo install silently, run:" -ForegroundColor Yellow
-Write-Host "msiexec /i WitcherSmartSaveManagerInstaller.msi /quiet" -ForegroundColor White
+Write-Host "Application binaries are available in: $BinPath" -ForegroundColor Cyan

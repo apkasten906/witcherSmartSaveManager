@@ -205,3 +205,25 @@ Once testing is complete:
 4. **Update issue #51** with test results
 
 This installer addresses all requirements from issue #51! 🎯
+
+## 🧪 Automated Testing with Pester
+
+We have implemented automated tests using Pester to validate the installer. These tests ensure that the installation, uninstallation, and other scenarios work as expected.
+
+### Pester Test Scenarios
+1. **Default Installation**: Ensures the application installs to the default path.
+2. **Custom Path Installation**: Validates installation to a user-specified path.
+3. **Silent Installation**: Confirms the installer works without user interaction.
+4. **Uninstallation**: Ensures all files and registry entries are removed.
+5. **Shortcut Validation**: Checks that Start Menu and Desktop shortcuts are created.
+6. **Registry Validation**: Verifies correct registry entries are created.
+7. **Error Handling**: Tests for appropriate error messages in edge cases.
+
+### Running Pester Tests
+To run the tests, navigate to the `Tests` folder and execute:
+```powershell
+Invoke-Pester
+```
+This will run all test scripts and provide a detailed report of the results.
+
+For more details, see the `README.md` in the `installer` folder.

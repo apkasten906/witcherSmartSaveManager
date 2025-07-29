@@ -89,6 +89,26 @@ Want to help build a better way to manage Geralt's journey?
 
 ---
 
+## 🏷 Versioning
+
+This project uses Git tags to manage versioning. The build process extracts the version number from the latest Git tag to dynamically update the application and installer versions.
+
+### How to Create a Git Tag
+
+1. Ensure your changes are committed.
+2. Create a new tag with the desired version number:
+   ```bash
+   git tag -a v1.0.0 -m "Release version 1.0.0"
+   ```
+3. Push the tag to the remote repository:
+   ```bash
+   git push origin v1.0.0
+   ```
+
+The build process will fail if no Git tag is found. Always create a tag before building a release.
+
+---
+
 ## 📜 License
 
 MIT — do what you want, but don’t sell this to the Wild Hunt.

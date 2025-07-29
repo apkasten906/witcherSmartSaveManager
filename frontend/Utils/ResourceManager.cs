@@ -15,7 +15,7 @@ namespace WitcherSmartSaveManager.Utils
         {
             // Update resource dictionaries for the current culture
             ResourceDictionaryHelper.UpdateResourcesForCulture(CultureInfo.CurrentUICulture);
-            
+
             // Get all resource dictionaries and refresh them
             foreach (ResourceDictionary dict in Application.Current.Resources.MergedDictionaries)
             {

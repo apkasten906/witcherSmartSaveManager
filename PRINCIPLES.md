@@ -20,6 +20,8 @@
 * Use **NUnit** for all unit tests.
 * All file system operations (save, delete, backup) must be mockable and covered by tests.
 * ViewModels should be testable without UI context.
+* All test scripts must be written using Pester and integrated into the Visual Studio project structure.
+* Tests should be runnable directly from Visual Studio or as part of the build process.
 
 ## 🧾 UI & UX
 

@@ -23,13 +23,13 @@ namespace WitcherSmartSaveManager.ViewModels
         private bool _backupExists = false;
         //get; set; }
         //=> SaveFile.BackupExists;
-        public bool BackupExists        
+        public bool BackupExists
         {
             get => _backupExists;
             set
             {
                 _backupExists = value;
-                OnPropertyChanged(nameof(BackupExists));                
+                OnPropertyChanged(nameof(BackupExists));
             }
         }
 

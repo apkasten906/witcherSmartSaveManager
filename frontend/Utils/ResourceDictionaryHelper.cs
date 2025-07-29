@@ -24,10 +24,10 @@ namespace WitcherSmartSaveManager.Utils
                 // Try to load the resource dictionary for the specific culture
                 string cultureSuffix = culture.Name;
                 string resourcePath = $"/Resources/{baseName}.{cultureSuffix}.xaml";
-                
+
                 // First check if culture-specific resource exists
                 var uri = new Uri($"pack://application:,,,{resourcePath}", UriKind.Absolute);
-                
+
                 try
                 {
                     return new ResourceDictionary { Source = uri };

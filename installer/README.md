@@ -1,22 +1,19 @@
 # Witcher Smart Save Manager - Windows Installer
 
-This directory contains the **WiX v6**-based Windows installer for the Witcher Smart Save Manager application.
+This directory contains the **Inno Setup**-based Windows installer for the Witcher Smart Save Manager application.
 
 ## 🚀 Quick Build
 
 ```powershell
 # From the installer directory
-# Option A: Use build script (if working)
-.\Build-WixInstaller.ps1
-
-# Option B: Direct WiX v6 command (recommended)
-wix build -arch x64 -d SourceDir="C:\Development\witcherSmartSaveManager\" -o bin\WitcherSmartSaveManagerInstaller.msi WitcherSmartSaveManagerInstaller.v6-simple.wxs
+# Use the build script to generate the installer
+.\Build-Installer.ps1
 ```
 
 ## 📋 Requirements
 
 ### For Building
-- **WiX Toolset v6** - Install as .NET global tool: `dotnet tool install --global wix`
+- **Inno Setup** - Download and install from [Inno Setup Downloads](https://jrsoftware.org/isdl.php)
 - **PowerShell 5.1+** (included with Windows 10/11)
 - **.NET SDK 8.0+** (for building the main application)
 
@@ -79,17 +76,17 @@ wix build -arch x64 -d SourceDir="C:\Development\witcherSmartSaveManager\" -o bi
 
 ### Interactive Installation
 ```cmd
-WitcherSmartSaveManagerInstaller.msi
+WitcherSmartSaveManagerInstaller.exe
 ```
 
 ### Silent Installation
 ```cmd
-msiexec /i WitcherSmartSaveManagerInstaller.msi /quiet
+WitcherSmartSaveManagerInstaller.exe /VERYSILENT
 ```
 
 ### Silent Installation with Log
 ```cmd
-msiexec /i WitcherSmartSaveManagerInstaller.msi /quiet /l*v install.log
+WitcherSmartSaveManagerInstaller.exe /VERYSILENT /LOG=install.log
 ```
 
 ### Uninstall
@@ -99,20 +96,17 @@ msiexec /i WitcherSmartSaveManagerInstaller.msi /quiet /l*v install.log
 # Windows 10: Control Panel → Programs → "Witcher Smart Save Manager" → Uninstall
 
 # Silent uninstall via command line
-msiexec /x WitcherSmartSaveManagerInstaller.msi /quiet
+WitcherSmartSaveManagerInstaller.exe /VERYSILENT /UNINSTALL
 
 # Interactive uninstall via command line  
-msiexec /x WitcherSmartSaveManagerInstaller.msi
-
-# Using Product GUID
-msiexec /x {8B5A2E4C-3F1D-4B9E-A6D7-2C4E8F9A1B3D} /quiet
+WitcherSmartSaveManagerInstaller.exe /UNINSTALL
 ```
 
 ## 🛠 Customization
 
 ### Custom Install Directory
 ```cmd
-msiexec /i WitcherSmartSaveManagerInstaller.msi INSTALLFOLDER="C:\MyGames\WitcherSaveManager"
+WitcherSmartSaveManagerInstaller.exe /DIR="C:\MyGames\WitcherSaveManager"
 ```
 
 ### Skip Desktop Shortcut
@@ -124,18 +118,16 @@ After building, you'll find:
 
 ```
 installer/
-├── bin/Release/
-│   └── WitcherSmartSaveManagerInstaller.msi
-├── obj/Release/
-│   └── (temporary build files)
+├── Output/
+│   └── WitcherSmartSaveManagerInstaller.exe
 └── Build-Installer.ps1
 ```
 
 ## 🔍 Troubleshooting
 
-### WiX Not Found
-- Download and install WiX Toolset v3.11+
-- Ensure the WiX bin directory is in your PATH
+### Inno Setup Not Found
+- Download and install Inno Setup from [Inno Setup Downloads](https://jrsoftware.org/isdl.php)
+- Ensure the Inno Setup directory is in your PATH
 - Restart your terminal/PowerShell session
 
 ### Application Not Built
@@ -146,7 +138,7 @@ dotnet build --configuration Release
 ```
 
 ### Missing Dependencies
-The installer checks for .NET Framework 4.8+ and will prompt users to install if missing.
+The installer checks for .NET 8.0 Desktop Runtime and will prompt users to install if missing.
 
 ### Build Errors
 Run with `-Verbose` flag for detailed output:
@@ -158,14 +150,14 @@ Run with `-Verbose` flag for detailed output:
 
 ### Test Installation
 1. Build the installer
-2. Run `WitcherSmartSaveManagerInstaller.msi`
+2. Run `WitcherSmartSaveManagerInstaller.exe`
 3. Verify installation in `C:\Program Files\WitcherSmartSaveManager`
 4. Check Start Menu shortcuts
 5. Launch application from Start Menu
 
 ### Test Uninstallation
 1. Use Windows "Add or Remove Programs"
-2. Or run: `msiexec /x WitcherSmartSaveManagerInstaller.msi`
+2. Or run: `WitcherSmartSaveManagerInstaller.exe /UNINSTALL`
 3. Verify all files and registry entries are removed
 
 ### What Gets Removed During Uninstall
@@ -184,19 +176,39 @@ This follows Windows installer best practices - user data is preserved during un
 
 ## 📋 Checklist for Issue #51
 
-- ✅ **WiX Toolset**: Using WiX Toolset for installer creation
-- ✅ **Silent Install**: Supports `/quiet` parameter for silent installation
+- ✅ **Inno Setup**: Using Inno Setup for installer creation
+- ✅ **Silent Install**: Supports `/VERYSILENT` parameter for silent installation
 - ✅ **Registry Entries**: InstallPath, Version, and standard uninstall info
 - ✅ **Assets & Config**: Includes all application files, config, and documentation
-- ✅ **No Custom Branding**: Uses standard WiX UI without custom branding
-- ✅ **.NET Runtime Check**: Validates .NET Framework 4.8+ and prompts if missing
+- ✅ **No Custom Branding**: Uses standard Inno Setup UI without custom branding
+- ✅ **.NET Runtime Check**: Validates .NET 8.0 Desktop Runtime and prompts if missing
 
 ## 🚀 Deployment
 
-Once built, the MSI installer can be:
+Once built, the installer can be:
 - Distributed via GitHub Releases
 - Deployed through Group Policy
 - Used for automated enterprise deployment
 - Shared directly with end users
 
 The installer is self-contained and includes all necessary files for a complete installation.
+
+## 🧪 Automated Testing
+
+### Pester Tests
+We have implemented automated tests using Pester to validate the installer. These tests cover:
+
+1. **Default Installation**: Ensures the application installs to the default path.
+2. **Custom Path Installation**: Validates installation to a user-specified path.
+3. **Silent Installation**: Confirms the installer works without user interaction.
+4. **Uninstallation**: Ensures all files and registry entries are removed.
+5. **Shortcut Validation**: Checks that Start Menu and Desktop shortcuts are created.
+6. **Registry Validation**: Verifies correct registry entries are created.
+7. **Error Handling**: Tests for appropriate error messages in edge cases.
+
+### Running Tests
+To run the tests, navigate to the `Tests` folder and execute:
+```powershell
+Invoke-Pester
+```
+This will run all test scripts and provide a detailed report of the results.

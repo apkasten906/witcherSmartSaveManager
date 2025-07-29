@@ -19,7 +19,7 @@ namespace WitcherSmartSaveManager.Utils
             var metadata = new Dictionary<string, object>();
             // Placeholder logic – replace with actual parsing later
             metadata["source"] = "mock";
-            metadata["quest"] = "The Little Kayran That Could";            
+            metadata["quest"] = "The Little Kayran That Could";
 
             return metadata;
         }
