@@ -66,11 +66,14 @@ docs/            → Planning docs (e.g. Trello CSV)
 
 ## 🔮 Roadmap
 
+
+- [x] Add support for Witcher 2
+- [x] Steam/GOG save path detection
+- [x] Backup feature before deletion
+- [ ] Display save metadata for easier decisison making
 - [ ] Add save analysis logic for critical decision points
-- [x] Add support for Witcher 1, Witcher 2, and Witcher 3
-- [ ] Steam/GOG save path detection
-- [ ] Backup feature before deletion
-- [ ] Cloud sync support (OneDrive/GOG Galaxy)
+- [ ] Add support for Witcher 1 and Witcher 3
+- [ ] Cloud sync support (OneDrive/GOG Galaxy) (if possible)
 
 ---
 
@@ -106,6 +109,18 @@ This project uses Git tags to manage versioning. The build process extracts the 
    ```
 
 The build process will fail if no Git tag is found. Always create a tag before building a release.
+
+---
+
+## 📦 Installer Location
+
+The installer for Witcher Smart Save Manager is generated in the `output` directory of the `installer` folder. After building the installer, you can find it at:
+
+```
+installer\output\WitcherSmartSaveManagerInstaller.msi
+```
+
+Use this file to install the application on Windows systems.
 
 ---
 

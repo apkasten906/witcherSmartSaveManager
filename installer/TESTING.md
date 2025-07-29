@@ -52,7 +52,7 @@ wix build -arch x64 -d SourceDir="C:\Development\witcherSmartSaveManager\" -o bi
 **Expected Output:**
 - ✅ Application build verification
 - ✅ WiX v6 compilation success  
-- ✅ Installer creation: `bin\WitcherSmartSaveManagerInstaller.msi`
+- ✅ Installer creation: `installer\bin\WitcherSmartSaveManagerInstaller.msi`
 
 ### Test Installation
 
@@ -99,21 +99,21 @@ Test-Path "C:\Program Files\WitcherSmartSaveManager" # Should be False
 ## ✅ Verification Checklist
 
 ### After Installation
-- [ ] Files installed in `C:\Program Files\WitcherSmartSaveManager\`
-- [ ] Start Menu shortcut created
-- [ ] Desktop shortcut created (if selected)
+- [x] Files installed in folder of choice. Recommendation 'C:\Program Files (x86)\Witcher Smart Save Manager'
+- [x] Start Menu shortcut created
+- [x] Desktop shortcut created (if selected)
 - [ ] Registry entries present:
   - [ ] `HKLM\Software\WitcherSmartSaveManager\InstallPath`
   - [ ] `HKLM\Software\WitcherSmartSaveManager\Version`
-- [ ] Appears in "Add or Remove Programs"
-- [ ] Application launches successfully
+- [x] Appears in "Add or Remove Programs"
+- [x] Application launches successfully
 
 ### After Uninstallation
-- [ ] All program files removed
-- [ ] Start Menu shortcuts removed
-- [ ] Desktop shortcut removed
+- [x] All program files removed
+- [x] Start Menu shortcuts removed
+- [x] Desktop shortcut removed
 - [ ] Registry entries cleaned up
-- [ ] Removed from "Add or Remove Programs"
+- [x] Removed from "Add or Remove Programs"
 - [ ] User data preserved (if any)
 
 ## 🔍 Troubleshooting
