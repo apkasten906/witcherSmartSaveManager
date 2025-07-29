@@ -263,9 +263,12 @@ switch ($Action) {
         if (-not $Description) {
             $Description = Read-Host "Enter issue description"
         }
-        
-        $body = Get-IssueTemplate -Type $IssueType -Description $Description
-        
+
+        # Use a here-string to preserve newlines in the description
+        $body = @"
+$Description
+"@
+
         Write-Host "Creating issue: $Title"
         $command = "gh issue create --repo $Repository --title `"$Title`" --body `"$body`" --assignee `"@me`""
         
