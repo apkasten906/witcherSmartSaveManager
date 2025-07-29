@@ -4,6 +4,28 @@ The goal of the Windows Smart Save Manager is to provide an intelligent, cross-v
 
 ---
 
+## ✨ Key Features
+
+### 🐺 Orphaned Screenshot Cleanup (NEW!)
+**Kikimora Detection & Cleanup** - When save files are deleted while the game is running, screenshot files can become "orphaned" and remain on disk. The Smart Save Manager now:
+- **Automatically detects** orphaned screenshots after loading saves
+- **Witchery-themed notifications** alert you to orphaned files with lore-friendly messages
+- **Handles locked files gracefully** - if files are locked by the game, shows which files couldn't be deleted and why
+- **Persistent file counters** display total loaded saves and backed up files in real-time
+
+### 📊 Smart File Management
+- **Backup before delete** - Always creates backups before removing save files
+- **Cross-platform paths** - Automatic detection of Steam/GOG save locations
+- **Multi-language support** - English and German with full localization
+- **Real-time counters** - Live display of loaded saves and backup file counts
+
+### 🎮 Game-Specific Support
+- **Dynamic file extensions** - Supports different save file formats per game
+- **Screenshot handling** - Manages both save files and their associated screenshot files
+- **Metadata preservation** - Maintains file timestamps and properties during operations
+
+---
+
 ## 🧱 Architecture
 
 * Follow **MVVM** (Model-View-ViewModel) for all WPF UI components.
@@ -55,6 +77,15 @@ WitcherSmartSaveManagerTests/ → Unit and integration tests
 - [ ] Add save analysis logic for critical decision points
 - [ ] Add support for Witcher 1 and Witcher 3
 - [ ] Cloud sync support (OneDrive/GOG Galaxy) (if possible)
+
+---
+
+## 📚 Documentation
+
+- **[Development Principles](PRINCIPLES.md)** - Architecture guidelines and coding standards
+- **[Orphaned Screenshot Cleanup](docs/orphaned-screenshot-cleanup.md)** - Detailed feature documentation
+- **[Changelog](CHANGELOG.md)** - Version history and release notes
+- **[Installation Guide](installer/README.md)** - Building and installing the application
 
 ---
 
@@ -125,10 +156,16 @@ Use this file to install the application on Windows systems.
 
 ## 🌍 Supported Languages
 
-The Witcher Smart Save Manager currently supports the following languages:
+The Witcher Smart Save Manager currently supports the following languages with full localization:
 
-- English
-- German
+- **English** - Complete interface and witchery-themed messaging
+- **German** - Vollständige deutsche Übersetzung mit hexerischen Nachrichten
+
+### Recent Localization Enhancements
+- Orphaned screenshot cleanup messages with lore-friendly themes
+- Real-time file counter labels
+- Comprehensive error message translations
+- Resource-based localization system using `.resx` files
 
 If you'd like to contribute translations for additional languages, feel free to open a pull request or contact the maintainers.
 

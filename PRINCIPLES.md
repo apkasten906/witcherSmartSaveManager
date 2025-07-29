@@ -28,8 +28,17 @@
 * Maintain a consistent **dark fantasy Witcher aesthetic**.
 * Reuse **named styles** for all controls (e.g., NavButtonStyle, ActionButtonStyle).
 * No hardcoded strings in XAML – bind through ViewModels or resource dictionaries.
-* All text must support future localization (via `.resx` or bindings).
+* All text must support **multi-language localization**:
+  - Use `.resx` files for all user-facing strings
+  - Access via `ResourceHelper.GetString()` and `ResourceHelper.GetFormattedString()`
+  - Maintain consistency between English (`Strings.en.resx`) and German (`Strings.de.resx`)
+  - Use witchery-themed messaging for enhanced user experience (e.g., "Kikimora alerts" for file cleanup)
 * Asset paths (e.g., for icons or images) should be bound via ViewModel properties.
+* **Error Handling in UI**:
+  - Always provide user-friendly error messages with context
+  - Handle locked file scenarios gracefully with clear explanations
+  - Use `StringToImageSourceConverter` for safe image binding
+  - Display progress and status information for long-running operations
 
 ## 🔢 Code Practices
 
@@ -43,6 +52,26 @@
 Avoid using hardcoded strings for programmatic decision making. This ensures these values are easy to revise without making sweeping changes to the code base when they are used frequently (such as game iteration identifiers). Additionally, this reduces the chance of error due to typos, because they are incorporated into the C# type-safety scheme.
 
 * Define display names and paths in a config-backed model, not inline.
+
+## 📁 File Management Patterns
+
+* **Dynamic File Extensions**: Always use `GameSaveExtensions.GetExtensionForGame(gameKey)` instead of hardcoded patterns
+  - Ensures consistency between save loading and backup counting
+  - Supports multiple game types with different file formats
+* **Orphaned File Cleanup**: 
+  - Detect orphaned files after save operations
+  - Provide user choice for cleanup with clear explanations
+  - Handle locked files gracefully with detailed error reporting
+  - Use witchery-themed messaging for enhanced user experience
+* **Robust Error Handling**:
+  - Always check if files exist before operations
+  - Handle `IOException` for locked files during gameplay
+  - Provide detailed error context to users
+  - Log errors appropriately without excessive debug noise
+* **Backup Operations**:
+  - Always create backups before destructive operations
+  - Maintain consistent counting logic across all file operations
+  - Update UI counters immediately after file changes
 
 ## 📁 Asset Use
 

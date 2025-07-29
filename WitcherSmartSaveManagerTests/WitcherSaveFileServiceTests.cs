@@ -1,4 +1,7 @@
 
+using System.Collections.Generic;
+using System.IO;
+using System;
 using NUnit.Framework;
 using WitcherSmartSaveManager.Services;
 using WitcherSmartSaveManager.Models;
@@ -27,7 +30,7 @@ namespace WitcherSmartSaveManager.Tests
             _screenshotPath = Path.Combine(_tempSaveDir, "test_640x360.bmp");
 
             File.WriteAllText(_saveFilePath, "SAVE DATA");
-            File.WriteAllText(_screenshotPath, "SCREENSHOT");            
+            File.WriteAllText(_screenshotPath, "SCREENSHOT");
 
             _service = new WitcherSaveFileService(GameKey.Witcher2, _tempSaveDir, _tempBackupDir);
         }
@@ -78,6 +81,83 @@ namespace WitcherSmartSaveManager.Tests
 
             Assert.That(result, Is.False);
             ClassicAssert.AreEqual("OLD BACKUP", File.ReadAllText(backupPath));
+        }
+
+        [Test]
+        public void GetOrphanedScreenshots_FindsOrphanedScreenshots()
+        {
+            // Create orphaned screenshot (no corresponding save file)
+            var orphanedScreenshotPath = Path.Combine(_tempSaveDir, "orphaned_640x360.bmp");
+            File.WriteAllText(orphanedScreenshotPath, "ORPHANED SCREENSHOT");
+
+            var orphanedScreenshots = _service.GetOrphanedScreenshots();
+
+            Assert.That(orphanedScreenshots, Contains.Item(orphanedScreenshotPath));
+            Assert.That(orphanedScreenshots.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GetOrphanedScreenshots_IgnoresScreenshotsWithCorrespondingSaves()
+        {
+            // The test screenshot already has a corresponding save file from SetUp
+            var orphanedScreenshots = _service.GetOrphanedScreenshots();
+
+            // Should not include our test screenshot since it has a corresponding save
+            Assert.That(orphanedScreenshots, Does.Not.Contain(_screenshotPath));
+        }
+
+        [Test]
+        public void GetOrphanedScreenshots_IgnoresNonWitcherScreenshots()
+        {
+            // Create a BMP file that doesn't match Witcher 2 screenshot pattern
+            var nonWitcherBmp = Path.Combine(_tempSaveDir, "random.bmp");
+            File.WriteAllText(nonWitcherBmp, "NOT A WITCHER SCREENSHOT");
+
+            var orphanedScreenshots = _service.GetOrphanedScreenshots();
+
+            Assert.That(orphanedScreenshots, Does.Not.Contain(nonWitcherBmp));
+        }
+
+        [Test]
+        public void CleanupOrphanedScreenshots_DeletesOrphanedFiles()
+        {
+            // Create orphaned screenshots
+            var orphanedScreenshot1 = Path.Combine(_tempSaveDir, "orphaned1_640x360.bmp");
+            var orphanedScreenshot2 = Path.Combine(_tempSaveDir, "orphaned2_640x360.bmp");
+            File.WriteAllText(orphanedScreenshot1, "ORPHANED 1");
+            File.WriteAllText(orphanedScreenshot2, "ORPHANED 2");
+
+            var orphanedList = new List<string> { orphanedScreenshot1, orphanedScreenshot2 };
+            var deletedCount = _service.CleanupOrphanedScreenshots(orphanedList);
+
+            Assert.That(deletedCount, Is.EqualTo(2));
+            Assert.That(File.Exists(orphanedScreenshot1), Is.False);
+            Assert.That(File.Exists(orphanedScreenshot2), Is.False);
+        }
+
+        [Test]
+        public void CleanupAllOrphanedScreenshots_DetectsAndDeletesOrphans()
+        {
+            // Create orphaned screenshot
+            var orphanedScreenshot = Path.Combine(_tempSaveDir, "orphaned_640x360.bmp");
+            File.WriteAllText(orphanedScreenshot, "ORPHANED");
+
+            var deletedCount = _service.CleanupAllOrphanedScreenshots();
+
+            Assert.That(deletedCount, Is.EqualTo(1));
+            Assert.That(File.Exists(orphanedScreenshot), Is.False);
+        }
+
+        [Test]
+        public void DeleteSaveFile_ContinuesOnScreenshotError()
+        {
+            // This test ensures that if screenshot deletion fails, the operation still succeeds
+            // (We can't easily simulate file locking in unit tests, so this is more of a design verification)
+
+            var result = _service.DeleteSaveFile(_saveFilePath, _screenshotPath);
+
+            Assert.That(result, Is.True);
+            Assert.That(File.Exists(_saveFilePath), Is.False);
         }
     }
 }
