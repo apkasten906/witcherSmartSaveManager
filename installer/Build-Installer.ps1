@@ -27,13 +27,6 @@ $FrontendDir = Join-Path $RootDir "frontend"
 Write-Host "Building Witcher Smart Save Manager..." -ForegroundColor Cyan
 Write-Host "Configuration: $Configuration" -ForegroundColor Yellow
 
-# Check for administrative privileges
-Write-Host "Checking for administrative privileges..." -ForegroundColor Cyan
-$IsAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-if (-not $IsAdmin) {
-    Write-Warning "This script is not running with administrative privileges. If you want to install to 'C:\Program Files (x86)', please rerun this script as an administrator."
-}
-
 # Step 1: Build the main application
 if (-not $SkipBuild) {
     Write-Host "`nStep 1: Building main application..." -ForegroundColor Green
