@@ -3,6 +3,7 @@ using System.Threading;
 using WitcherSmartSaveManager.Models;
 using WitcherSmartSaveManager.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -87,6 +88,39 @@ namespace WitcherSmartSaveManager.ViewModels
             }
         }
 
+        private int _totalSaveFiles;
+        public int TotalSaveFiles
+        {
+            get => _totalSaveFiles;
+            set
+            {
+                if (_totalSaveFiles != value)
+                {
+                    _totalSaveFiles = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TotalSaveFilesDisplay));
+                }
+            }
+        }
+
+        private int _backedUpFiles;
+        public int BackedUpFiles
+        {
+            get => _backedUpFiles;
+            set
+            {
+                if (_backedUpFiles != value)
+                {
+                    _backedUpFiles = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(BackedUpFilesDisplay));
+                }
+            }
+        }
+
+        public string TotalSaveFilesDisplay => Utils.ResourceHelper.GetFormattedString("TotalSaveFiles", TotalSaveFiles);
+        public string BackedUpFilesDisplay => Utils.ResourceHelper.GetFormattedString("TotalBackedUpFiles", BackedUpFiles);
+
         public ICommand CustomSaveFolderPickerCommand { get; }
         public ICommand DeleteSelectedCommand { get; }
         public ICommand BackupSelectedCommand { get; }
@@ -96,6 +130,10 @@ namespace WitcherSmartSaveManager.ViewModels
 
         public MainViewModel()
         {
+            // Initialize counters
+            TotalSaveFiles = 0;
+            BackedUpFiles = 0;
+
             ChangeLanguageCommand = new RelayCommand(lang => SelectedLanguage = lang?.ToString());
 
             Logger.Info("MainViewModel initialized.");
@@ -119,6 +157,9 @@ namespace WitcherSmartSaveManager.ViewModels
             BackupLocationPickerCommand = new RelayCommand(_ => SelectBackupFolder());
             CustomSaveFolderPickerCommand = new RelayCommand(_ => SelectCustomSaveFolder());
             SetLanguage(_selectedLanguage);
+
+            // Initialize backup counter
+            UpdateBackupFileCounter();
         }
 
         private void SetLanguage(string lang)
@@ -143,6 +184,8 @@ namespace WitcherSmartSaveManager.ViewModels
 
                     // Force property changed notifications for all localized properties
                     OnPropertyChanged(nameof(StatusMessage));
+                    OnPropertyChanged(nameof(TotalSaveFilesDisplay));
+                    OnPropertyChanged(nameof(BackedUpFilesDisplay));
 
                     // Refresh UI
                     foreach (Window window in Application.Current.Windows)
@@ -266,6 +309,22 @@ namespace WitcherSmartSaveManager.ViewModels
             }
         }
 
+        /// <summary>
+        /// Updates the backup file counter by counting actual files in the backup folder
+        /// </summary>
+        private void UpdateBackupFileCounter()
+        {
+            if (_saveFileService != null)
+            {
+                var count = _saveFileService.GetBackupFileCount();
+                BackedUpFiles = count;
+            }
+            else
+            {
+                Logger.Warn("UpdateBackupFileCounter: _saveFileService is null");
+            }
+        }
+
         public async Task LoadSavesAsync()
         {
             try
@@ -281,8 +340,19 @@ namespace WitcherSmartSaveManager.ViewModels
                         {
                             Saves.Add(new SaveFileViewModel(save));
                         }
+
+                        // Update counters
+                        TotalSaveFiles = Saves.Count;
+                        BackedUpFiles = _saveFileService.GetBackupFileCount();
                     });
                 });
+
+                // Check for orphaned screenshots after loading saves
+                var orphanedScreenshots = _saveFileService.GetOrphanedScreenshots();
+                if (orphanedScreenshots.Count > 0)
+                {
+                    HandleOrphanedScreenshots(orphanedScreenshots);
+                }
 
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_SavesLoaded", Saves.Count);
@@ -290,6 +360,42 @@ namespace WitcherSmartSaveManager.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Error_LoadingSaves", ex.Message);
+            }
+        }
+
+        private void HandleOrphanedScreenshots(List<string> orphanedScreenshots)
+        {
+            try
+            {
+                var witchyExplanation = Utils.ResourceHelper.GetFormattedString("OrphanedScreenshots_Message", orphanedScreenshots.Count);
+                var title = Utils.ResourceHelper.GetString("OrphanedScreenshots_Title");
+
+                var result = MessageBox.Show(witchyExplanation, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var (deletedCount, lockedFiles) = _saveFileService.CleanupOrphanedScreenshotsWithDetails(orphanedScreenshots);
+
+                    if (lockedFiles.Any())
+                    {
+                        var fileList = string.Join("\n", lockedFiles.Select(f => $"• {Path.GetFileName(f.file)}: {f.reason}"));
+                        var lockedMessage = Utils.ResourceHelper.GetFormattedString("OrphanedScreenshots_PartialCleanup_Message",
+                            deletedCount, orphanedScreenshots.Count, lockedFiles.Count, fileList);
+                        var lockedTitle = Utils.ResourceHelper.GetString("OrphanedScreenshots_PartialCleanup_Title");
+
+                        MessageBox.Show(lockedMessage, lockedTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                        StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_OrphanedPartialCleanup",
+                            deletedCount, orphanedScreenshots.Count, lockedFiles.Count);
+                    }
+                    else
+                    {
+                        StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_OrphanedFullCleanup", deletedCount);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error handling orphaned screenshots: {ex.Message}";
             }
         }
 
@@ -306,6 +412,9 @@ namespace WitcherSmartSaveManager.ViewModels
                         save.BackupExists = true;
                     }
                 }
+
+                // Update backup counter
+                BackedUpFiles = _saveFileService.GetBackupFileCount();
 
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_BackupComplete", selected.Count);
@@ -372,6 +481,10 @@ namespace WitcherSmartSaveManager.ViewModels
                     }
                 }
 
+                // Update counters after deletion
+                TotalSaveFiles = Saves.Count;
+                BackedUpFiles = _saveFileService.GetBackupFileCount();
+
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_DeleteComplete", selected.Count);
             }
@@ -390,6 +503,14 @@ namespace WitcherSmartSaveManager.ViewModels
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 BackupFilePath = dlg.FileName;
+
+                // Update the service's backup folder and refresh counter
+                if (_saveFileService != null)
+                {
+                    _saveFileService.UpdateBackupFolder(dlg.FileName);
+                    UpdateBackupFileCounter();
+                }
+
                 StatusMessage = Utils.ResourceHelper.GetString("Status_BackupFolderSet");
             }
         }

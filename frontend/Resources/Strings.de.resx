@@ -27,4 +27,71 @@
   <data name="FindSaves" xml:space="preserve">
     <value>Witcher Speicherstände finden</value>
   </data>
+  <data name="OrphanedScreenshots_Title" xml:space="preserve">
+    <value>Verwaiste Screenshots Gefunden - Kikimora Alarm! 🐺</value>
+  </data>
+  <data name="OrphanedScreenshots_Message" xml:space="preserve">
+    <value>🐺 Verwaiste Screenshot-Dateien gefunden! 🐺
+
+Wahrscheinlich wurden ihre Eltern tragisch von einer Kikimora gefressen (du hast ihre Speicherdateien gelöscht, während das Spiel lief, um sicherzustellen, dass auch ihre Cloud-Zwillinge verschwinden und nicht von den Toten zurückkehren!)
+
+Möchtest du diese {0} verwaiste(n) Screenshot(s) aufräumen?</value>
+  </data>
+  <data name="OrphanedScreenshots_PartialCleanup_Title" xml:space="preserve">
+    <value>Aufräumen Teilweise Abgeschlossen - Einige Geister Widersetzen Sich! 🐺</value>
+  </data>
+  <data name="OrphanedScreenshots_PartialCleanup_Message" xml:space="preserve">
+    <value>🐺 {0} von {1} verwaisten Screenshots aufgeräumt.
+
+{2} Datei(en) konnten nicht gelöscht werden, da sie noch von listigen Geistern gesperrt sind:
+{3}</value>
+  </data>
+  <data name="Status_OrphanedPartialCleanup" xml:space="preserve">
+    <value>🐺 {0}/{1} verwaiste Screenshots aufgeräumt. {2} Dateien noch von Geistern gesperrt.</value>
+  </data>
+  <data name="Status_OrphanedFullCleanup" xml:space="preserve">
+    <value>🐺 Alle {0} verwaisten Screenshots erfolgreich aufgeräumt! Die Arbeit der Kikimora ist getan.</value>
+  </data>
+  <data name="TotalSaveFiles" xml:space="preserve">
+    <value>Gesamt Geladen: {0}</value>
+  </data>
+  <data name="TotalBackedUpFiles" xml:space="preserve">
+    <value>Gesamt Backups: {0}</value>
+  </data>
+  <data name="Status_ConfigFound" xml:space="preserve">
+    <value>Konfigurationsdatei gefunden unter: {0}</value>
+  </data>
+  <data name="Status_ConfigNotFound" xml:space="preserve">
+    <value>Konfigurationsdatei nicht gefunden. Verwende Standardeinstellungen.</value>
+  </data>
+  <data name="Status_SavesLoaded" xml:space="preserve">
+    <value>{0} Speicherstand/-stände geladen.</value>
+  </data>
+  <data name="Status_BackupComplete" xml:space="preserve">
+    <value>{0} Speicherstand/-stände gesichert.</value>
+  </data>
+  <data name="Status_DeleteComplete" xml:space="preserve">
+    <value>{0} Speicherstand/-stände gelöscht.</value>
+  </data>
+  <data name="Status_SaveDeleted" xml:space="preserve">
+    <value>Speicherstand gelöscht.</value>
+  </data>
+  <data name="Status_BackupFolderSet" xml:space="preserve">
+    <value>Backup-Ordner festgelegt.</value>
+  </data>
+  <data name="Status_CustomSaveFolderSet" xml:space="preserve">
+    <value>Benutzerdefinierter Speicherordner festgelegt.</value>
+  </data>
+  <data name="Status_NoSaveFiles" xml:space="preserve">
+    <value>Der ausgewählte Ordner enthält keine Witcher 2 Speicherstände.</value>
+  </data>
+  <data name="Error_LoadingSaves" xml:space="preserve">
+    <value>Fehler beim Laden der Speicherstände: {0}</value>
+  </data>
+  <data name="Error_BackupSaves" xml:space="preserve">
+    <value>Fehler beim Sichern der Speicherstände: {0}</value>
+  </data>
+  <data name="Error_DeletingSaves" xml:space="preserve">
+    <value>Fehler beim Löschen der Speicherstände: {0}</value>
+  </data>
 </root>

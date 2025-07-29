@@ -3,7 +3,15 @@ Witcher Smart Save Manager
 
 The Witcher Smart Save Manager is a tool designed to help players of the Witcher series manage their save files efficiently. It reduces clutter, optimizes cloud storage usage, and preserves key decision points while giving you full control over your files.
 
-Current Version: v1.0.0
+Current Version: v1.1.0
+
+What's New in v1.1.0:
+---------------------
+- Orphaned Screenshot Cleanup: Automatically detects and cleans up screenshot files left behind when saves are deleted during gameplay, with optional Witcher-themed notifications.
+- Live File Counters: Real-time display of loaded saves and backed up files in the interface.
+- Enhanced German Localization: Complete German translations for all new features.
+- Improved Accuracy: Fixed backup file counting to work correctly across different game configurations.
+- Better Error Handling: More robust file operations with clearer error messages.
 
 Features:
 ---------
@@ -16,6 +24,7 @@ Features:
 - Individual and bulk backup of saves.
 - Backup verification.
 - Individual and bulk deletion of saves.
+- Smart cleanup of orphaned screenshot files.
 
 Installation:
 -------------
@@ -27,11 +36,12 @@ Usage:
 2. Use the interface to manage your save files:
    - Select save files to back up or delete.
    - Verify backups to ensure data integrity.
+   - Clean up orphaned screenshots when prompted.
 
 Supported Languages:
 --------------------
 - English
-- German
+- German (Deutsch) - Complete localization
 
 License:
 --------
