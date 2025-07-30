@@ -46,7 +46,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: write  # Required for creating releases and pushing tags
-      
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -100,8 +100,7 @@ jobs:
         foreach ($commit in $commits) {
           if ($commit -match 'version:\s*v?(\d+\.\d+\.\d+)') {
             $manualVersion = $matches[1]
-            Write-Host "Manual version override detected in commit: $commit"
-            Write-Host "Override version: v$manualVersion"
+            Write-Host "Manual version override detected in commit: v$manualVersion"
             break
           }
         }
