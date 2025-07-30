@@ -76,11 +76,6 @@ finally {
     Pop-Location
 }
 
-# Clean the publish folder before building
-if (Test-Path -Path "../publish") {
-    Remove-Item -Path "../publish/*" -Recurse -Force
-}
-
 # Step 2: Verify application files exist
 Write-Host "`nStep 2: Verifying application files..." -ForegroundColor Green
 
@@ -102,10 +97,26 @@ Write-Host "All required application files found!" -ForegroundColor Green
 
 # Extract version from Git tag
 Write-Host "Extracting version from Git tag..." -ForegroundColor Cyan
-$Version = git describe --tags --abbrev=0
+
+# Debug: Show available tags
+Write-Host "Available tags:" -ForegroundColor Yellow
+git tag --list
+Write-Host "Current commit:" -ForegroundColor Yellow
+git rev-parse HEAD
+Write-Host "Attempting git describe..." -ForegroundColor Yellow
+
+$Version = git describe --tags --abbrev=0 2>$null
 if (-not $Version) {
-    Write-Error "No Git tag found. Please create a tag for versioning."
-    exit 1
+    Write-Host "git describe failed, trying alternative methods..." -ForegroundColor Yellow
+    
+    # Try to get the latest tag
+    $Version = git tag --list --sort=-version:refname | Select-Object -First 1
+    if ($Version) {
+        Write-Host "Found latest tag: $Version" -ForegroundColor Yellow
+    } else {
+        Write-Error "No Git tag found. Please create a tag for versioning."
+        exit 1
+    }
 }
 
 # Remove 'v' prefix if present
