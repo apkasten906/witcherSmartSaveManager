@@ -98,12 +98,38 @@ Avoid using hardcoded strings for programmatic decision making. This ensures the
 * Link this document in `README.md`.
 * Keep project layout, file responsibilities, and patterns clear for future contributors.
 
-## 🔗 Git Workflow
+## 🔗 Git Workflow & Versioning
 
 * **Branch Naming**: All feature branches must follow `feat/{issue-number}-{description}` format
   - Examples: `feat/56-link-branch-to-issue`, `feat/123-add-new-feature`
   - This ensures automatic linking to GitHub issues for project tracking
-* **Commit Messages**: Use conventional commit format with clear, descriptive messages
+* **Commit Messages**: Use **Conventional Commits** format for automatic semantic versioning:
+  - `feat:` → Minor version bump (1.0.0 → 1.1.0)
+  - `fix:` → Patch version bump (1.0.0 → 1.0.1)
+  - `docs:`, `chore:`, `style:`, `refactor:`, `test:` → Patch version bump
+  - `BREAKING CHANGE:` or `feat!:` → Major version bump (1.0.0 → 2.0.0)
+  - **Examples**:
+    ```
+    feat: add cloud sync functionality
+    fix: resolve save file corruption issue
+    feat!: redesign save file format
+    docs: update installation instructions
+    ```
+* **Automated Versioning**: 
+  - Releases are automatically created when merging to `main` branch
+  - Version numbers follow semantic versioning based on commit messages
+  - CI/CD pipeline analyzes commit history since last tag to determine version bump
+  - **Release notes are automatically generated** from commit messages, categorized by type:
+    - 🚨 Breaking Changes, ✨ New Features, 🐛 Bug Fixes, 📚 Documentation, 🔧 Maintenance
+* **GitHub Environments**:
+  - **Production Environment**: Used for `main` branch with protection rules and releases
+    - Requires approval from designated reviewers before deployment
+    - Optional wait timer for additional safety (5 minutes recommended)
+    - Complete audit trail of all deployments and approvals
+  - **Development Environment**: Used for `dev` branch with fast feedback and no versioning
+  - Environment-specific variables and secrets support
+* **Manual Version Override**: Include `version: 1.2.3` in commit message to specify exact version
+* **Large Batch Handling**: Merges with >20 commits automatically get major version bump
 * **Pre-commit Hooks**: Always install Git hooks (`.\Install-GitHooks.ps1`) for:
   - Branch naming validation
   - Code compilation verification

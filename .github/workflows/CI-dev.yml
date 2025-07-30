@@ -1,0 +1,35 @@
+name: CI for Dev Branch
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    environment: development
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build solution
+      run: |
+        $config = if ($env:BUILD_CONFIGURATION) { $env:BUILD_CONFIGURATION } else { "Release" }
+        Write-Host "Building with configuration: $config"
+        Write-Host "Environment: $($env:ENVIRONMENT_NAME ?? 'development')"
+        dotnet build --configuration $config --no-restore
+      shell: pwsh
+
+    - name: Run tests
+      run: dotnet test --verbosity normal
