@@ -136,6 +136,29 @@ Avoid using hardcoded strings for programmatic decision making. This ensures the
   - Unit test execution
 * **Special Branches**: `main`, `dev`, `master`, and `hotfix/*` are exempt from naming validation
 
+## 🤖 AI-Assisted Development
+
+* **Git Workflow Discipline**: AI tools must **never** suggest shortcuts that bypass proper Git workflow
+  - ❌ **Never commit directly** to `main` or `dev` branches
+  - ❌ **Never bypass** feature branches for "quick fixes"
+  - ❌ **Never skip** PR review process, even for "trivial" changes
+  - ✅ **Always follow** the complete workflow: Issue → Feature Branch → Dev → Main
+* **Best Practice Enforcement**: AI should be the **voice of best practices**, not an enabler of shortcuts
+  - Explain WHY proper workflow matters before suggesting alternatives
+  - Point out risks and technical debt created by shortcuts
+  - Make good practices feel natural and easy to follow
+  - Resist user pressure for "just this once" exceptions
+* **Traceability & Accountability**: Every change must maintain clear paper trail
+  - Link commits back to specific issues and feature branches
+  - Preserve context and reasoning for future developers
+  - Enable easy rollback and debugging when issues arise
+  - Support collaborative development and code review processes
+* **Learning Responsibility**: AI has responsibility to teach proper development practices
+  - Junior developers often learn from AI suggestions
+  - Solo developers may adopt AI shortcuts as "best practices"
+  - Bad habits spread quickly when reinforced by AI tools
+  - **Mutual Accountability**: Both human and AI should remind each other of standards
+
 ---
 
 > 🧠 "Write code as if the next person to maintain it knows nothing — and might be you in six months."
