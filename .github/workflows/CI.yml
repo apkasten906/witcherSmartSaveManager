@@ -1,0 +1,306 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    environment: production
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Needed for tags
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build solution
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test --verbosity normal
+
+    # Optional: uncomment if you want to include Pester tests
+    # - name: Run Pester Tests
+    #   shell: pwsh
+    #   run: |
+    #     Install-Module -Name Pester -Force -Scope CurrentUser
+    #     Invoke-Pester -Path ./WitcherSmartSaveManagerTests -Output Detailed
+
+  release:
+    needs: build-and-test
+    runs-on: windows-latest
+    environment: production
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Needed for tags
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Production Release Notice
+      run: |
+        Write-Host "🚀 PRODUCTION RELEASE DEPLOYMENT" -ForegroundColor Yellow
+        Write-Host "================================" -ForegroundColor Yellow
+        Write-Host "Environment: $($env:ENVIRONMENT_NAME ?? 'production')" -ForegroundColor Cyan
+        Write-Host "Branch: ${{ github.ref_name }}" -ForegroundColor Cyan
+        Write-Host "Commit: ${{ github.sha }}" -ForegroundColor Cyan
+        Write-Host "Actor: ${{ github.actor }}" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "⚠️  This deployment will create a new release with installer" -ForegroundColor Yellow
+        Write-Host "⚠️  Semantic versioning will be applied based on commit messages" -ForegroundColor Yellow
+        Write-Host ""
+      shell: pwsh
+
+    - name: Generate semantic version tag
+      id: tag
+      shell: pwsh
+      run: |
+        git fetch --tags
+
+        # Get the latest tag
+        $existing = git tag --list --sort=-version:refname | Select-Object -First 1
+        if (-not $existing) {
+          $currentVersion = [version]"1.0.0"
+        } else {
+          $currentVersion = [version]($existing -replace '^v', '')
+        }
+
+        # Get commits since last tag
+        if ($existing) {
+          $commits = git log "$existing..HEAD" --oneline
+          $commitCount = ($commits | Measure-Object).Count
+        } else {
+          $commits = git log --oneline
+          $commitCount = ($commits | Measure-Object).Count
+        }
+
+        # Check for manual version override in commit message
+        $latestCommit = git log -1 --pretty=format:"%s"
+        $manualVersion = $null
+        if ($latestCommit -match 'version:\s*v?(\d+\.\d+\.\d+)') {
+          $manualVersion = $matches[1]
+          Write-Host "Manual version override detected: v$manualVersion"
+        }
+
+        # If manual version specified, use it
+        if ($manualVersion) {
+          $newVersion = [version]$manualVersion
+          $bump = "MANUAL OVERRIDE"
+        }
+        # If large batch of commits (>20), suggest major bump
+        elseif ($commitCount -gt 20) {
+          $newVersion = [version]::new($currentVersion.Major + 1, 0, 0)
+          $bump = "MAJOR (large batch: $commitCount commits)"
+          Write-Host "Large batch detected ($commitCount commits), applying MAJOR bump"
+        }
+        else {
+          # Determine version bump from commit messages (existing logic)
+          $major = $false
+          $minor = $false
+          $patch = $false
+
+          foreach ($commit in $commits) {
+            # Check for breaking changes (MAJOR)
+            if ($commit -match '(BREAKING CHANGE|!:|\w+!)') {
+              $major = $true
+            }
+            # Check for features (MINOR)
+            elseif ($commit -match '^[a-f0-9]+ feat(\([^)]*\))?:') {
+              $minor = $true
+            }
+            # Check for fixes and other changes (PATCH)
+            elseif ($commit -match '^[a-f0-9]+ (fix|docs|style|refactor|test|chore)(\([^)]*\))?:') {
+              $patch = $true
+            }
+          }
+
+          # Calculate new version
+          if ($major) {
+            $newVersion = [version]::new($currentVersion.Major + 1, 0, 0)
+            $bump = "MAJOR"
+          } elseif ($minor) {
+            $newVersion = [version]::new($currentVersion.Major, $currentVersion.Minor + 1, 0)
+            $bump = "MINOR"
+          } elseif ($patch) {
+            $newVersion = [version]::new($currentVersion.Major, $currentVersion.Minor, $currentVersion.Build + 1)
+            $bump = "PATCH"
+          } else {
+            # No conventional commits found, default to patch
+            $newVersion = [version]::new($currentVersion.Major, $currentVersion.Minor, $currentVersion.Build + 1)
+            $bump = "PATCH (default)"
+          }
+        }
+
+        $tag = "v$newVersion"
+
+        Write-Host "Commits analyzed: $commitCount"
+        Write-Host "Previous version: $existing"
+        Write-Host "Version bump: $bump"
+        Write-Host "New version: $tag"
+
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git tag $tag
+        git push origin $tag
+
+        echo "tag=$tag" >> $env:GITHUB_OUTPUT
+        echo "previous_tag=$existing" >> $env:GITHUB_OUTPUT
+        echo "bump_type=$bump" >> $env:GITHUB_OUTPUT
+        echo "commit_count=$commitCount" >> $env:GITHUB_OUTPUT
+
+    - name: Generate release notes
+      id: release_notes
+      shell: pwsh
+      run: |
+        # Get the previous tag for commit range
+        $previousTag = "${{ steps.tag.outputs.previous_tag }}"
+        
+        if ($previousTag) {
+          $commits = git log "$previousTag..HEAD" --pretty=format:"%h %s" --reverse
+        } else {
+          $commits = git log --pretty=format:"%h %s" --reverse
+        }
+
+        # Categorize commits
+        $features = @()
+        $fixes = @()
+        $docs = @()
+        $chores = @()
+        $breaking = @()
+        $other = @()
+
+        foreach ($commit in $commits) {
+          if ($commit -match '^([a-f0-9]+) (.+)$') {
+            $hash = $matches[1]
+            $message = $matches[2]
+            
+            # Check for breaking changes first
+            if ($message -match '(BREAKING CHANGE|!:|\w+!)') {
+              $breaking += "- $message ($hash)"
+            }
+            # Categorize by conventional commit type
+            elseif ($message -match '^feat(\([^)]*\))?:\s*(.+)') {
+              $features += "- $($matches[2]) ($hash)"
+            }
+            elseif ($message -match '^fix(\([^)]*\))?:\s*(.+)') {
+              $fixes += "- $($matches[2]) ($hash)"
+            }
+            elseif ($message -match '^docs(\([^)]*\))?:\s*(.+)') {
+              $docs += "- $($matches[2]) ($hash)"
+            }
+            elseif ($message -match '^(chore|style|refactor|test|ci)(\([^)]*\))?:\s*(.+)') {
+              $chores += "- $($matches[3]) ($hash)"
+            }
+            else {
+              $other += "- $message ($hash)"
+            }
+          }
+        }
+
+        # Build release notes
+        $releaseNotes = @()
+        $releaseNotes += "**Version Bump:** ${{ steps.tag.outputs.bump_type }}"
+        $releaseNotes += "**Commits Included:** ${{ steps.tag.outputs.commit_count }}"
+        $releaseNotes += ""
+
+        if ($breaking.Count -gt 0) {
+          $releaseNotes += "## 🚨 Breaking Changes"
+          $releaseNotes += $breaking
+          $releaseNotes += ""
+        }
+
+        if ($features.Count -gt 0) {
+          $releaseNotes += "## ✨ New Features"
+          $releaseNotes += $features
+          $releaseNotes += ""
+        }
+
+        if ($fixes.Count -gt 0) {
+          $releaseNotes += "## 🐛 Bug Fixes"
+          $releaseNotes += $fixes
+          $releaseNotes += ""
+        }
+
+        if ($docs.Count -gt 0) {
+          $releaseNotes += "## 📚 Documentation"
+          $releaseNotes += $docs
+          $releaseNotes += ""
+        }
+
+        if ($chores.Count -gt 0) {
+          $releaseNotes += "## 🔧 Maintenance"
+          $releaseNotes += $chores
+          $releaseNotes += ""
+        }
+
+        if ($other.Count -gt 0) {
+          $releaseNotes += "## 📝 Other Changes"
+          $releaseNotes += $other
+          $releaseNotes += ""
+        }
+
+        $releaseNotes += "---"
+        $releaseNotes += ""
+        $releaseNotes += "## 📋 Commit Message Guidelines"
+        $releaseNotes += "- \`feat:\` → Minor version bump"
+        $releaseNotes += "- \`fix:\`, \`docs:\`, \`chore:\` → Patch version bump"
+        $releaseNotes += "- \`BREAKING CHANGE:\` or \`feat!:\` → Major version bump"
+        $releaseNotes += "- Large batches (>20 commits) → Automatic major bump"
+        $releaseNotes += "- Manual override: Include \`version: 1.2.3\` in commit message"
+
+        # Convert to single string and escape for GitHub Actions
+        $releaseNotesText = $releaseNotes -join "`n"
+        
+        # Save to file for GitHub Actions
+        $releaseNotesText | Out-File -FilePath "release_notes.txt" -Encoding UTF8
+        
+        # Output for debugging
+        Write-Host "Generated release notes:"
+        Write-Host $releaseNotesText
+
+    - name: Run Build Script
+      shell: pwsh
+      run: |
+        $config = if ($env:BUILD_CONFIGURATION) { $env:BUILD_CONFIGURATION } else { "Release" }
+        Write-Host "Building with configuration: $config"
+        Write-Host "Environment: $($env:ENVIRONMENT_NAME ?? 'production')"
+        ./installer/Build-Installer.ps1 -Configuration $config
+
+    - name: Publish release with installer
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.tag.outputs.tag }}
+        name: Release ${{ steps.tag.outputs.tag }}
+        body_path: release_notes.txt
+        files: installer/Output/*.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Release Completion Notice
+      run: |
+        Write-Host "✅ PRODUCTION RELEASE COMPLETED" -ForegroundColor Green
+        Write-Host "===============================" -ForegroundColor Green
+        Write-Host "Version: ${{ steps.tag.outputs.tag }}" -ForegroundColor Cyan
+        Write-Host "Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.tag.outputs.tag }}" -ForegroundColor Cyan
+        Write-Host "Deployment: Production environment" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "🎉 Release is now available for download!" -ForegroundColor Green
+      shell: pwsh

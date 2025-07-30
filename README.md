@@ -98,9 +98,29 @@ Want to help build a better way to manage Geralt's journey?
 3. Create a feature branch following the naming convention: `feat/{issue-number}-{description}`
    - ✅ Example: `feat/56-link-branch-to-issue`, `feat/123-add-new-feature`
    - This ensures automatic linking to GitHub issues for better project tracking
-4. Make your changes (hooks will validate code quality on commit)
-5. Open a pull request — PR template is in `.github/pull_request_template.md`
-6. Use the Trello board for reference (`docs/witcher_save_manager_user_stories.csv`)
+4. Make your changes using **Conventional Commits** for automatic versioning:
+   ```bash
+   # Examples:
+   git commit -m "feat: add cloud sync functionality"        # Minor bump
+   git commit -m "fix: resolve save file corruption"         # Patch bump  
+   git commit -m "feat!: redesign save file format"          # Major bump
+   git commit -m "docs: update installation instructions"    # Patch bump
+   ```
+5. Hooks will validate code quality and branch naming on commit
+6. Open a pull request — PR template is in `.github/pull_request_template.md`
+7. **Automatic Releases**: When merged to `main`, CI will automatically:
+   - Analyze your commit messages for semantic versioning
+   - Create appropriate version tags (major/minor/patch)
+   - Generate categorized release notes from commit history
+   - Build and publish releases with installers
+
+### 📋 Commit Message Guidelines
+
+Use **Conventional Commits** for automatic semantic versioning:
+- `feat:` → Minor version bump (1.0.0 → 1.1.0)
+- `fix:` → Patch version bump (1.0.0 → 1.0.1)  
+- `docs:`, `chore:`, `style:`, `refactor:`, `test:` → Patch version bump
+- `BREAKING CHANGE:` or `feat!:` → Major version bump (1.0.0 → 2.0.0)
 
 ---
 
