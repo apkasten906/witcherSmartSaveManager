@@ -95,21 +95,22 @@ foreach ($File in $RequiredFiles) {
 
 Write-Host "All required application files found!" -ForegroundColor Green
 
+# Ensure tags are fetched
+Write-Host "Fetching tags..." -ForegroundColor Cyan
+$IsShallow = git rev-parse --is-shallow-repository 2>$null
+if ($IsShallow -eq $true) {
+    Write-Host "Repository is shallow, unshallowing..." -ForegroundColor Yellow
+    git fetch --unshallow
+} else {
+    Write-Host "Repository is not shallow, fetching tags normally..." -ForegroundColor Yellow
+    git fetch --tags
+}
+
 # Extract version from Git tag
 Write-Host "Extracting version from Git tag..." -ForegroundColor Cyan
-
-# Debug: Show available tags
-Write-Host "Available tags:" -ForegroundColor Yellow
-git tag --list
-Write-Host "Current commit:" -ForegroundColor Yellow
-git rev-parse HEAD
-Write-Host "Attempting git describe..." -ForegroundColor Yellow
-
 $Version = git describe --tags --abbrev=0 2>$null
 if (-not $Version) {
     Write-Host "git describe failed, trying alternative methods..." -ForegroundColor Yellow
-    
-    # Try to get the latest tag
     $Version = git tag --list --sort=-version:refname | Select-Object -First 1
     if ($Version) {
         Write-Host "Found latest tag: $Version" -ForegroundColor Yellow
