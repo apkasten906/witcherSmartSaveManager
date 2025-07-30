@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace WitcherGuiApp.Models
+namespace WitcherSmartSaveManager.Models
 {
     public class WitcherSaveFile
     {
@@ -28,7 +28,7 @@ namespace WitcherGuiApp.Models
 
         [JsonPropertyName("metadata")]
         public Dictionary<string, object> Metadata { get; set; }
-        
+
         [JsonPropertyName("BackupExists")]
         public bool BackupExists { get; internal set; }
     }

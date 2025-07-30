@@ -58,6 +58,124 @@ catch {
     exit 1
 }
 
+# GitHub Project Management Helper Functions
+function Get-IssueUrl {
+    param($IssueNumber, $Repo)
+    return "https://github.com/$Repo/issues/$IssueNumber"
+}
+
+function Get-ProjectId {
+    param($Owner = "apkasten906", $ProjectNumber = 1)
+    $projects = gh project list --owner $Owner --format json | ConvertFrom-Json
+    $project = $projects.projects | Where-Object { $_.number -eq $ProjectNumber }
+    return $project.id
+}
+
+function Get-ProjectIssueId {
+    param($ProjectNumber, $IssueNumber, $IssueUrl, $Owner = "apkasten906", $MaxRetries = 2)
+    
+    # If we don't have an issue URL but have an issue number, construct it
+    if (-not $IssueUrl -and $IssueNumber) {
+        $IssueUrl = Get-IssueUrl -IssueNumber $IssueNumber -Repo "$Owner/witcherSmartSaveManager"
+    }
+    
+    # Use GraphQL API directly to bypass CLI caching issues
+    $retryCount = 0
+    $issueItem = $null
+    
+    while ($retryCount -lt $MaxRetries -and -not $issueItem) {
+        if ($retryCount -gt 0) {
+            # Wait a bit before retrying
+            $waitTime = 3
+            Write-Host "Waiting $waitTime seconds before retry..." -ForegroundColor Yellow
+            Start-Sleep -Seconds $waitTime
+        }
+        
+        try {
+            Write-Host "Searching for issue $($IssueNumber) using GraphQL API..." -ForegroundColor Cyan
+            
+            # Query project items using GraphQL
+            $query = 'query($owner: String!, $number: Int!) { user(login: $owner) { projectV2(number: $number) { id items(first: 100) { nodes { id content { ... on Issue { number title url } } } } } } }'
+            $result = gh api graphql -f query=$query -f owner=$Owner -F number=$ProjectNumber | ConvertFrom-Json
+            
+            if ($result.data.user.projectV2) {
+                $items = $result.data.user.projectV2.items.nodes
+                $issueItem = $items | Where-Object { 
+                    ($_.content.number -eq [int]$IssueNumber) -or
+                    ($_.content.url -eq $IssueUrl)
+                } | Select-Object -First 1
+                
+                if ($issueItem) {
+                    Write-Host "Found issue $($IssueNumber) in project: $($issueItem.content.title)" -ForegroundColor Green
+                    break
+                }
+                else {
+                    Write-Host "Attempt $($retryCount + 1)/$($MaxRetries): Issue $($IssueNumber) not found in project yet." -ForegroundColor Yellow
+                    $retryCount++
+                }
+            }
+            else {
+                throw "Could not access project via GraphQL API"
+            }
+        }
+        catch {
+            Write-Host "Error querying project items via GraphQL: $_" -ForegroundColor Red
+            $retryCount++
+        }
+    }
+    
+    if (-not $issueItem) {
+        throw "Could not find issue $($IssueNumber) in project after $($MaxRetries) attempts"
+    }
+    
+    return $issueItem.id
+}
+
+function Get-StatusFieldInfo {
+    param($ProjectNumber, $StatusName, $Owner = "apkasten906")
+    
+    $fields = gh project field-list $ProjectNumber --owner $Owner --format json | ConvertFrom-Json
+    $statusField = $fields.fields | Where-Object { $_.name -eq "Status" }
+    
+    if (-not $statusField) {
+        throw "Could not find Status field in project"
+    }
+    
+    $optionId = ($statusField.options | Where-Object { $_.name -eq $StatusName }).id
+    if (-not $optionId) {
+        throw "Could not find option '$StatusName' in Status field"
+    }
+    
+    return @{
+        FieldId  = $statusField.id
+        OptionId = $optionId
+    }
+}
+
+function Set-ProjectItemStatus {
+    param(
+        $ItemId,
+        $ProjectNumber,
+        $StatusFieldId,
+        $StatusOptionId
+    )
+    
+    # The --owner flag was causing issues, and project-id needs to use the actual project ID
+    # Instead of the project number, use the item-edit command correctly
+    $setCommand = "gh project item-edit --id $ItemId --project-id $ProjectNumber --field-id $StatusFieldId --single-select-option-id $StatusOptionId"
+    Write-Host "Running command: $setCommand"
+    Invoke-Expression $setCommand
+    
+    # Check if the command was successful
+    if ($LASTEXITCODE -eq 0) {
+        return $true
+    }
+    else {
+        Write-Host "Error executing command: $setCommand" -ForegroundColor Red
+        return $false
+    }
+}
+
 # Helper function to create issue templates based on type
 function Get-IssueTemplate {
     param(
@@ -145,9 +263,12 @@ switch ($Action) {
         if (-not $Description) {
             $Description = Read-Host "Enter issue description"
         }
-        
-        $body = Get-IssueTemplate -Type $IssueType -Description $Description
-        
+
+        # Use a here-string to preserve newlines in the description
+        $body = @"
+$Description
+"@
+
         Write-Host "Creating issue: $Title"
         $command = "gh issue create --repo $Repository --title `"$Title`" --body `"$body`" --assignee `"@me`""
         
@@ -198,17 +319,57 @@ switch ($Action) {
                     # For GitHub's new Projects (v2), use the project number (1)
                     $projectNumber = "1"  # Using hardcoded value for Witcher Smart Save Manager project
                     $projectCommand = "gh project item-add $projectNumber --owner apkasten906 --url $issueUrl"
-                    Invoke-Expression $projectCommand
+                    $result = Invoke-Expression $projectCommand
                     Write-Host "Successfully added issue to project '$Project'." -ForegroundColor Green
+                    
+                    # Add a comment to indicate that the issue was added to the project
+                    $projectComment = "Issue added to project: **$Project**"
+                    $projectCommentCommand = "gh issue comment $newIssueNumber --repo $Repository --body `"$projectComment`""
+                    Invoke-Expression $projectCommentCommand
+                    
+                    # Now let's try to set the status programmatically using our helper functions
+                    Write-Host "Attempting to set status to '$Status' in the project..."
+                    try {
+                        # Main logic to set project status
+                        $projectNumber = "1"  # Using hardcoded project number
+                        $projectId = Get-ProjectId -ProjectNumber $projectNumber
+                        Write-Host "Found project ID: $projectId"
+                        
+                        $itemId = Get-ProjectIssueId -ProjectNumber $projectNumber -IssueNumber $newIssueNumber -IssueUrl $issueUrl
+                        Write-Host "Found issue item ID: $itemId"
+                        
+                        $statusInfo = Get-StatusFieldInfo -ProjectNumber $projectNumber -StatusName $Status
+                        Write-Host "Found Status field ID: $($statusInfo.FieldId) and option ID: $($statusInfo.OptionId)"
+                        
+                        # Execute the status update command
+                        Set-ProjectItemStatus -ItemId $itemId -ProjectNumber $projectId -StatusFieldId $statusInfo.FieldId -StatusOptionId $statusInfo.OptionId
+                        
+                        Write-Host "Successfully set status to '$Status' in the project." -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Host "Could not set status automatically: $_" -ForegroundColor Yellow
+                        
+                        # Add a clear comment indicating what status should be set to
+                        $statusComment = "✅ **Project Status Setting**
+
+This issue has been added to the project board and should be set to status: **$Status**
+
+**Note:** There may be a brief delay before the issue appears in GitHub CLI queries, but it should be visible in the web interface immediately.
+    
+*If needed, please update the status manually in the GitHub project interface.*"
+                        
+                        $statusCommentCommand = "gh issue comment $newIssueNumber --repo $Repository --body `"$statusComment`""
+                        Invoke-Expression $statusCommentCommand
+                        
+                        Write-Host "Added a comment with status setting instructions." -ForegroundColor Green
+                        Write-Host "Note: Issue added to project successfully. You can set the status to '$Status' in the GitHub project web interface." -ForegroundColor Cyan
+                    }
                 }
                 catch {
                     Write-Host "Could not add issue to project automatically: $_" -ForegroundColor Yellow
                     Write-Host "You may need to add it manually through the GitHub web interface." -ForegroundColor Yellow
                 }
             }
-            
-            # Inform the user how to set the status in the GitHub UI
-            Write-Host "Note: You'll need to manually set the status to '$Status' in the GitHub project board."
         }
     }
     
@@ -347,7 +508,8 @@ switch ($Action) {
         }
         
         Write-Host "Setting status '$Status' for issue #$IssueNumber"
-        # Add a comment with the status since GitHub CLI doesn't directly support setting project item status
+        
+        # Add a comment with the status
         $statusComment = "## Status Update
 Status changed to: **$Status**
 
@@ -355,7 +517,29 @@ Status changed to: **$Status**
         $command = "gh issue comment $IssueNumber --repo $Repository --body `"$statusComment`""
         Invoke-Expression $command
         
-        Write-Host "Note: You'll need to manually update the status to '$Status' in the GitHub project board."
+        # Now try to set the status programmatically in the project
+        Write-Host "Attempting to set status in project..."
+        try {
+            # Main logic to set project status
+            $projectNumber = "1"  # Using hardcoded project number
+            $projectId = Get-ProjectId -ProjectNumber $projectNumber
+            Write-Host "Found project ID: $projectId"
+            
+            $itemId = Get-ProjectIssueId -ProjectNumber $projectNumber -IssueNumber $IssueNumber
+            Write-Host "Found issue item ID: $itemId"
+            
+            $statusInfo = Get-StatusFieldInfo -ProjectNumber $projectNumber -StatusName $Status
+            Write-Host "Found Status field ID: $($statusInfo.FieldId) and option ID: $($statusInfo.OptionId)"
+            
+            # Execute the status update command
+            Set-ProjectItemStatus -ItemId $itemId -ProjectNumber $projectId -StatusFieldId $statusInfo.FieldId -StatusOptionId $statusInfo.OptionId
+            
+            Write-Host "Successfully set status to '$Status' in the project." -ForegroundColor Green
+        }
+        catch {
+            Write-Host "Could not set status automatically: $_" -ForegroundColor Yellow
+            Write-Host "Note: You'll need to manually update the status to '$Status' in the GitHub project board." -ForegroundColor Yellow
+        }
     }
     
     'link' {

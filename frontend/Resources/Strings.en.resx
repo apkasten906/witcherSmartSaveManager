@@ -30,4 +30,74 @@
   <data name="DownloadGogCloud" xml:space="preserve">
     <value>Download from GOG Cloud</value>
   </data>
+  <data name="OrphanedScreenshots_Title" xml:space="preserve">
+    <value>Orphaned Screenshots Found - Kikimora Alert! 🐺</value>
+  </data>
+  <data name="OrphanedScreenshots_Message" xml:space="preserve">
+    <value>🐺 Found orphaned screenshot files! 🐺
+
+It's likely their parents were tragically eaten by a kikimora (you deleted their save files while the game was running, so you could also make sure their cloud twins would go away and not return from the dead!)
+
+Would you like to clean up these {0} orphaned screenshot(s)?</value>
+  </data>
+  <data name="OrphanedScreenshots_PartialCleanup_Title" xml:space="preserve">
+    <value>Cleanup Partially Complete - Some Spirits Resist! 🐺</value>
+  </data>
+  <data name="OrphanedScreenshots_PartialCleanup_Message" xml:space="preserve">
+    <value>🐺 Cleaned up {0} of {1} orphaned screenshots.
+
+Could not delete {2} file(s) because they are still locked by cunning spirits:
+{3}</value>
+  </data>
+  <data name="Status_OrphanedPartialCleanup" xml:space="preserve">
+    <value>🐺 Cleaned up {0}/{1} orphaned screenshots. {2} files still locked by spirits.</value>
+  </data>
+  <data name="Status_OrphanedFullCleanup" xml:space="preserve">
+    <value>🐺 Successfully cleaned up all {0} orphaned screenshots! The kikimora's work is done.</value>
+  </data>
+  <data name="TotalSaveFiles" xml:space="preserve">
+    <value>Total Loaded: {0}</value>
+  </data>
+  <data name="TotalBackedUpFiles" xml:space="preserve">
+    <value>Total Backups: {0}</value>
+  </data>
+  <data name="Status_Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Status_ConfigFound" xml:space="preserve">
+    <value>Config file found at: {0}</value>
+  </data>
+  <data name="Status_ConfigNotFound" xml:space="preserve">
+    <value>Config file not found. Using default settings.</value>
+  </data>
+  <data name="Status_SavesLoaded" xml:space="preserve">
+    <value>Loaded {0} save(s).</value>
+  </data>
+  <data name="Status_BackupComplete" xml:space="preserve">
+    <value>{0} save(s) backed up.</value>
+  </data>
+  <data name="Status_DeleteComplete" xml:space="preserve">
+    <value>{0} save(s) deleted.</value>
+  </data>
+  <data name="Status_SaveDeleted" xml:space="preserve">
+    <value>Save deleted.</value>
+  </data>
+  <data name="Status_BackupFolderSet" xml:space="preserve">
+    <value>Backup folder set.</value>
+  </data>
+  <data name="Status_CustomSaveFolderSet" xml:space="preserve">
+    <value>Custom save folder set.</value>
+  </data>
+  <data name="Status_NoSaveFiles" xml:space="preserve">
+    <value>Selected folder does not contain Witcher 2 save files.</value>
+  </data>
+  <data name="Error_LoadingSaves" xml:space="preserve">
+    <value>Error loading saves: {0}</value>
+  </data>
+  <data name="Error_BackupSaves" xml:space="preserve">
+    <value>Error backing up saves: {0}</value>
+  </data>
+  <data name="Error_DeletingSaves" xml:space="preserve">
+    <value>Error deleting saves: {0}</value>
+  </data>
 </root>

@@ -1,8 +1,9 @@
 using NUnit.Framework;
 using System.Globalization;
 using System.Resources;
+using WitcherSmartSaveManager;
 
-namespace WitcherGuiApp.Tests
+namespace WitcherSmartSaveManager.Tests
 {
     [TestFixture]
     public class LocalizationScenarioTests
@@ -10,7 +11,7 @@ namespace WitcherGuiApp.Tests
         [Test]
         public void SwitchingLanguage_UpdatesResourceStrings()
         {
-            var rm = new ResourceManager("WitcherGuiApp.Resources.Strings", typeof(App).Assembly);
+            var rm = new ResourceManager("WitcherSmartSaveManager.Resources.Strings", typeof(App).Assembly);
             var english = rm.GetString("FindSaves", new CultureInfo("en"));
             var german = rm.GetString("FindSaves", new CultureInfo("de"));
             Assert.That(english, Is.EqualTo("Find Witcher Save Games"));
@@ -20,7 +21,7 @@ namespace WitcherGuiApp.Tests
         [Test]
         public void MissingResourceKey_FallbacksGracefully()
         {
-            var rm = new ResourceManager("WitcherGuiApp.Resources.Strings", typeof(App).Assembly);
+            var rm = new ResourceManager("WitcherSmartSaveManager.Resources.Strings", typeof(App).Assembly);
             var missing = rm.GetString("NonExistentKey", new CultureInfo("en"));
             Assert.That(missing, Is.Null.Or.Empty);
         }

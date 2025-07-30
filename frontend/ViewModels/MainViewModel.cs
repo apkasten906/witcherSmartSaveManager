@@ -1,8 +1,9 @@
 using System.Globalization;
 using System.Threading;
-using WitcherGuiApp.Models;
-using WitcherGuiApp.Services;
+using WitcherSmartSaveManager.Models;
+using WitcherSmartSaveManager.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -11,18 +12,18 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using WitcherGuiApp.Utils;
+using WitcherSmartSaveManager.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
-namespace WitcherGuiApp.ViewModels
+namespace WitcherSmartSaveManager.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
         private string _selectedLanguage = "en";
         private string _originalConfigMessage; // Store the original config message
-        
+
         public string SelectedLanguage
         {
             get => _selectedLanguage;
@@ -39,7 +40,7 @@ namespace WitcherGuiApp.ViewModels
         }
 
         public ICommand ChangeLanguageCommand { get; }
-    
+
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly WitcherSaveFileService _saveFileService;
@@ -87,6 +88,39 @@ namespace WitcherGuiApp.ViewModels
             }
         }
 
+        private int _totalSaveFiles;
+        public int TotalSaveFiles
+        {
+            get => _totalSaveFiles;
+            set
+            {
+                if (_totalSaveFiles != value)
+                {
+                    _totalSaveFiles = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TotalSaveFilesDisplay));
+                }
+            }
+        }
+
+        private int _backedUpFiles;
+        public int BackedUpFiles
+        {
+            get => _backedUpFiles;
+            set
+            {
+                if (_backedUpFiles != value)
+                {
+                    _backedUpFiles = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(BackedUpFilesDisplay));
+                }
+            }
+        }
+
+        public string TotalSaveFilesDisplay => Utils.ResourceHelper.GetFormattedString("TotalSaveFiles", TotalSaveFiles);
+        public string BackedUpFilesDisplay => Utils.ResourceHelper.GetFormattedString("TotalBackedUpFiles", BackedUpFiles);
+
         public ICommand CustomSaveFolderPickerCommand { get; }
         public ICommand DeleteSelectedCommand { get; }
         public ICommand BackupSelectedCommand { get; }
@@ -96,16 +130,20 @@ namespace WitcherGuiApp.ViewModels
 
         public MainViewModel()
         {
+            // Initialize counters
+            TotalSaveFiles = 0;
+            BackedUpFiles = 0;
+
             ChangeLanguageCommand = new RelayCommand(lang => SelectedLanguage = lang?.ToString());
 
             Logger.Info("MainViewModel initialized.");
-            
+
             // Store the original config message for later localization
             _originalConfigMessage = App.ConfigStatusMessage;
-            
+
             // Set initial status message
             UpdateConfigStatusMessage();
-            
+
             if (!App.ConfigInitialized)
             {
                 return;
@@ -119,6 +157,9 @@ namespace WitcherGuiApp.ViewModels
             BackupLocationPickerCommand = new RelayCommand(_ => SelectBackupFolder());
             CustomSaveFolderPickerCommand = new RelayCommand(_ => SelectCustomSaveFolder());
             SetLanguage(_selectedLanguage);
+
+            // Initialize backup counter
+            UpdateBackupFileCounter();
         }
 
         private void SetLanguage(string lang)
@@ -126,7 +167,7 @@ namespace WitcherGuiApp.ViewModels
             var culture = new CultureInfo(lang);
             Thread.CurrentThread.CurrentUICulture = culture;
             Thread.CurrentThread.CurrentCulture = culture;
-            
+
             // Notify that all bindable properties have changed to force UI refresh
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -134,22 +175,24 @@ namespace WitcherGuiApp.ViewModels
                 {
                     // Load the appropriate resource dictionary for the selected language
                     Utils.ResourceDictionaryHelper.UpdateResourcesForCulture(culture);
-                    
+
                     // Update status message with localized text if it's a standard message
                     UpdateLocalizedStatusMessage();
-                    
+
                     // Explicitly update config status message when language changes
                     UpdateConfigStatusMessage();
-                    
+
                     // Force property changed notifications for all localized properties
                     OnPropertyChanged(nameof(StatusMessage));
-                    
+                    OnPropertyChanged(nameof(TotalSaveFilesDisplay));
+                    OnPropertyChanged(nameof(BackedUpFilesDisplay));
+
                     // Refresh UI
                     foreach (Window window in Application.Current.Windows)
                     {
                         window.UpdateLayout();
                     }
-                    
+
                     // Log success
                     Logger.Info($"Language changed to: {lang}");
                 }
@@ -160,13 +203,13 @@ namespace WitcherGuiApp.ViewModels
                 }
             });
         }
-        
+
         /// <summary>
         /// Updates the status message if it needs to be localized
         /// </summary>
         private void UpdateLocalizedStatusMessage()
         {
-            try 
+            try
             {
                 // If the status message is empty, set it to the default ready message
                 if (string.IsNullOrEmpty(_statusMessage))
@@ -174,10 +217,10 @@ namespace WitcherGuiApp.ViewModels
                     StatusMessage = Utils.ResourceHelper.GetString("Status_Ready");
                     return;
                 }
-                
+
                 // Try to update known status message patterns
                 UpdateStatusMessageIfMatches();
-                
+
                 // Note: Config status message is handled separately by UpdateConfigStatusMessage
                 // to preserve the original config message format across language changes
             }
@@ -186,7 +229,7 @@ namespace WitcherGuiApp.ViewModels
                 Logger.Error(ex, "Error updating localized status message");
             }
         }
-        
+
         /// <summary>
         /// Updates the status message if it matches one of our known patterns
         /// </summary>
@@ -241,7 +284,7 @@ namespace WitcherGuiApp.ViewModels
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Error_DeletingSaves", errorMsg);
             }
         }
-        
+
         /// <summary>
         /// Updates the config status message based on the original stored message
         /// </summary>
@@ -249,7 +292,7 @@ namespace WitcherGuiApp.ViewModels
         {
             if (_originalConfigMessage == null)
                 return;
-                
+
             if (_originalConfigMessage.StartsWith("Config file found at "))
             {
                 string path = _originalConfigMessage.Replace("Config file found at ", "").TrimEnd('.');
@@ -263,6 +306,22 @@ namespace WitcherGuiApp.ViewModels
             else if (_originalConfigMessage.StartsWith("Failed to create config file"))
             {
                 StatusMessage = Utils.ResourceHelper.GetString("Status_ConfigNotFound");
+            }
+        }
+
+        /// <summary>
+        /// Updates the backup file counter by counting actual files in the backup folder
+        /// </summary>
+        private void UpdateBackupFileCounter()
+        {
+            if (_saveFileService != null)
+            {
+                var count = _saveFileService.GetBackupFileCount();
+                BackedUpFiles = count;
+            }
+            else
+            {
+                Logger.Warn("UpdateBackupFileCounter: _saveFileService is null");
             }
         }
 
@@ -281,15 +340,62 @@ namespace WitcherGuiApp.ViewModels
                         {
                             Saves.Add(new SaveFileViewModel(save));
                         }
+
+                        // Update counters
+                        TotalSaveFiles = Saves.Count;
+                        BackedUpFiles = _saveFileService.GetBackupFileCount();
                     });
                 });
-                
+
+                // Check for orphaned screenshots after loading saves
+                var orphanedScreenshots = _saveFileService.GetOrphanedScreenshots();
+                if (orphanedScreenshots.Count > 0)
+                {
+                    HandleOrphanedScreenshots(orphanedScreenshots);
+                }
+
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_SavesLoaded", Saves.Count);
             }
             catch (Exception ex)
             {
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Error_LoadingSaves", ex.Message);
+            }
+        }
+
+        private void HandleOrphanedScreenshots(List<string> orphanedScreenshots)
+        {
+            try
+            {
+                var witchyExplanation = Utils.ResourceHelper.GetFormattedString("OrphanedScreenshots_Message", orphanedScreenshots.Count);
+                var title = Utils.ResourceHelper.GetString("OrphanedScreenshots_Title");
+
+                var result = MessageBox.Show(witchyExplanation, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var (deletedCount, lockedFiles) = _saveFileService.CleanupOrphanedScreenshotsWithDetails(orphanedScreenshots);
+
+                    if (lockedFiles.Any())
+                    {
+                        var fileList = string.Join("\n", lockedFiles.Select(f => $"• {Path.GetFileName(f.file)}: {f.reason}"));
+                        var lockedMessage = Utils.ResourceHelper.GetFormattedString("OrphanedScreenshots_PartialCleanup_Message",
+                            deletedCount, orphanedScreenshots.Count, lockedFiles.Count, fileList);
+                        var lockedTitle = Utils.ResourceHelper.GetString("OrphanedScreenshots_PartialCleanup_Title");
+
+                        MessageBox.Show(lockedMessage, lockedTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                        StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_OrphanedPartialCleanup",
+                            deletedCount, orphanedScreenshots.Count, lockedFiles.Count);
+                    }
+                    else
+                    {
+                        StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_OrphanedFullCleanup", deletedCount);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error handling orphaned screenshots: {ex.Message}";
             }
         }
 
@@ -306,7 +412,10 @@ namespace WitcherGuiApp.ViewModels
                         save.BackupExists = true;
                     }
                 }
-                
+
+                // Update backup counter
+                BackedUpFiles = _saveFileService.GetBackupFileCount();
+
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_BackupComplete", selected.Count);
             }
@@ -352,7 +461,7 @@ namespace WitcherGuiApp.ViewModels
                 }
                 CustomSaveFolderPath = selectedPath;
                 UpdateUserPathsJson(selectedPath);
-                
+
                 StatusMessage = Utils.ResourceHelper.GetString("Status_CustomSaveFolderSet");
             }
         }
@@ -371,7 +480,11 @@ namespace WitcherGuiApp.ViewModels
                         StatusMessage = Utils.ResourceHelper.GetString("Status_SaveDeleted");
                     }
                 }
-                
+
+                // Update counters after deletion
+                TotalSaveFiles = Saves.Count;
+                BackedUpFiles = _saveFileService.GetBackupFileCount();
+
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_DeleteComplete", selected.Count);
             }
@@ -390,6 +503,14 @@ namespace WitcherGuiApp.ViewModels
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 BackupFilePath = dlg.FileName;
+
+                // Update the service's backup folder and refresh counter
+                if (_saveFileService != null)
+                {
+                    _saveFileService.UpdateBackupFolder(dlg.FileName);
+                    UpdateBackupFileCounter();
+                }
+
                 StatusMessage = Utils.ResourceHelper.GetString("Status_BackupFolderSet");
             }
         }

@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualBasic;
 using System.ComponentModel;
 using System.Windows.Input;
-using WitcherGuiApp.Models;
+using WitcherSmartSaveManager.Models;
 
-namespace WitcherGuiApp.ViewModels
+namespace WitcherSmartSaveManager.ViewModels
 {
     public class SaveFileViewModel : INotifyPropertyChanged
     {
@@ -23,13 +23,13 @@ namespace WitcherGuiApp.ViewModels
         private bool _backupExists = false;
         //get; set; }
         //=> SaveFile.BackupExists;
-        public bool BackupExists        
+        public bool BackupExists
         {
             get => _backupExists;
             set
             {
                 _backupExists = value;
-                OnPropertyChanged(nameof(BackupExists));                
+                OnPropertyChanged(nameof(BackupExists));
             }
         }
 

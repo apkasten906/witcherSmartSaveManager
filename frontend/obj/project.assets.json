@@ -759,11 +759,11 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "restore": {
-      "projectUniqueName": "C:\\Development\\witcherSmartSaveManager\\frontend\\WitcherGuiApp.csproj",
-      "projectName": "WitcherGuiApp",
-      "projectPath": "C:\\Development\\witcherSmartSaveManager\\frontend\\WitcherGuiApp.csproj",
+      "projectUniqueName": "C:\\Development\\witcherSmartSaveManager\\frontend\\WitcherSmartSaveManager.csproj",
+      "projectName": "WitcherSmartSaveManager",
+      "projectPath": "C:\\Development\\witcherSmartSaveManager\\frontend\\WitcherSmartSaveManager.csproj",
       "packagesPath": "C:\\Users\\apkas\\.nuget\\packages\\",
       "outputPath": "C:\\Development\\witcherSmartSaveManager\\frontend\\obj\\",
       "projectStyle": "PackageReference",

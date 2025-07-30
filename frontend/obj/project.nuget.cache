@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Daz9f/qIbt4=",
+  "dgSpecHash": "m27rA970Fyg=",
   "success": true,
-  "projectFilePath": "C:\\Development\\witcherSmartSaveManager\\frontend\\WitcherGuiApp.csproj",
+  "projectFilePath": "C:\\Development\\witcherSmartSaveManager\\frontend\\WitcherSmartSaveManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\apkas\\.nuget\\packages\\microsoft-windowsapicodepack-core\\1.1.5\\microsoft-windowsapicodepack-core.1.1.5.nupkg.sha512",
     "C:\\Users\\apkas\\.nuget\\packages\\microsoft-windowsapicodepack-shell\\1.1.5\\microsoft-windowsapicodepack-shell.1.1.5.nupkg.sha512",

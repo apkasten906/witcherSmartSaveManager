@@ -1,6 +1,7 @@
-<Application x:Class="WitcherGuiApp.App"
+<Application x:Class="WitcherSmartSaveManager.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utils="clr-namespace:WitcherSmartSaveManager.Utils"
              StartupUri="./Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -8,9 +9,10 @@
                 <!-- Default resource dictionary (English) -->
                 <ResourceDictionary Source="/Resources/StringResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
             <!-- Global resources -->
-            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <utils:StringToImageSourceConverter x:Key="StringToImageSourceConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

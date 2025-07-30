@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using WitcherGuiApp.Models;
+using WitcherSmartSaveManager.Models;
 
-namespace WitcherGuiApp.Utils
+namespace WitcherSmartSaveManager.Utils
 {
     public static class MetadataExtractor
     {
@@ -19,7 +19,7 @@ namespace WitcherGuiApp.Utils
             var metadata = new Dictionary<string, object>();
             // Placeholder logic – replace with actual parsing later
             metadata["source"] = "mock";
-            metadata["quest"] = "The Little Kayran That Could";            
+            metadata["quest"] = "The Little Kayran That Could";
 
             return metadata;
         }

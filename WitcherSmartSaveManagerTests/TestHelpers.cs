@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 
-namespace WitcherGuiApp.Tests
+namespace WitcherSmartSaveManager.Tests
 {
     public static class TestHelpers
     {

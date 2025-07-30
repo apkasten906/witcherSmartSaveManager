@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Windows;
 
-namespace WitcherGuiApp.Utils
+namespace WitcherSmartSaveManager.Utils
 {
     /// <summary>
     /// Utility class for managing resources and language switching
@@ -15,7 +15,7 @@ namespace WitcherGuiApp.Utils
         {
             // Update resource dictionaries for the current culture
             ResourceDictionaryHelper.UpdateResourcesForCulture(CultureInfo.CurrentUICulture);
-            
+
             // Get all resource dictionaries and refresh them
             foreach (ResourceDictionary dict in Application.Current.Resources.MergedDictionaries)
             {

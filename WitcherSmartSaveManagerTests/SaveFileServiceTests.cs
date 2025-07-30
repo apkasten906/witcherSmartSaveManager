@@ -1,9 +1,9 @@
-﻿using System.IO;
+using System.IO;
 using NUnit.Framework;
-using WitcherGuiApp.Tests.Mocks;
-using WitcherGuiApp.Utils;
+using WitcherSmartSaveManager.Tests.Mocks;
+using WitcherSmartSaveManager.Utils;
 
-namespace WitcherGuiApp.Tests
+namespace WitcherSmartSaveManager.Tests
 {
     [TestFixture]
     public class SaveFileServiceTests
