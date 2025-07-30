@@ -1,8 +1,14 @@
 name: Run Pester Tests
 
-# Note: This workflow is not part of the main CI pipeline defined in CI.yaml.
-# It is intended for running Pester tests independently.
+# Note: This workflow is DISABLED until virtual environment setup is completed.
+# It is intended for running Pester tests independently once environment is ready.
 
+# DISABLED - Using workflow_dispatch only (manual trigger)
+# Remove the workflow_dispatch and uncomment the push/pull_request triggers when ready
+on:
+  workflow_dispatch:  # Manual trigger only - workflow is effectively disabled
+
+# FUTURE TRIGGERS (uncomment when ready):
 # on:
 #   push:
 #     branches:
