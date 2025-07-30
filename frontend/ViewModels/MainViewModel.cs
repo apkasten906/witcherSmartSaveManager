@@ -515,6 +515,48 @@ namespace WitcherSmartSaveManager.ViewModels
             }
         }
 
+        private string _selectedQuest;
+        private List<string> _allQuests;
+
+        public string SelectedQuest
+        {
+            get => _selectedQuest;
+            set
+            {
+                if (_selectedQuest != value)
+                {
+                    _selectedQuest = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public List<string> AllQuests
+        {
+            get => _allQuests;
+            set
+            {
+                if (_allQuests != value)
+                {
+                    _allQuests = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private void LoadQuestMetadata(WitcherSaveFile saveFile)
+        {
+            if (saveFile.Metadata.TryGetValue("all_quests", out var allQuests))
+            {
+                AllQuests = allQuests as List<string>;
+            }
+
+            if (saveFile.Metadata.TryGetValue("selected_quest", out var selectedQuest))
+            {
+                SelectedQuest = selectedQuest as string;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string name = null)
         {

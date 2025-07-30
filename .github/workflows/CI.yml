@@ -44,6 +44,8 @@ jobs:
     runs-on: windows-latest
     environment: production
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write  # Required for creating releases and pushing tags
 
     steps:
     - name: Checkout code
@@ -93,12 +95,14 @@ jobs:
           $commitCount = ($commits | Measure-Object).Count
         }
 
-        # Check for manual version override in commit message
-        $latestCommit = git log -1 --pretty=format:"%s"
+        # Check for manual version override in ANY commit since last tag
         $manualVersion = $null
-        if ($latestCommit -match 'version:\s*v?(\d+\.\d+\.\d+)') {
-          $manualVersion = $matches[1]
-          Write-Host "Manual version override detected: v$manualVersion"
+        foreach ($commit in $commits) {
+          if ($commit -match 'version:\s*v?(\d+\.\d+\.\d+)') {
+            $manualVersion = $matches[1]
+            Write-Host "Manual version override detected in commit: v$manualVersion"
+            break
+          }
         }
 
         # If manual version specified, use it
