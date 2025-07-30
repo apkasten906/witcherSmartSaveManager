@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Witcher Save Manager
-AppVersion=1.0.0
+AppVersion=1.1.0
 DefaultDirName={code:GetInstallFolder|C:\Program Files (x86)\WitcherSmartSaveManager}
 DefaultGroupName=Witcher Save Manager
 OutputBaseFilename=WitcherSaveManagerInstaller
