@@ -9,7 +9,8 @@ on:
 jobs:
   build-and-test:
     runs-on: windows-latest
-    environment: production
+    # Only use production environment for pushes to main, not PRs
+    environment: ${{ github.event_name == 'push' && 'production' || '' }}
 
     steps:
     - name: Checkout code
