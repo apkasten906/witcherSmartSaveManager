@@ -9,8 +9,8 @@
     x:Class="WitcherSmartSaveManager.Views.MainWindow"
     x:Name="MainWindowRoot"
     Title="Witcher Save Manager"
-        Height="450"
-        Width="800"
+    Height="450"
+    Width="800"
     Icon="/Views/Assets/icon_wolf_save.ico">
 
     <Grid Margin="10">
@@ -23,20 +23,20 @@
 
         <!-- Status + Buttons container -->
         <StackPanel Orientation="Vertical"
-                Grid.Row="0">
+                    Grid.Row="0">
             <!-- Language Selector -->
             <StackPanel Orientation="Horizontal"
-                    Margin="0,0,0,10">
+                        Margin="0,0,0,10">
                 <Label Content="{DynamicResource Language_Label}"
-                        Width="70"/>
+                       Width="70"/>
                 <ComboBox Width="120"
                           SelectedValue="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           SelectedValuePath="Tag"
                           SelectionChanged="LanguageSelector_Changed">
                     <ComboBoxItem Content="English"
-                            Tag="en"/>
+                                  Tag="en"/>
                     <ComboBoxItem Content="Deutsch"
-                            Tag="de"/>
+                                  Tag="de"/>
                 </ComboBox>
             </StackPanel>
 
@@ -52,14 +52,14 @@
 
             <!-- Custom Save Folder Selection -->
             <Label HorizontalAlignment="Left"
-                    x:Name="SaveFolderLabel"
-                    Content="{DynamicResource SaveFolder_Label}"/>
+                   x:Name="SaveFolderLabel"
+                   Content="{DynamicResource SaveFolder_Label}"/>
             <StackPanel Orientation="Horizontal"
-                    Margin="0,0,0,10">
+                        Margin="0,0,0,10">
                 <TextBox Text="{Binding CustomSaveFolderPath}"
-                        TextWrapping="Wrap"
-                        Width="500"
-                        HorizontalAlignment="Left"/>
+                         TextWrapping="Wrap"
+                         Width="500"
+                         HorizontalAlignment="Left"/>
                 <Button Command="{Binding CustomSaveFolderPickerCommand}"
                         Content="..."
                         Width="20"
@@ -69,14 +69,14 @@
 
             <!--Backup Folder Location Input-->
             <Label HorizontalAlignment="Left"
-                    x:Name="BackupLocationLabel"
-                    Content="{DynamicResource BackupLocation_Label}"/>
+                   x:Name="BackupLocationLabel"
+                   Content="{DynamicResource BackupLocation_Label}"/>
             <StackPanel Orientation="Horizontal"
-                    Margin="0,0,0,10">
+                        Margin="0,0,0,10">
                 <TextBox Text="{Binding BackupFilePath}"
-                        TextWrapping="Wrap"
-                        Width="500"
-                        HorizontalAlignment="Left"/>
+                         TextWrapping="Wrap"
+                         Width="500"
+                         HorizontalAlignment="Left"/>
                 <Button Command="{Binding BackupLocationPickerCommand}"
                         Content="..."
                         Width="20"
@@ -102,9 +102,20 @@
                        FontWeight="Bold"
                        Foreground="DarkRed"/>
 
+            <!-- File Counters -->
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,5,0,0">
+                <TextBlock Text="{Binding TotalSaveFilesDisplay}"
+                           Margin="0,0,20,0"
+                           FontWeight="SemiBold"
+                           Foreground="DarkBlue"/>
+                <TextBlock Text="{Binding BackedUpFilesDisplay}"
+                           FontWeight="SemiBold"
+                           Foreground="DarkGreen"/>
+            </StackPanel>
+
             <ProgressBar Height="10"
-                    HorizontalAlignment="Center"/>
-            <Label Content="Label"/>
+                         HorizontalAlignment="Center"/>
         </StackPanel>
 
         <!-- Scrollable, resizable DataGrid -->
@@ -137,7 +148,7 @@
                 <DataGridTemplateColumn Header="Thumbnail">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding SaveFile.ScreenshotPath}"
+                            <Image Source="{Binding SaveFile.ScreenshotPath, Converter={StaticResource StringToImageSourceConverter}}"
                                    Width="120"
                                    Height="68"
                                    Stretch="Uniform"
@@ -161,7 +172,7 @@
                                     IsReadOnly="True"
                                     Width="100"/>
                 <DataGridTemplateColumn IsReadOnly="True"
-                        Width="70">
+                                        Width="70">
                     <DataGridTemplateColumn.Header>Backed Up
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>

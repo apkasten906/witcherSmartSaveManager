@@ -76,11 +76,6 @@ finally {
     Pop-Location
 }
 
-# Clean the publish folder before building
-if (Test-Path -Path "../publish") {
-    Remove-Item -Path "../publish/*" -Recurse -Force
-}
-
 # Step 2: Verify application files exist
 Write-Host "`nStep 2: Verifying application files..." -ForegroundColor Green
 
@@ -100,12 +95,29 @@ foreach ($File in $RequiredFiles) {
 
 Write-Host "All required application files found!" -ForegroundColor Green
 
+# Ensure tags are fetched
+Write-Host "Fetching tags..." -ForegroundColor Cyan
+$IsShallow = git rev-parse --is-shallow-repository 2>$null
+if ($IsShallow -eq $true) {
+    Write-Host "Repository is shallow, unshallowing..." -ForegroundColor Yellow
+    git fetch --unshallow
+} else {
+    Write-Host "Repository is not shallow, fetching tags normally..." -ForegroundColor Yellow
+    git fetch --tags
+}
+
 # Extract version from Git tag
 Write-Host "Extracting version from Git tag..." -ForegroundColor Cyan
-$Version = git describe --tags --abbrev=0
+$Version = git describe --tags --abbrev=0 2>$null
 if (-not $Version) {
-    Write-Error "No Git tag found. Please create a tag for versioning."
-    exit 1
+    Write-Host "git describe failed, trying alternative methods..." -ForegroundColor Yellow
+    $Version = git tag --list --sort=-version:refname | Select-Object -First 1
+    if ($Version) {
+        Write-Host "Found latest tag: $Version" -ForegroundColor Yellow
+    } else {
+        Write-Error "No Git tag found. Please create a tag for versioning."
+        exit 1
+    }
 }
 
 # Remove 'v' prefix if present
