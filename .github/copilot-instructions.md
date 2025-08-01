@@ -12,6 +12,35 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 - **IDE**: Visual Studio Code / Visual Studio
 - **Runtime**: .NET 8.0 Windows Desktop
 
+## 📚 ERROR LEARNING PROTOCOL - HIGHEST PRIORITY
+
+### Core Learning Principle
+**EVERY ERROR is a learning opportunity that MUST be documented to prevent repetition.**
+
+### Learning Process - MANDATORY
+1. **Capture the Error**: Record exact error message, context, and conditions
+2. **Root Cause Analysis**: Identify the fundamental cause, not just symptoms
+3. **Document Solution**: Record the exact fix that resolved the issue
+4. **Create Prevention Rule**: Add guideline to prevent this error class
+5. **Update Instructions**: Add to this file for future reference
+
+### Learning Categories
+- **Syntax/Language Issues**: PowerShell, C#, XAML parsing errors
+- **Architectural Violations**: MVVM, file organization, separation concerns
+- **Configuration Problems**: Build, dependency, environment setup
+- **Logic Errors**: Business logic, data flow, state management
+- **Integration Issues**: File paths, external tools, cross-component communication
+
+### Documentation Standard
+```
+**Error**: [Exact error message or symptom]
+- **Cause**: [Root cause analysis]
+- **Solution**: [Specific fix applied]
+- **Prevention**: [Rule/guideline to avoid repetition]
+```
+
+This learning protocol applies to ALL development work, not just scripts.
+
 ## 🏗️ Architecture & Project Structure
 
 ### Core Projects
@@ -203,6 +232,112 @@ dotnet restore witcherSmartSaveManager.sln
 4. **Handle locked files gracefully** during gameplay
 5. **Update UI counters immediately** after file operations
 6. **Test with temp directories** - never use real save folders in tests
+7. **APPLY ERROR LEARNING PROTOCOL** - document every error for prevention
+
+## 📝 COMPREHENSIVE ERROR LEARNING LOG
+
+### PowerShell Script Failures
+**Error**: "Die Zeichenfolge hat kein Abschlusszeichen" (String not terminated)
+- **Cause**: Missing closing braces in foreach loops or if statements
+- **Solution**: Always verify brace matching, use proper indentation
+- **Prevention**: Count opening/closing braces before running scripts
+
+**Error**: Unicode symbols causing parse failures in PowerShell 5.1
+- **Cause**: Using ✓, ❌, 🎯 symbols in PowerShell scripts
+- **Solution**: Replace with plain ASCII: "Success:", "Error:", "Warning:"
+- **Prevention**: Stick to basic ASCII characters in all .ps1 files
+
+### Architectural Violations
+**Error**: Nested public classes in service files
+- **Cause**: Putting multiple classes in SaveFileHexAnalyzer.cs
+- **Solution**: Extract to separate Model files (HexAnalysisResult.cs, DZipInfo.cs)
+- **Prevention**: Follow "one class per file" rule strictly
+
+**Error**: Business logic in ViewModels instead of Services
+- **Cause**: Direct file operations or complex logic in ViewModel
+- **Solution**: Move to dedicated Service classes, inject via constructor
+- **Prevention**: ViewModels should only coordinate UI and delegate to services
+
+### File Path Issues
+**Error**: Mixed path separators causing cross-platform issues
+- **Cause**: Using forward slashes in Windows-specific code
+- **Solution**: Use Path.Combine() or consistent backslashes for Windows
+- **Prevention**: Always use Windows-style paths in Windows-specific code
+
+### Configuration & Build Issues
+**Error**: Missing package references causing compilation failures
+- **Cause**: Adding functionality without proper NuGet package dependencies
+- **Solution**: Add appropriate PackageReference entries to .csproj files
+- **Prevention**: Check dependencies before implementing new features
+
+### C# Language & Syntax Issues
+**Error**: Null reference exceptions in property binding
+- **Cause**: Not initializing collections or objects before binding
+- **Solution**: Initialize in constructor or use null-coalescing operators
+- **Prevention**: Always initialize bound properties and use defensive coding
+
+### XAML & WPF Issues
+**Error**: Binding failures with no error indication
+- **Cause**: Incorrect property names or missing INotifyPropertyChanged
+- **Solution**: Verify property names, implement proper change notification
+- **Prevention**: Use compile-time binding validation and consistent naming
+
+## 🚨 PowerShell Script Guidelines - CRITICAL
+
+### Unicode and Special Characters
+- **NEVER use Unicode symbols** in PowerShell scripts (✓, ❌, 🎯, etc.)
+- **Causes parsing errors** in PowerShell 5.1 on Windows
+- **Use plain ASCII only**: "Success:", "Error:", "Warning:"
+- **File encoding**: Save .ps1 files as UTF-8 without BOM or ASCII
+
+### PowerShell Syntax Rules
+- **Always close braces properly** - missing `}` causes cascading parse errors
+- **Use consistent quoting** - prefer double quotes for strings with variables
+- **Test scripts before committing** - syntax errors break automation
+- **Avoid complex Unicode formatting** - stick to basic colored output
+
+### Error Recovery Patterns
+```powershell
+# Good - Plain ASCII status messages
+Write-Host "Success: DZIP format confirmed!" -ForegroundColor Green
+Write-Host "Error: File not found" -ForegroundColor Red
+Write-Host "Warning: Large file size" -ForegroundColor Yellow
+
+# Bad - Unicode symbols cause parsing failures  
+Write-Host "✓ DZIP format confirmed!" -ForegroundColor Green
+Write-Host "❌ File not found" -ForegroundColor Red
+```
+
+### Learning from Errors
+- **Missing braces**: Always count opening/closing braces in complex scripts
+- **Unicode issues**: Test all scripts on target PowerShell version (5.1)
+- **String termination**: Ensure all quotes are properly closed
+- **Variable scope**: Watch for uninitialized variables in script blocks
+
+## 📝 Error Patterns & Solutions - Learning Log
+
+### PowerShell Script Failures
+**Error**: "Die Zeichenfolge hat kein Abschlusszeichen" (String not terminated)
+- **Cause**: Missing closing braces in foreach loops or if statements
+- **Solution**: Always verify brace matching, use proper indentation
+- **Prevention**: Count opening/closing braces before running scripts
+
+**Error**: Unicode symbols causing parse failures in PowerShell 5.1
+- **Cause**: Using ✓, ❌, 🎯 symbols in PowerShell scripts
+- **Solution**: Replace with plain ASCII: "Success:", "Error:", "Warning:"
+- **Prevention**: Stick to basic ASCII characters in all .ps1 files
+
+### Architectural Violations
+**Error**: Nested public classes in service files
+- **Cause**: Putting multiple classes in SaveFileHexAnalyzer.cs
+- **Solution**: Extract to separate Model files (HexAnalysisResult.cs, DZipInfo.cs)
+- **Prevention**: Follow "one class per file" rule strictly
+
+### File Path Issues
+**Error**: Mixed path separators causing cross-platform issues
+- **Cause**: Using forward slashes in Windows-specific code
+- **Solution**: Use Path.Combine() or consistent backslashes for Windows
+- **Prevention**: Always use Windows-style paths in Windows-specific code
 
 ## 🔍 Key Files to Reference
 - **`frontend/ViewModels/MainViewModel.cs`** - Primary MVVM example

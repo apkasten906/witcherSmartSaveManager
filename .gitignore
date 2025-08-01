@@ -14,6 +14,8 @@ obj/
 *.userprefs
 *.*~*
 /witcherSmartSaveManager_2025-07-16.zip
+*.sav
+
 
 # Ignore publish directory
 publish/
@@ -21,3 +23,4 @@ publish/
 # Witcher tools and resources
 CookedPC/
 pack0unzip/
+_backup/
