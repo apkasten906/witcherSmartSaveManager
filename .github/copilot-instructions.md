@@ -1,7 +1,7 @@
 # Witcher Smart Save Manager - AI Coding Instructions
 
 ## 🎯 Project Overview
-This is a **WPF MVVM application** for managing Witcher game save files with features like backup management, orphaned screenshot cleanup, multi-language support, and **database-enhanced metadata**. Built on **.NET 8.0** with strict architectural principles and a **hybrid storage approach**.
+This is a **WPF MVVM application** for managing Witcher game save files with features like backup management, orphaned screenshot cleanup, and multi-language support. Built on **.NET 8.0** with strict architectural principles.
 
 ## 🖥️ Development Environment
 - **Primary OS**: Windows 10/11
@@ -11,7 +11,6 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 - **Scripts**: All automation uses `.ps1` PowerShell scripts
 - **IDE**: Visual Studio Code / Visual Studio
 - **Runtime**: .NET 8.0 Windows Desktop
-- **Database**: SQLite with DBCode extension for development
 
 ## 🏗️ Architecture & Project Structure
 
@@ -20,7 +19,6 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 - **`WitcherCore/`** - Core business logic library with Models, Services, Data access
 - **`Shared/`** - Common types and utilities
 - **`WitcherSmartSaveManagerTests/`** - NUnit test project
-- **`database/`** - SQLite schema and initialization scripts
 
 ### Critical Dependencies
 ```xml
@@ -30,65 +28,6 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 <PackageReference Include="Microsoft.Extensions.Configuration.*" />
 ```
 
-## 🗃️ Hybrid Database Architecture
-
-### **Two-Tier Storage Strategy**
-The application uses a **hybrid approach** that ensures reliability while providing enhancements:
-
-1. **File-Based Core (Always Available)**
-   - Basic save file operations work without database
-   - File system enumeration and metadata extraction
-   - Backup and deletion operations
-
-2. **Database Enhancement Layer (Optional)**
-   - **SQLite database**: `witcher_save_manager.db`
-   - **Enhanced metadata**: Quest information, character variables, inventory
-   - **Performance optimization**: Cached parsing results
-   - **Advanced features**: Save file analysis, quest tracking
-
-### **Database Schema Pattern**
-```sql
-SaveFiles                    # Basic file tracking
-├── SaveFileMetadata        # Enhanced file metadata + foreign key
-│   ├── QuestInfo          # Parsed quest states (FK to SaveFileMetadata)
-│   ├── CharacterVariables # Character stats (FK to SaveFileMetadata)
-│   └── InventoryItems     # Future: Inventory tracking
-├── LanguageResources      # Localization enhancements
-└── DatabaseVersion        # Schema versioning
-```
-
-### **Service Layer Pattern**
-```csharp
-// Hybrid service coordinates file + database operations
-public class WitcherSaveFileService
-{
-    private readonly SaveFileMetadataService _metadataService;
-    
-    public List<WitcherSaveFile> GetSaveFiles()
-    {
-        // 1. Get files from filesystem (always works)
-        var files = Directory.EnumerateFiles(...);
-        
-        // 2. Enhance with database metadata asynchronously
-        _ = Task.Run(() => EnhanceWithDatabaseMetadataAsync(saveFile));
-    }
-}
-
-// Database operations service
-public class SaveFileMetadataService
-{
-    public async Task<Dictionary<string, object>> GetEnhancedMetadataAsync(string fileName);
-    public async Task<bool> StoreQuestDataAsync(string fileName, List<QuestInfo> quests);
-}
-```
-
-### **Database Schema Management (Critical Practice)**
-- **ALL entity creation scripts** must be saved in `database/` folder
-- **Idempotent scripts** using `CREATE TABLE IF NOT EXISTS` patterns
-- **Migration scripts** numbered sequentially (e.g., `001_initial.sql`, `002_add_quests.sql`)
-- **Schema documentation** with table relationships and foreign keys
-- **Why this matters**: Enables easy database recreation, reliable deployments, clear audit trail, and team collaboration
-
 ## 🎨 MVVM Patterns
 
 ### Strict MVVM Rules
@@ -96,9 +35,8 @@ public class SaveFileMetadataService
 - **NO direct file operations in ViewModels** - delegate to services
 - **Commands over event handlers** - use `RelayCommand` pattern
 - **Binding-only UI updates** - `INotifyPropertyChanged` everywhere
-- **Database operations in services only** - ViewModels never touch SQLite directly
 
-### Enhanced ViewModel Pattern
+### ViewModel Example Pattern
 ```csharp
 public class MainViewModel : INotifyPropertyChanged
 {
@@ -149,25 +87,11 @@ private void SetLanguage(string lang)
 ```csharp
 public class WitcherSaveFileService
 {
-    private readonly SaveFileMetadataService _metadataService;
-    
     // Always use game-specific extensions
     string extensionPattern = GameSaveExtensions.GetExtensionForGame(gameKey);
     
     // Handle screenshot relationships
     var screenshotName = saveName + "_640x360.bmp";
-    
-    // Hybrid approach: file + database
-    public List<WitcherSaveFile> GetSaveFiles()
-    {
-        // 1. File system operations (always work)
-        var files = Directory.EnumerateFiles(_saveFolder, extensionPattern);
-        
-        // 2. Enhance with database metadata asynchronously
-        _ = Task.Run(async () => await EnhanceWithDatabaseMetadataAsync(saveFile));
-        
-        return saveFiles;
-    }
     
     // Robust error handling with user feedback
     public bool DeleteSaveFile(WitcherSaveFile save)
@@ -186,51 +110,10 @@ public class WitcherSaveFileService
 }
 ```
 
-### Database Service Pattern
-```csharp
-public class SaveFileMetadataService
-{
-    // Async database operations - never block UI
-    public async Task<Dictionary<string, object>> GetEnhancedMetadataAsync(string fileName)
-    {
-        using var connection = new SQLiteConnection(_connectionString);
-        // Query enhanced metadata from SaveFileMetadata, QuestInfo, etc.
-    }
-    
-    // Store parsed save file data
-    public async Task<bool> StoreQuestDataAsync(string fileName, List<QuestInfo> quests)
-    {
-        // Store quest data in QuestInfo table with FK to SaveFileMetadata
-    }
-}
-```
-
 ### Orphaned File Detection
 - **Automatic detection** after save operations
 - **User choice** for cleanup with clear explanations  
 - **Graceful locked file handling** with detailed reporting
-
-## 🎨 Enhanced UI Patterns
-
-### SaveFileViewModel Enhancement
-```csharp
-public class SaveFileViewModel : INotifyPropertyChanged
-{
-    // Database-enhanced properties
-    public bool HasDatabaseMetadata => SaveFile.Metadata.ContainsKey("database_enhanced");
-    public string CurrentQuest => GetActiveQuest();
-    public int QuestCount => GetQuestCount();
-    public string QuestDisplay => QuestCount > 0 ? $"{CurrentQuest} ({QuestCount} total)" : "No Quest Data";
-    public string MetadataStatus => HasDatabaseMetadata ? $"Enhanced ({QuestCount} quests)" : "Basic metadata";
-}
-```
-
-### UI Column Integration
-```xml
-<!-- Enhanced DataGrid columns show database metadata -->
-<DataGridTextColumn Header="Current Quest" Binding="{Binding QuestDisplay}" Width="200"/>
-<DataGridTextColumn Header="Metadata" Binding="{Binding MetadataStatus}" Width="150"/>
-```
 
 ## 🧪 Testing Requirements
 
@@ -313,17 +196,10 @@ dotnet restore witcherSmartSaveManager.sln
 4. **Handle locked files gracefully** during gameplay
 5. **Update UI counters immediately** after file operations
 6. **Test with temp directories** - never use real save folders in tests
-7. **Database operations are async** - never block UI with SQLite calls
-8. **Hybrid approach first** - ensure file operations work without database
-9. **Use SaveFileMetadataService** for all database operations, not direct SQLite
-10. **Always save database scripts** - every schema change goes in `database/` folder
 
 ## 🔍 Key Files to Reference
 - **`frontend/ViewModels/MainViewModel.cs`** - Primary MVVM example
 - **`WitcherCore/Services/WitcherSaveFileService.cs`** - Service layer pattern
-- **`WitcherCore/Services/SaveFileMetadataService.cs`** - Database operations
-- **`frontend/ViewModels/SaveFileViewModel.cs`** - Enhanced UI properties
 - **`frontend/Utils/ResourceHelper.cs`** - Localization utilities
-- **`database/initialize_database.sql`** - Database schema reference
 - **`PRINCIPLES.md`** - Complete architectural guidelines
 - **`installer/Build-Installer.ps1`** - Build automation example
