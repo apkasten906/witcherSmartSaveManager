@@ -30,6 +30,7 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 - **Configuration Problems**: Build, dependency, environment setup
 - **Logic Errors**: Business logic, data flow, state management
 - **Integration Issues**: File paths, external tools, cross-component communication
+- **Project Management Issues**: Missing cleanup, documentation, incomplete task closure
 
 ### Documentation Standard
 ```
@@ -197,6 +198,56 @@ public static string GetSavePath(GameKey gameKey)
 }
 ```
 
+## 🛠️ WitcherCI Tool Infrastructure
+
+### Organization Structure
+```
+.vscode/tools/
+├── witcher-devagent.bat              # Entry point batch file
+└── witcherci/                        # WitcherCI framework directory
+    ├── WitcherCI.ps1                 # Main task runner
+    ├── witcher_commands.json         # Command definitions
+    ├── scripts/                      # PowerShell execution scripts
+    │   ├── Invoke-DZipAnalysis.ps1
+    │   ├── Invoke-DZipDecompression.ps1
+    │   ├── Invoke-HexAnalysis.ps1
+    │   └── Build-WitcherTools.ps1
+    └── tasks/                        # JSON task definitions
+        ├── test-decompression.json
+        ├── build-test.json
+        └── final-test.json
+```
+
+### WitcherCI Design Patterns
+- **JSON Task Definitions**: All tasks defined in declarative JSON format
+- **Command Whitelisting**: Security through allowed command validation
+- **Parameter Validation**: Type-safe parameter handling with validation
+- **Watch Mode**: Continuous monitoring for automated task execution
+- **Direct Assembly Integration**: PowerShell scripts load WitcherCore.dll directly
+- **Error Isolation**: Failed tasks don't crash the entire runner
+
+### Usage Examples
+```powershell
+# Start watch mode for continuous task monitoring
+.\.vscode\tools\witcher-devagent.bat
+
+# Run single task file
+.\.vscode\tools\witcher-devagent.bat "test-decompression.json"
+
+# Show help and available commands
+.\.vscode\tools\witcher-devagent.bat "help"
+```
+
+### Task File Format
+```json
+{
+    "command": "dzip-analyze",
+    "save-path": "savesAnalysis/_backup/AutoSave_0039.sav",
+    "output-format": "detailed",
+    "pattern": "quest-data"
+}
+```
+
 ## 🚀 Build & Development
 
 ### Essential Commands (PowerShell)
@@ -233,6 +284,9 @@ dotnet restore witcherSmartSaveManager.sln
 5. **Update UI counters immediately** after file operations
 6. **Test with temp directories** - never use real save folders in tests
 7. **APPLY ERROR LEARNING PROTOCOL** - document every error for prevention
+8. **Verify file existence** - use Test-Path before assuming path resolution issues
+9. **Clean up temporary projects** - remove console apps and prototyping code after integration
+10. **Organize tooling properly** - follow WitcherCI structure for all development tools
 
 ## 📝 COMPREHENSIVE ERROR LEARNING LOG
 
@@ -281,6 +335,44 @@ dotnet restore witcherSmartSaveManager.sln
 - **Cause**: Incorrect property names or missing INotifyPropertyChanged
 - **Solution**: Verify property names, implement proper change notification
 - **Prevention**: Use compile-time binding validation and consistent naming
+
+### Project Management & Task Completion Issues
+**Error**: Incomplete task closure without cleanup and documentation
+- **Cause**: Focusing on implementation without proper task completion procedures
+- **Solution**: Always clean up, document, and verify completion before moving to next task
+- **Prevention**: Follow cleanup checklist after each subtask/issue completion
+
+### CI/CD Tool Organization Issues
+**Error**: WitcherCI tool infrastructure scattered across multiple directories
+- **Cause**: Rapid prototyping without proper organizational structure
+- **Solution**: Reorganize into dedicated .vscode\tools\witcherci\ subdirectory with clean separation
+- **Prevention**: Follow DandelionCI patterns with dedicated tool directories from start
+
+**Error**: Batch file pause commands breaking automation workflows
+- **Cause**: Including `pause` commands in CI/CD batch files for debugging
+- **Solution**: Remove all `pause` commands from automation scripts
+- **Prevention**: Use conditional pause only in debug mode, never in production automation
+
+**Error**: PowerShell parameter naming mismatch between task definitions and scripts
+- **Cause**: Using different parameter conventions (kebab-case vs PascalCase) in JSON vs PowerShell
+- **Solution**: Standardize on kebab-case parameters with PowerShell ${parameter-name} syntax
+- **Prevention**: Establish consistent parameter naming conventions across all tooling
+
+**Error**: Temporary console applications left in codebase after prototyping
+- **Cause**: Creating console apps for quick testing without cleanup plan
+- **Solution**: Remove temporary projects, integrate directly with core assemblies
+- **Prevention**: Use PowerShell scripts with direct assembly loading instead of console apps
+
+### File System & Path Resolution Issues
+**Error**: VS Code editor context showing files that don't exist on file system
+- **Cause**: Assuming editor file paths match actual file system locations
+- **Solution**: Always verify file existence with Test-Path before path resolution debugging
+- **Prevention**: Check physical file existence before investigating path resolution logic
+
+**Error**: PowerShell assembly loading failures with "Mindestens ein Typ in der Assembly kann nicht geladen werden"
+- **Cause**: Missing dependency resolution when loading .NET assemblies in PowerShell
+- **Solution**: Ensure all required dependencies are available or use alternative integration approaches
+- **Prevention**: Test assembly loading in isolation before complex script integration
 
 ## 🚨 PowerShell Script Guidelines - CRITICAL
 
@@ -345,3 +437,5 @@ Write-Host "❌ File not found" -ForegroundColor Red
 - **`frontend/Utils/ResourceHelper.cs`** - Localization utilities
 - **`PRINCIPLES.md`** - Complete architectural guidelines
 - **`installer/Build-Installer.ps1`** - Build automation example
+- **`.vscode/tools/witcherci/WitcherCI.ps1`** - Task runner infrastructure
+- **`.vscode/tools/witcher-devagent.bat`** - WitcherCI entry point

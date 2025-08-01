@@ -1,0 +1,99 @@
+{
+    "dzip-analyze": {
+        "description": "Analyze DZIP header structure of Witcher 2 save files",
+        "command": "powershell",
+        "script": "scripts/Invoke-DZipAnalysis.ps1",
+        "parameters": [
+            "save-path",
+            "output-format"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": false,
+                "default": "savesAnalysis/_backup"
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "console",
+                    "json",
+                    "csv"
+                ],
+                "required": false,
+                "default": "console"
+            }
+        }
+    },
+    "dzip-decompress": {
+        "description": "Decompress DZIP save files and analyze content structure",
+        "command": "powershell",
+        "script": "scripts/Invoke-DZipDecompression.ps1",
+        "parameters": [
+            "save-path",
+            "count"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": false,
+                "default": "savesAnalysis/_backup"
+            },
+            "count": {
+                "type": "integer",
+                "min": 1,
+                "max": 50,
+                "required": false,
+                "default": 3
+            }
+        }
+    },
+    "hex-analyze": {
+        "description": "Perform hex analysis on save files to identify patterns",
+        "command": "powershell",
+        "script": "scripts/Invoke-HexAnalysis.ps1",
+        "parameters": [
+            "save-path",
+            "pattern"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "pattern": {
+                "type": "string",
+                "required": false,
+                "default": "quest-data"
+            }
+        }
+    },
+    "build-tools": {
+        "description": "Build all Witcher analysis tools",
+        "command": "powershell",
+        "script": "scripts/Build-WitcherTools.ps1",
+        "parameters": [
+            "configuration"
+        ],
+        "validation": {
+            "configuration": {
+                "type": "enum",
+                "values": [
+                    "Debug",
+                    "Release"
+                ],
+                "required": false,
+                "default": "Debug"
+            }
+        }
+    }
+}
