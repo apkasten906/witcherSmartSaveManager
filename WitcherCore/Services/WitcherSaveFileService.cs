@@ -5,7 +5,7 @@ using System.Linq;
 using WitcherCore.Models;
 using WitcherCore.Configuration;
 using WitcherCore.Services;
-
+using System.Threading.Tasks;
 
 namespace WitcherCore.Services
 {
@@ -14,6 +14,8 @@ namespace WitcherCore.Services
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly GameKey gameKey;
         private readonly string _saveFolder;
+        private readonly SaveFileMetadataService _metadataService;
+
         public string GetSaveFolder()
         {
             return _saveFolder;
@@ -35,6 +37,7 @@ namespace WitcherCore.Services
             this.gameKey = gameKey;
             _saveFolder = SavePathResolver.GetSavePath(gameKey);
             _backupSaveFolder = SavePathResolver.GetDefaultBackupPath(gameKey);
+            _metadataService = new SaveFileMetadataService();
         }
 
         // Overload to allow for custom save and backup folders, useful for testing or specific configurations
@@ -43,6 +46,7 @@ namespace WitcherCore.Services
             this.gameKey = gameKey;
             _saveFolder = saveFolder;
             _backupSaveFolder = backupFolder;
+            _metadataService = new SaveFileMetadataService();
         }
 
         public List<WitcherSaveFile> GetSaveFiles()
@@ -58,7 +62,7 @@ namespace WitcherCore.Services
             try
             {
                 var files = Directory.EnumerateFiles(_saveFolder, extensionPattern, SearchOption.TopDirectoryOnly);
-                return files.Select(file =>
+                var saveFiles = files.Select(file =>
                 {
                     var info = new FileInfo(file);
                     var saveName = Path.GetFileNameWithoutExtension(info.Name);
@@ -67,7 +71,8 @@ namespace WitcherCore.Services
                     var backupPath = Path.Combine(_backupSaveFolder, info.Name);
                     var backupScreenshotPath = Path.Combine(_backupSaveFolder, screenshotName);
                     Logger.Debug($"Found save: {info.Name}, Modified: {info.LastWriteTimeUtc}");
-                    return new WitcherSaveFile
+
+                    var saveFile = new WitcherSaveFile
                     {
                         Game = gameKey,
                         FileName = info.Name,
@@ -79,12 +84,47 @@ namespace WitcherCore.Services
                         BackupExists = File.Exists(backupPath),
                         Metadata = MetadataExtractor.GetMetadata(file)
                     };
+
+                    // Enhance with database metadata asynchronously
+                    _ = Task.Run(async () => await EnhanceWithDatabaseMetadataAsync(saveFile));
+
+                    return saveFile;
                 }).ToList();
+
+                Logger.Info($"Found {saveFiles.Count} save files in {_saveFolder}");
+                return saveFiles;
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "Error enumerating save files.");
                 return new List<WitcherSaveFile>();
+            }
+        }
+
+        /// <summary>
+        /// Enhances a save file with database metadata
+        /// </summary>
+        private async Task EnhanceWithDatabaseMetadataAsync(WitcherSaveFile saveFile)
+        {
+            try
+            {
+                var enhancedMetadata = await _metadataService.GetEnhancedMetadataAsync(saveFile.FileName);
+
+                // Merge database metadata with existing metadata
+                foreach (var kvp in enhancedMetadata)
+                {
+                    saveFile.Metadata[kvp.Key] = kvp.Value;
+                }
+
+                // Store/update metadata in database for future use
+                await _metadataService.UpsertSaveFileMetadataAsync(saveFile);
+
+                Logger.Debug($"Enhanced metadata for {saveFile.FileName} with database data");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"Failed to enhance metadata for {saveFile.FileName}");
+                saveFile.Metadata["metadata_error"] = ex.Message;
             }
         }
 

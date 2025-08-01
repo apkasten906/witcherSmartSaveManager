@@ -53,7 +53,34 @@ Avoid using hardcoded strings for programmatic decision making. This ensures the
 
 * Define display names and paths in a config-backed model, not inline.
 
-## 📁 File Management Patterns
+## �️ Database Management Principles
+
+### **Schema Version Control**
+* **All database schema changes** must be saved as scripts in the `database/` folder
+* **Entity creation scripts** should be idempotent (use `CREATE TABLE IF NOT EXISTS`)
+* **Migration scripts** should be numbered and sequenced (e.g., `001_initial_schema.sql`, `002_add_quest_tracking.sql`)
+* **Schema documentation** should include table relationships and purpose
+* This practice enables:
+  - Easy recreation of database from scratch
+  - Reliable deployment to different environments
+  - Clear audit trail of schema evolution
+  - Team collaboration and code review of database changes
+
+### **Hybrid Storage Strategy**
+* **File-based operations** must always work without database dependency
+* **Database enhancements** provide optional rich metadata and caching
+* **Service layer** coordinates between file system and database operations
+* **Asynchronous database operations** to never block the UI thread
+* **Graceful degradation** when database is unavailable or corrupted
+
+### **Database Access Patterns**
+* **Use SaveFileMetadataService** for all database operations
+* **Never expose SQLite directly** to ViewModels or UI layers
+* **Connection string management** through configuration system
+* **Proper disposal** of database connections using `using` statements
+* **Error handling** with fallback to file-based operations
+
+## �📁 File Management Patterns
 
 * **Dynamic File Extensions**: Always use `GameSaveExtensions.GetExtensionForGame(gameKey)` instead of hardcoded patterns
   - Ensures consistency between save loading and backup counting

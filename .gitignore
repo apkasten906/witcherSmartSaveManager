@@ -18,6 +18,11 @@ obj/
 # Ignore publish directory
 publish/
 
+# Database runtime files (keep schema scripts, ignore runtime db files)
+*.db
+*.db-shm
+*.db-wal
+
 # Witcher tools and resources
 CookedPC/
 pack0unzip/
