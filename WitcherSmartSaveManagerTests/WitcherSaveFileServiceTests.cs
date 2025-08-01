@@ -1,10 +1,9 @@
-
 using System.Collections.Generic;
 using System.IO;
 using System;
 using NUnit.Framework;
-using WitcherSmartSaveManager.Services;
-using WitcherSmartSaveManager.Models;
+using WitcherCore.Services;
+using WitcherCore.Models;
 using NUnit.Framework.Legacy;
 
 namespace WitcherSmartSaveManager.Tests

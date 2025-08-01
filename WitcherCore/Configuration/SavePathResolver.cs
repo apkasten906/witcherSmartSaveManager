@@ -1,13 +1,15 @@
-﻿#nullable enable
+#nullable enable
 using System;
 using Microsoft.Extensions.Configuration;
-using WitcherSmartSaveManager.Models;
+using WitcherCore.Models;
 
-namespace WitcherSmartSaveManager.Utils
+namespace WitcherCore.Configuration
 {
     public static class SavePathResolver
     {
         private static readonly IConfiguration? _userConfig;
+
+
 
         static SavePathResolver()
         {

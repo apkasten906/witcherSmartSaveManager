@@ -1,6 +1,6 @@
 using NUnit.Framework;
-using WitcherSmartSaveManager.Services;
-using WitcherSmartSaveManager.Models;
+using WitcherCore.Services;
+using WitcherCore.Models;
 using System.IO;
 using System;
 
@@ -22,7 +22,13 @@ namespace WitcherSmartSaveManager.Tests
         public void BackupSaveFile_Throws_WhenFileMissing()
         {
             var service = new WitcherSaveFileService(GameKey.Witcher2, Path.GetTempPath(), Path.GetTempPath());
-            var dummySave = new WitcherSaveFile { FullPath = "Z:\\NonExistentFile.sav", ScreenshotPath = "" };
+            var dummySave = new WitcherSaveFile
+            {
+                FileName = "NonExistentFile.sav",
+                FullPath = "Z:\\NonExistentFile.sav",
+                ScreenshotPath = "",
+                ModifiedTimeIso = DateTime.Now.ToString("O")
+            };
             Assert.Throws<FileNotFoundException>(() => service.BackupSaveFile(dummySave));
             // Manual: Check logs/app.log for error about missing file
         }

@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\frontend\WitcherSmartSaveManager.csproj" />
+    <ProjectReference Include="..\WitcherCore\WitcherCore.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
   <!--<Target Name="PreBuild" BeforeTargets="PreBuildEvent">

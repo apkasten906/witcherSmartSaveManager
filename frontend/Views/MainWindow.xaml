@@ -163,6 +163,14 @@
                                     Binding="{Binding FileName}"
                                     IsReadOnly="True"
                                     Width="*"/>
+                <DataGridTextColumn Header="Current Quest"
+                                    Binding="{Binding QuestDisplay}"
+                                    IsReadOnly="True"
+                                    Width="200"/>
+                <DataGridTextColumn Header="Metadata"
+                                    Binding="{Binding MetadataStatus}"
+                                    IsReadOnly="True"
+                                    Width="150"/>
                 <DataGridTextColumn Header="Modified"
                                     Binding="{Binding ModifiedTimeIso}"
                                     IsReadOnly="True"

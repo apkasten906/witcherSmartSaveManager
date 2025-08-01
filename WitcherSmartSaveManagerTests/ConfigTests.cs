@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
-using WitcherSmartSaveManager.Models;
-using WitcherSmartSaveManager.Utils;
+using WitcherCore.Models;
+using WitcherCore.Configuration;
 
 [TestFixture]
 public class ConfigTests

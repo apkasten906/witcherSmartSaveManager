@@ -1,6 +1,7 @@
 using NUnit.Framework;
-using WitcherSmartSaveManager.Services;
-using WitcherSmartSaveManager.Models;
+using WitcherCore.Services;
+using WitcherCore.Models;
+using System;
 using System.IO;
 
 namespace WitcherSmartSaveManager.Tests
@@ -20,7 +21,13 @@ namespace WitcherSmartSaveManager.Tests
             var testFile = Path.Combine(tempDir, "test.sav");
             File.WriteAllText(testFile, "original");
             var service = new WitcherSaveFileService(GameKey.Witcher2, tempDir, backupDir);
-            var save = new WitcherSaveFile { FullPath = testFile, ScreenshotPath = "" };
+            var save = new WitcherSaveFile
+            {
+                FileName = "test.sav",
+                FullPath = testFile,
+                ScreenshotPath = "",
+                ModifiedTimeIso = DateTime.Now.ToString("O")
+            };
             // First backup
             Assert.That(service.BackupSaveFile(save, false), Is.True);
             // Overwrite backup
@@ -42,7 +49,13 @@ namespace WitcherSmartSaveManager.Tests
             var testFile = Path.Combine(tempDir, "test.sav");
             File.WriteAllText(testFile, "original");
             var service = new WitcherSaveFileService(GameKey.Witcher2, tempDir, backupDir);
-            var save = new WitcherSaveFile { FullPath = testFile, ScreenshotPath = "" };
+            var save = new WitcherSaveFile
+            {
+                FileName = "test.sav",
+                FullPath = testFile,
+                ScreenshotPath = "",
+                ModifiedTimeIso = DateTime.Now.ToString("O")
+            };
             // First backup
             Assert.That(service.BackupSaveFile(save, false), Is.True);
             // Try backup again without overwrite
@@ -62,7 +75,13 @@ namespace WitcherSmartSaveManager.Tests
             Directory.CreateDirectory(backupDir);
             var testFile = Path.Combine(tempDir, "missing.sav");
             var service = new WitcherSaveFileService(GameKey.Witcher2, tempDir, backupDir);
-            var save = new WitcherSaveFile { FullPath = testFile, ScreenshotPath = "" };
+            var save = new WitcherSaveFile
+            {
+                FileName = "missing.sav",
+                FullPath = testFile,
+                ScreenshotPath = "",
+                ModifiedTimeIso = DateTime.Now.ToString("O")
+            };
             Assert.DoesNotThrow(() => service.DeleteSaveFile(save));
             Directory.Delete(tempDir, true);
             Directory.Delete(backupDir, true);

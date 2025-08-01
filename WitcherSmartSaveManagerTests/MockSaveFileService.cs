@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using WitcherSmartSaveManager.Models;
+using WitcherCore.Models;
 
 namespace WitcherSmartSaveManager.Tests.Mocks
 {

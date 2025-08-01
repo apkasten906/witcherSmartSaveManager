@@ -1,0 +1,15 @@
+using System;
+using WitcherSmartSaveManager.Shared;
+
+namespace WitcherSmartSaveManager.DataLayer
+{
+    public class SaveFileRepository : ISaveFileRepository
+    {
+        public void InsertMetadata(SaveFileMetadata metadata)
+        {
+            // Example implementation for inserting metadata into the database
+            Console.WriteLine($"Inserting metadata for {metadata.FileName} into the database.");
+            // Actual database logic goes here
+        }
+    }
+}
