@@ -1,7 +1,8 @@
 using System.Globalization;
 using System.Threading;
-using WitcherSmartSaveManager.Models;
-using WitcherSmartSaveManager.Services;
+using WitcherCore.Models;
+using WitcherCore.Services;
+using WitcherCore.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

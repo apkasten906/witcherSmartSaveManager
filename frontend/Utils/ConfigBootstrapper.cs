@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
-using WitcherSmartSaveManager.Models;
+using WitcherCore.Models;
 
 namespace WitcherSmartSaveManager.Utils
 {

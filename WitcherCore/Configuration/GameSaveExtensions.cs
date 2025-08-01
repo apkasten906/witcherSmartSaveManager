@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Configuration;
 using WitcherCore.Models;
 
-namespace WitcherSmartSaveManager.Utils
+namespace WitcherCore.Configuration
 {
     public static class GameSaveExtensions
     {

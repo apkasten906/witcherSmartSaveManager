@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using WitcherCore.Models;
 
-namespace WitcherSmartSaveManager.Utils
+namespace WitcherCore.Services
 {
     public static class MetadataExtractor
     {

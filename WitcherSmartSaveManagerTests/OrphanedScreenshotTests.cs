@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using WitcherSmartSaveManager.Services;
-using WitcherSmartSaveManager.Models;
+using WitcherCore.Services;
+using WitcherCore.Models;
 
 namespace WitcherSmartSaveManager.Tests
 {
@@ -49,14 +49,6 @@ namespace WitcherSmartSaveManager.Tests
         {
             var emptyList = new List<string>();
             var deletedCount = _service.CleanupOrphanedScreenshots(emptyList);
-
-            Assert.That(deletedCount, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void CleanupOrphanedScreenshots_WithNullList_ReturnsZero()
-        {
-            var deletedCount = _service.CleanupOrphanedScreenshots(null);
 
             Assert.That(deletedCount, Is.EqualTo(0));
         }

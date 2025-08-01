@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using System.ComponentModel;
 using System.Windows.Input;
-using WitcherSmartSaveManager.Models;
+using WitcherCore.Models;
 
 namespace WitcherSmartSaveManager.ViewModels
 {

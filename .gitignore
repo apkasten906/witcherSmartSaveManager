@@ -17,3 +17,7 @@ obj/
 
 # Ignore publish directory
 publish/
+
+# Witcher tools and resources
+CookedPC/
+pack0unzip/
