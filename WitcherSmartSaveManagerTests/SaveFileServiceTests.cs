@@ -1,7 +1,7 @@
 using System.IO;
 using NUnit.Framework;
 using WitcherSmartSaveManager.Tests.Mocks;
-using WitcherSmartSaveManager.Utils;
+using WitcherCore.Services;
 
 namespace WitcherSmartSaveManager.Tests
 {

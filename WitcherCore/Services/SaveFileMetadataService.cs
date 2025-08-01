@@ -32,6 +32,74 @@ namespace WitcherCore.Services
         }
 
         /// <summary>
+        /// Initialize database schema for testing purposes
+        /// </summary>
+        public async Task<bool> InitializeDatabaseAsync()
+        {
+            try
+            {
+                using var connection = new SQLiteConnection(_connectionString);
+                await connection.OpenAsync();
+
+                // Create SaveFiles table
+                const string createSaveFilesSql = @"
+                    CREATE TABLE IF NOT EXISTS SaveFiles (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        FileName TEXT NOT NULL,
+                        Timestamp DATETIME NOT NULL,
+                        GameState TEXT
+                    )";
+
+                // Create SaveFileMetadata table
+                const string createMetadataSql = @"
+                    CREATE TABLE IF NOT EXISTS SaveFileMetadata (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        SaveFileId INTEGER NOT NULL,
+                        FileName TEXT NOT NULL,
+                        GameKey TEXT NOT NULL,
+                        FullPath TEXT NOT NULL,
+                        ScreenshotPath TEXT,
+                        FileSize INTEGER,
+                        LastModified DATETIME NOT NULL,
+                        ModifiedTimeIso TEXT,
+                        CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (SaveFileId) REFERENCES SaveFiles (Id)
+                    )";
+
+                // Create QuestInfo table
+                const string createQuestSql = @"
+                    CREATE TABLE IF NOT EXISTS QuestInfo (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        SaveFileId INTEGER NOT NULL,
+                        QuestName TEXT NOT NULL,
+                        QuestPhase TEXT NOT NULL,
+                        QuestDescription TEXT,
+                        IsCompleted BOOLEAN NOT NULL DEFAULT 0,
+                        CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (SaveFileId) REFERENCES SaveFileMetadata (Id)
+                    )";
+
+                using var saveFilesCommand = new SQLiteCommand(createSaveFilesSql, connection);
+                await saveFilesCommand.ExecuteNonQueryAsync();
+
+                using var metadataCommand = new SQLiteCommand(createMetadataSql, connection);
+                await metadataCommand.ExecuteNonQueryAsync();
+
+                using var questCommand = new SQLiteCommand(createQuestSql, connection);
+                await questCommand.ExecuteNonQueryAsync();
+
+                Logger.Info("Database schema initialized successfully");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Failed to initialize database schema");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Inserts or updates save file metadata in the database
         /// </summary>
         public async Task<bool> UpsertSaveFileMetadataAsync(WitcherSaveFile saveFile)

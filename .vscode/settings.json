@@ -20,6 +20,8 @@
     "dotnet-test-explorer.autoWatch": true,
     "dotnet-test-explorer.showCodeLens": true,
     "dotnet-test-explorer.testArguments": "/p:CollectCoverage=true",
+    "dotnet-test-explorer.logLevel": "Debug",
+    "dotnet-test-explorer.enableTelemetry": false,
     // Code lens features
     "editor.codeLens": true,
     // Problem detection

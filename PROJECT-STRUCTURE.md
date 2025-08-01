@@ -89,6 +89,8 @@ The application implements a **hybrid approach** combining file-based core funct
 - **Enhanced metadata storage**: Quest information, character variables, inventory
 - **Performance optimization**: Cached file metadata and parsing results
 - **Advanced features**: Save file analysis, quest tracking, character progression
+- **Automated schema initialization**: `InitializeDatabaseAsync()` creates tables for testing/deployment
+- **Graceful degradation**: System works even when database features are unavailable
 
 ### **Database Schema**
 ```sql
@@ -103,8 +105,10 @@ SaveFiles                    # Basic file tracking
 
 ### **Hybrid Service Pattern**
 - **WitcherSaveFileService**: Coordinates file + database operations
-- **SaveFileMetadataService**: Handles database operations
+- **SaveFileMetadataService**: Handles all database operations with error handling
 - **MetadataExtractor**: Parses save file content for database storage
+- **Database Testing**: Comprehensive integration tests verify hybrid functionality
+- **Schema Management**: All database entity scripts saved in `database/` folder
 
 ## 🎯 Architecture Principles
 
@@ -159,13 +163,14 @@ frontend → Services → WitcherCore → Shared
 The project is currently migrating from a single-project structure to a clean multi-project architecture:
 
 - ✅ **WitcherCore**: New core logic layer established
-- ✅ **Database Integration**: Hybrid SQLite architecture implemented
-- ✅ **Enhanced Metadata**: SaveFileMetadataService for database operations
-- ✅ **UI Enhancements**: Database-powered save file information display
-- ✅ **Testing**: Comprehensive test coverage
+- ✅ **Database Integration**: Hybrid SQLite architecture implemented with automated schema initialization
+- ✅ **Enhanced Metadata**: SaveFileMetadataService for database operations with graceful degradation
+- ✅ **UI Enhancements**: Database-powered save file information display (Current Quest, Metadata Status columns)
+- ✅ **Testing**: Comprehensive database integration test coverage (6/7 passing)
+- ✅ **Hybrid Architecture**: File-based core + optional database enhancements working end-to-end
 - 🔄 **Services**: Legacy services being moved to WitcherCore
 - ✅ **Frontend**: MVVM patterns established
-- 🚧 **Save File Parsing**: Witcher 2 content parsing (next phase)
+- 🚧 **Save File Parsing**: Witcher 2 content parsing (ready for implementation)
 
 ## 🎮 Witcher Game Support
 

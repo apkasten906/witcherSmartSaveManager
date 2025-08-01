@@ -3,5 +3,21 @@
         {
             "path": "."
         }
-    ]
+    ],
+    "settings": {
+        "dbcode.connections": [
+            {
+                "connectionId": "a79r6B5qztSAX4K1CwIY4",
+                "name": "Data Source=witcher_save_manager.db;Version=3;Journal Mode=WAL;Cache Size=10000;Synchronous=Normal;",
+                "driver": "sqlite",
+                "connectionType": "socket",
+                "socket": "witcherSmartSaveManager/database/witcher_save_manager.db",
+                "readOnly": false,
+                "driverOptions": {
+                    "extensions": []
+                },
+                "idleTimeout": 0
+            }
+        ]
+    }
 }
