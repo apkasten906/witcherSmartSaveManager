@@ -41,11 +41,17 @@ Available Commands:
   dzip-decompress    - Decompress and analyze save content  
   build-tools        - Build all analysis tools
   hex-analyze        - Perform hex pattern analysis
+  simple-dzip-analyze - Native PowerShell DZIP header analysis
+
+💡 Important: Witcher 2 save files may contain POLISH text strings!
+   CD Projekt RED is a Polish studio - expect Polish quest names,
+   variable names, and game text in save file data.
 
 Example Tasks:
   {"command": "dzip-decompress", "count": 5}
   {"command": "dzip-analyze", "output-format": "json"}
   {"command": "build-tools", "configuration": "Release"}
+  {"command": "simple-dzip-analyze", "save-path": "savesAnalysis/_backup/AutoSave_0039.sav"}
 
 Task files are monitored in: $TasksDir
 Commands defined in: $CommandsFile

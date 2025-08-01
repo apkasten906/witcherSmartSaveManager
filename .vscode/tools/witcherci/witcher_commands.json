@@ -95,5 +95,32 @@
                 "default": "Debug"
             }
         }
+    },
+    "simple-dzip-analyze": {
+        "description": "Simple DZIP header analysis using native PowerShell",
+        "command": "powershell",
+        "script": "scripts/Invoke-SimpleDZipAnalysis.ps1",
+        "parameters": [
+            "save-path",
+            "output-format"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "console",
+                    "json"
+                ],
+                "required": false,
+                "default": "console"
+            }
+        }
     }
 }

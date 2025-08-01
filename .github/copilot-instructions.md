@@ -225,6 +225,7 @@ public static string GetSavePath(GameKey gameKey)
 - **Watch Mode**: Continuous monitoring for automated task execution
 - **Direct Assembly Integration**: PowerShell scripts load WitcherCore.dll directly
 - **Error Isolation**: Failed tasks don't crash the entire runner
+- **Polish Language Awareness**: CD Projekt RED is Polish - expect Polish text in save files
 
 ### Usage Examples
 ```powershell
