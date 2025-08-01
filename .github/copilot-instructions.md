@@ -20,6 +20,13 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 - **`Shared/`** - Common types and utilities
 - **`WitcherSmartSaveManagerTests/`** - NUnit test project
 
+### File Organization Rules
+- **One class per file** - Never put multiple public classes in the same file
+- **Models in Models/** - All data models belong in `WitcherCore/Models/` or `Shared/Models/`
+- **Services focused** - Service classes should be single-purpose and delegate to models
+- **No nested public classes** - Extract nested classes to separate files with proper naming
+- **Consistent naming** - `SaveFileData.cs`, `QuestState.cs`, `ParseResult.cs` etc.
+
 ### Critical Dependencies
 ```xml
 <!-- Core packages across projects -->
