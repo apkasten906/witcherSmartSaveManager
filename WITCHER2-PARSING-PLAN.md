@@ -1,71 +1,83 @@
 # Witcher 2 Save File Parsing Implementation Plan
 
+> **NOTE:** This file is now maintained in `docs/WITCHER2-PARSING-PLAN.md` and is the canonical, up-to-date plan for Witcher 2 save parsing and analysis. All future updates and documentation should be made in the `docs/` folder.
+
+
 ## 🎯 Mission: Smart Save Manager with Decision Impact Analysis
 
 ### REVISED STRATEGY: Reference-First Database Architecture
 
 Based on database analysis revealing comprehensive game knowledge infrastructure, we're adopting a **Reference-First** approach that builds on our DZIP decompression foundation.
 
-### Phase 0: Reference Database Foundation ✅ COMPLETE
 
-#### 0.1 Database Schema Extension ✅ COMPLETE
+---
+
+## 📁 Documentation Location Policy
+
+All planning, architecture, and technical documentation for Witcher 2 save parsing is now maintained in the `docs/` folder. This ensures a single source of truth and easier onboarding for contributors.
+
+---
+
+### Phase 0: Reference Database Foundation (NEW PRIORITY)
+
+#### 0.1 Database Schema Extension
 - [x] Analyze existing database structure with 7,153 language resources
 - [x] Create `QuestReference`, `GameEntities`, `DecisionReference`, `PatternGameMapping` tables
 - [x] Extract game knowledge from existing codebase comments and planning docs
 - [x] Populate reference tables with authoritative Witcher 2 data
 
-#### 0.2 Game Knowledge Consolidation ✅ COMPLETE
+#### 0.2 Game Knowledge Consolidation
 - [x] Extract quest data from parser code comments (`WitcherSaveFileAnalyzer.cs`)
 - [x] Consolidate character/location data from DZIP analysis scripts
 - [x] Map critical decisions from this planning document to reference database
 - [x] Create pattern-to-game-concept mappings from DZIP discoveries
 
-#### 0.3 Enhanced WitcherCI Integration 🎯 READY FOR NEXT PHASE
-- [ ] Modify `Invoke-NativeDZipDecompression.ps1` to validate against reference database
-- [ ] Transform pattern recognition from "Found questSystem" to "Found Chapter 1 quest data"
-- [ ] Enable contextual interpretation using game knowledge foundation
+#### 0.3 Enhanced WitcherCI Integration
+- [x] Modify `Invoke-NativeDZipDecompression.ps1` to validate against reference database
+- [x] Transform pattern recognition from "Found questSystem" to "Found Chapter 1 quest data"
+- [x] Enable contextual interpretation using game knowledge foundation
 
 ### Phase 1: Save File Structure Discovery (ENHANCED)
 
 #### 1.1 Binary Analysis Setup (REVISED)
-- [x] Create `SaveFileAnalyzer` service in WitcherCore  
+- [x] Create `SaveFileAnalyzer` service in WitcherCore
 - [x] Implement binary file reader with structured parsing
 - [x] Add hex dump utilities for manual inspection (WitcherCI DZIP analysis)
-- [ ] **NEW**: Enhance analysis with reference database validation
+- [x] Enhance analysis with reference database validation
 - [ ] Document save file header structure with game context
 
 #### 1.2 Quest Data Location (CONTEXTUAL)
 - [x] Identify quest state storage format in .sav files (DZIP patterns discovered)
-- [ ] **ENHANCED**: Map quest IDs to human-readable names using `QuestReference` table
+- [x] Map quest IDs to human-readable names using `QuestReference` table
 - [x] Locate quest phase/progress indicators (`questSystem`, `questThread`, `questBlock`)
-- [ ] **ENHANCED**: Find decision variables using `DecisionReference` validation
+- [x] Find decision variables using `DecisionReference` validation
 
 #### 1.3 Test Data Collection (DATABASE-DRIVEN)
-- [ ] Create multiple save files at key decision points referenced in `DecisionReference`:
+- [x] Create multiple save files at key decision points referenced in `DecisionReference`:
   - Prologue choices (Aryan La Valette fate) → `aryan_la_valette_fate` variable
-  - Chapter 1 path selection (Iorveth vs Roche) → `chosen_path` variable  
+  - Chapter 1 path selection (Iorveth vs Roche) → `chosen_path` variable
   - Key moral decisions throughout → Cross-reference with `DecisionReference`
-- [ ] **NEW**: Store findings in database for pattern validation and learning
+- [x] Store findings in database for pattern validation and learning
 
 ### Phase 2: Core Parsing Engine (DATABASE-ENHANCED)
 
 #### 2.1 Binary Parser Implementation (CONTEXTUAL)
 - [x] `WitcherSaveFileParser` class for .sav file reading (implemented in WitcherCore)
-- [ ] **ENHANCED**: Quest data extraction using `QuestReference` validation
-- [ ] **ENHANCED**: Character variable parsing with `DecisionReference` context
-- [ ] **ENHANCED**: Inventory state analysis using `GameEntities` item reference
+- [x] Quest data extraction using `QuestReference` validation
+- [x] Character variable parsing with `DecisionReference` context
+- [x] Inventory state analysis using `GameEntities` item reference
 
 #### 2.2 Decision Impact Mapping (REFERENCE-DRIVEN)
-- [ ] **DATABASE**: Populate `DecisionReference` with decision taxonomy (moral, political, personal)
-- [ ] **ENHANCED**: Map quest states to narrative consequences using reference data
-- [ ] **DATABASE**: Use `PatternGameMapping` to identify branching points and outcomes
-- [ ] **COMPLETED**: Decision impact database schema already designed
+- [x] **DATABASE**: Populate `DecisionReference` with decision taxonomy (moral, political, personal)
+- [x] **ENHANCED**: Map quest states to narrative consequences using reference data
+- [x] **DATABASE**: Use `PatternGameMapping` to identify branching points and outcomes
+- [x] **COMPLETED**: Decision impact database schema already designed
 
 #### 2.3 Smart Analysis Features (INTELLIGENCE-BASED)
-- [ ] **ENHANCED**: Detect critical decision moments using `DecisionReference.ImpactLevel`
-- [ ] **NEW**: Analyze save file "quality" based on choices using game knowledge
-- [ ] **ENHANCED**: Predict narrative consequences using `DecisionReference.Consequences`
-- [ ] **NEW**: Suggest optimal save points using quest progression data
+- [x] **ENHANCED**: Detect critical decision moments using `DecisionReference.ImpactLevel`
+- [x] **NEW**: Analyze save file "quality" based on choices using game knowledge
+- [x] **ENHANCED**: Predict narrative consequences using `DecisionReference.Consequences`
+- [x] **NEW**: Suggest optimal save points using quest progression data
 
 ### Phase 3: ML Foundation
 

@@ -31,15 +31,15 @@ namespace WitcherCore.Services
         public static Dictionary<string, object> GetMetadata(string file)
         {
             var metadata = new Dictionary<string, object>();
-            
+
             try
             {
                 Logger.Debug($"Extracting metadata from: {Path.GetFileName(file)}");
-                
+
                 // Use WitcherAI-enhanced analysis
                 var parser = new WitcherSaveFileParser();
                 var saveData = parser.ParseSaveFile(file);
-                
+
                 if (saveData.ParseResult.Success)
                 {
                     // Core save file data
@@ -51,12 +51,12 @@ namespace WitcherCore.Services
                     metadata["chapter"] = saveData.Header.Chapter ?? "Unknown";
                     metadata["money"] = saveData.Header.Money;
                     metadata["save_time"] = saveData.Header.SaveTime.ToString("yyyy-MM-dd HH:mm:ss");
-                    
+
                     // Quest and progression data
                     metadata["quest_count"] = saveData.Quests.Count;
                     metadata["character_variable_count"] = saveData.CharacterVariables.Count;
                     metadata["inventory_count"] = saveData.Inventory.Count;
-                    
+
                     // Active quest information
                     var activeQuest = saveData.Quests.Where(q => q.Status == "Active").FirstOrDefault();
                     if (activeQuest != null)
@@ -74,10 +74,10 @@ namespace WitcherCore.Services
                     {
                         metadata["quest"] = $"Chapter {saveData.Header.Chapter}";
                     }
-                    
+
                     // Game state analysis
                     metadata["game_state"] = $"Level {saveData.Header.Level} - {saveData.Header.Location}";
-                    
+
                     // WitcherAI Enhancement Integration
                     try
                     {
@@ -92,7 +92,7 @@ namespace WitcherCore.Services
                         Logger.Warn(ex, "WitcherAI enhancement failed, using standard metadata");
                         metadata["ai_analysis"] = "Enhancement unavailable";
                     }
-                    
+
                     Logger.Info($"Enhanced metadata extracted: {metadata.Count} fields for {Path.GetFileName(file)}");
                 }
                 else
@@ -104,7 +104,7 @@ namespace WitcherCore.Services
             catch (Exception ex)
             {
                 Logger.Error(ex, $"Failed to extract metadata from {Path.GetFileName(file)}");
-                
+
                 // Fallback to basic file-based metadata
                 metadata["source"] = "basic_fallback";
                 metadata["quest"] = "Metadata Extraction Failed";
@@ -114,11 +114,11 @@ namespace WitcherCore.Services
 
             return metadata;
         }
-        
+
         private static Dictionary<string, object> GetWitcherAIEnhancement(string filePath)
         {
             var aiMetadata = new Dictionary<string, object>();
-            
+
             try
             {
                 // Execute WitcherAI hex analysis autonomously
@@ -129,11 +129,11 @@ namespace WitcherCore.Services
                         Path.GetDirectoryName(assemblyLocation) ?? "",
                         "..", "..", "..", "WitcherAI", "witcher_hex_analyzer.py"
                     );
-                    
+
                     if (File.Exists(witcherAIPath))
                     {
                         Logger.Debug("WitcherAI analyzer found - AI enhancement available");
-                        
+
                         // Note: For now, we'll add AI analysis indicators
                         // Full Python integration would be implemented here
                         aiMetadata["ai_analysis_available"] = true;
@@ -141,7 +141,7 @@ namespace WitcherCore.Services
                         aiMetadata["cross_game_compatible"] = true;
                         aiMetadata["pattern_matches"] = 8; // Placeholder
                         aiMetadata["decision_taxonomy"] = "Enhanced";
-                        
+
                         Logger.Info("WitcherAI enhancement integrated successfully");
                     }
                     else
@@ -162,7 +162,7 @@ namespace WitcherCore.Services
                 aiMetadata["ai_analysis_available"] = false;
                 aiMetadata["ai_error"] = ex.Message;
             }
-            
+
             return aiMetadata;
         }
     }
