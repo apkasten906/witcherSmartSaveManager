@@ -122,5 +122,40 @@
                 "default": "console"
             }
         }
+    },
+    "native-dzip-decompress": {
+        "description": "Native PowerShell DZIP decompression and content analysis",
+        "command": "powershell",
+        "script": "scripts/Invoke-NativeDZipDecompression.ps1",
+        "parameters": [
+            "save-path",
+            "bytes-to-extract",
+            "output-format"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "bytes-to-extract": {
+                "type": "integer",
+                "min": 256,
+                "max": 10240,
+                "required": false,
+                "default": 1024
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "console",
+                    "hex"
+                ],
+                "required": false,
+                "default": "console"
+            }
+        }
     }
 }
