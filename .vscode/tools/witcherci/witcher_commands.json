@@ -157,5 +157,47 @@
                 "default": "console"
             }
         }
+    },
+    "quest-extract": {
+        "description": "Extract quest data and structures from Witcher 2 save files",
+        "command": "powershell",
+        "script": "scripts/Invoke-QuestDataExtraction.ps1",
+        "parameters": [
+            "save-path",
+            "bytes-to-extract",
+            "quest-filter",
+            "output-format"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "bytes-to-extract": {
+                "type": "integer",
+                "min": 1024,
+                "max": 16384,
+                "required": false,
+                "default": 4096
+            },
+            "quest-filter": {
+                "type": "string",
+                "required": false,
+                "default": ""
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "structured",
+                    "detailed",
+                    "summary"
+                ],
+                "required": false,
+                "default": "structured"
+            }
+        }
     }
 }

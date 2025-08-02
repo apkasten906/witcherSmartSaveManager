@@ -41,7 +41,7 @@ function Extract-DZipContent {
     
     # Try to decompress using .NET Deflate
     try {
-        $memoryStream = New-Object System.IO.MemoryStream(,$compressedData)
+        $memoryStream = New-Object System.IO.MemoryStream(, $compressedData)
         $deflateStream = New-Object System.IO.Compression.DeflateStream($memoryStream, [System.IO.Compression.CompressionMode]::Decompress)
         
         $buffer = New-Object byte[] $BytesToExtract
@@ -54,7 +54,8 @@ function Extract-DZipContent {
             $decompressedData = $buffer[0..($bytesRead - 1)]
             Write-Status "Successfully decompressed $bytesRead bytes"
             return $decompressedData
-        } else {
+        }
+        else {
             Write-Status "No data decompressed - trying alternative method"
         }
     }
@@ -66,7 +67,7 @@ function Extract-DZipContent {
     try {
         # Skip potential zlib header (2 bytes)
         $zlibData = $compressedData[2..($compressedData.Length - 1)]
-        $memoryStream = New-Object System.IO.MemoryStream(,$zlibData)
+        $memoryStream = New-Object System.IO.MemoryStream(, $zlibData)
         $deflateStream = New-Object System.IO.Compression.DeflateStream($memoryStream, [System.IO.Compression.CompressionMode]::Decompress)
         
         $buffer = New-Object byte[] $BytesToExtract
@@ -116,9 +117,11 @@ function Analyze-DecompressedData {
                 $strings += $currentString
             }
             $currentString = ""
-        } elseif ($byte -ge 32 -and $byte -le 126) {
+        }
+        elseif ($byte -ge 32 -and $byte -le 126) {
             $currentString += [char]$byte
-        } else {
+        }
+        else {
             if ($currentString.Length -gt 3) {
                 $strings += $currentString
             }
@@ -127,10 +130,10 @@ function Analyze-DecompressedData {
     }
     
     return @{
-        TextPreview = $text.Substring(0, [Math]::Min(200, $text.Length))
+        TextPreview        = $text.Substring(0, [Math]::Min(200, $text.Length))
         QuestPatternsFound = $foundPatterns
-        ExtractedStrings = $strings[0..[Math]::Min(9, $strings.Length - 1)]
-        DataSize = $Data.Length
+        ExtractedStrings   = $strings[0..[Math]::Min(9, $strings.Length - 1)]
+        DataSize           = $Data.Length
     }
 }
 
