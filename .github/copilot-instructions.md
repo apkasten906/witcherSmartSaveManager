@@ -12,6 +12,36 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 - **IDE**: Visual Studio Code / Visual Studio
 - **Runtime**: .NET 8.0 Windows Desktop
 
+## 📚 ERROR LEARNING PROTOCOL - HIGHEST PRIORITY
+
+### Core Learning Principle
+**EVERY ERROR is a learning opportunity that MUST be documented to prevent repetition.**
+
+### Learning Process - MANDATORY
+1. **Capture the Error**: Record exact error message, context, and conditions
+2. **Root Cause Analysis**: Identify the fundamental cause, not just symptoms
+3. **Document Solution**: Record the exact fix that resolved the issue
+4. **Create Prevention Rule**: Add guideline to prevent this error class
+5. **Update Instructions**: Add to this file for future reference
+
+### Learning Categories
+- **Syntax/Language Issues**: PowerShell, C#, XAML parsing errors
+- **Architectural Violations**: MVVM, file organization, separation concerns
+- **Configuration Problems**: Build, dependency, environment setup
+- **Logic Errors**: Business logic, data flow, state management
+- **Integration Issues**: File paths, external tools, cross-component communication
+- **Project Management Issues**: Missing cleanup, documentation, incomplete task closure
+
+### Documentation Standard
+```
+**Error**: [Exact error message or symptom]
+- **Cause**: [Root cause analysis]
+- **Solution**: [Specific fix applied]
+- **Prevention**: [Rule/guideline to avoid repetition]
+```
+
+This learning protocol applies to ALL development work, not just scripts.
+
 ## 🏗️ Architecture & Project Structure
 
 ### Core Projects
@@ -19,6 +49,13 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 - **`WitcherCore/`** - Core business logic library with Models, Services, Data access
 - **`Shared/`** - Common types and utilities
 - **`WitcherSmartSaveManagerTests/`** - NUnit test project
+
+### File Organization Rules
+- **One class per file** - Never put multiple public classes in the same file
+- **Models in Models/** - All data models belong in `WitcherCore/Models/` or `Shared/Models/`
+- **Services focused** - Service classes should be single-purpose and delegate to models
+- **No nested public classes** - Extract nested classes to separate files with proper naming
+- **Consistent naming** - `SaveFileData.cs`, `QuestState.cs`, `ParseResult.cs` etc.
 
 ### Critical Dependencies
 ```xml
@@ -161,6 +198,57 @@ public static string GetSavePath(GameKey gameKey)
 }
 ```
 
+## 🛠️ WitcherCI Tool Infrastructure
+
+### Organization Structure
+```
+tools/
+├── witcher-devagent.bat              # Entry point batch file
+└── witcherci/                        # WitcherCI framework directory
+    ├── WitcherCI.ps1                 # Main task runner
+    ├── witcher_commands.json         # Command definitions
+    ├── scripts/                      # PowerShell execution scripts
+    │   ├── Invoke-DZipAnalysis.ps1
+    │   ├── Invoke-DZipDecompression.ps1
+    │   ├── Invoke-HexAnalysis.ps1
+    │   └── Build-WitcherTools.ps1
+    └── tasks/                        # JSON task definitions
+        ├── test-decompression.json
+        ├── build-test.json
+        └── final-test.json
+```
+
+### WitcherCI Design Patterns
+- **JSON Task Definitions**: All tasks defined in declarative JSON format
+- **Command Whitelisting**: Security through allowed command validation
+- **Parameter Validation**: Type-safe parameter handling with validation
+- **Watch Mode**: Continuous monitoring for automated task execution
+- **Direct Assembly Integration**: PowerShell scripts load WitcherCore.dll directly
+- **Error Isolation**: Failed tasks don't crash the entire runner
+- **Polish Language Awareness**: CD Projekt RED is Polish - expect Polish text in save files
+
+### Usage Examples
+```powershell
+# Start watch mode for continuous task monitoring
+.\tools\witcher-devagent.bat
+
+# Run single task file
+.\tools\witcher-devagent.bat "test-decompression.json"
+
+# Show help and available commands
+.\tools\witcher-devagent.bat "help"
+```
+
+### Task File Format
+```json
+{
+    "command": "dzip-analyze",
+    "save-path": "savesAnalysis/_backup/AutoSave_0039.sav",
+    "output-format": "detailed",
+    "pattern": "quest-data"
+}
+```
+
 ## 🚀 Build & Development
 
 ### Essential Commands (PowerShell)
@@ -196,6 +284,192 @@ dotnet restore witcherSmartSaveManager.sln
 4. **Handle locked files gracefully** during gameplay
 5. **Update UI counters immediately** after file operations
 6. **Test with temp directories** - never use real save folders in tests
+7. **APPLY ERROR LEARNING PROTOCOL** - document every error for prevention
+8. **Verify file existence** - use Test-Path before assuming path resolution issues
+9. **Clean up temporary projects** - remove console apps and prototyping code after integration
+10. **Organize tooling properly** - follow WitcherCI structure for all development tools
+
+## 📝 COMPREHENSIVE ERROR LEARNING LOG
+
+### PowerShell Script Failures
+**Error**: "Die Zeichenfolge hat kein Abschlusszeichen" (String not terminated)
+- **Cause**: Missing closing braces in foreach loops or if statements
+- **Solution**: Always verify brace matching, use proper indentation
+- **Prevention**: Count opening/closing braces before running scripts
+
+**Error**: Unicode symbols causing parse failures in PowerShell 5.1
+- **Cause**: Using ✓, ❌, 🎯 symbols in PowerShell scripts
+- **Solution**: Replace with plain ASCII: "Success:", "Error:", "Warning:"
+- **Prevention**: Stick to basic ASCII characters in all .ps1 files
+
+### Architectural Violations
+**Error**: Nested public classes in service files
+- **Cause**: Putting multiple classes in SaveFileHexAnalyzer.cs
+- **Solution**: Extract to separate Model files (HexAnalysisResult.cs, DZipInfo.cs)
+- **Prevention**: Follow "one class per file" rule strictly
+
+**Error**: Business logic in ViewModels instead of Services
+- **Cause**: Direct file operations or complex logic in ViewModel
+- **Solution**: Move to dedicated Service classes, inject via constructor
+- **Prevention**: ViewModels should only coordinate UI and delegate to services
+
+### File Path Issues
+**Error**: Mixed path separators causing cross-platform issues
+- **Cause**: Using forward slashes in Windows-specific code
+- **Solution**: Use Path.Combine() or consistent backslashes for Windows
+- **Prevention**: Always use Windows-style paths in Windows-specific code
+
+### Configuration & Build Issues
+**Error**: Missing package references causing compilation failures
+- **Cause**: Adding functionality without proper NuGet package dependencies
+- **Solution**: Add appropriate PackageReference entries to .csproj files
+- **Prevention**: Check dependencies before implementing new features
+
+### C# Language & Syntax Issues
+**Error**: Null reference exceptions in property binding
+- **Cause**: Not initializing collections or objects before binding
+- **Solution**: Initialize in constructor or use null-coalescing operators
+- **Prevention**: Always initialize bound properties and use defensive coding
+
+### XAML & WPF Issues
+**Error**: Binding failures with no error indication
+- **Cause**: Incorrect property names or missing INotifyPropertyChanged
+- **Solution**: Verify property names, implement proper change notification
+- **Prevention**: Use compile-time binding validation and consistent naming
+
+### Project Management & Task Completion Issues
+**Error**: Incomplete task closure without cleanup and documentation
+- **Cause**: Focusing on implementation without proper task completion procedures
+- **Solution**: Always clean up, document, and verify completion before moving to next task
+- **Prevention**: Follow cleanup checklist after each subtask/issue completion
+
+### CI/CD Tool Organization Issues
+**Error**: WitcherCI tool infrastructure scattered across multiple directories
+- **Cause**: Rapid prototyping without proper organizational structure
+- **Solution**: Reorganize into dedicated tools/witcherci/ subdirectory with clean separation
+- **Prevention**: Follow clean architecture patterns with dedicated tool directories from start
+
+**Success**: WitcherCI architectural restructure from .vscode/tools/ to tools/
+- **Problem**: Application tooling mixed with VS Code configuration space
+- **Solution**: Moved WitcherCI framework to dedicated tools/ directory for better separation
+- **Impact**: Cleaner project structure, better discoverability, proper architectural boundaries
+- **Key Insight**: .vscode/ should only contain editor configuration, not application tooling
+
+**Error**: Batch file pause commands breaking automation workflows
+- **Cause**: Including `pause` commands in CI/CD batch files for debugging
+- **Solution**: Remove all `pause` commands from automation scripts
+- **Prevention**: Use conditional pause only in debug mode, never in production automation
+
+**Error**: PowerShell parameter naming mismatch between task definitions and scripts
+- **Cause**: Using different parameter conventions (kebab-case vs PascalCase) in JSON vs PowerShell
+- **Solution**: Standardize on kebab-case parameters with PowerShell ${parameter-name} syntax
+- **Prevention**: Establish consistent parameter naming conventions across all tooling
+
+**Error**: Temporary console applications left in codebase after prototyping
+- **Cause**: Creating console apps for quick testing without cleanup plan
+- **Solution**: Remove temporary projects, integrate directly with core assemblies
+- **Prevention**: Use PowerShell scripts with direct assembly loading instead of console apps
+
+**Error**: PowerShell script execution failures with PSSQLite parameter binding
+- **Cause**: PSSQLite module requires hashtable parameters, not arrays; complex JSON strings cause parsing errors in PowerShell 5.1
+- **Solution**: Use DBCode direct database connection instead of PowerShell scripts for complex data operations
+- **Prevention**: For database operations with complex data, prefer DBCode tools over PowerShell scripting
+
+**Error**: Unicode symbols breaking PowerShell script parsing
+- **Cause**: Using ✅, 🎯, ❌ symbols in PowerShell scripts on German Windows environment
+- **Solution**: Stick to plain ASCII characters in all .ps1 files 
+- **Prevention**: Documented in coding instructions - use "Success:", "Error:", "Warning:" instead of Unicode
+
+### File System & Path Resolution Issues
+**Error**: VS Code editor context showing files that don't exist on file system
+- **Cause**: Assuming editor file paths match actual file system locations
+- **Solution**: Always verify file existence with Test-Path before path resolution debugging
+- **Prevention**: Check physical file existence before investigating path resolution logic
+
+**Error**: PowerShell assembly loading failures with "Mindestens ein Typ in der Assembly kann nicht geladen werden"
+- **Cause**: Missing dependency resolution when loading .NET assemblies in PowerShell
+- **Solution**: Ensure all required dependencies are available or use alternative integration approaches
+- **Prevention**: Test assembly loading in isolation before complex script integration
+
+### Phase 1 DZIP Analysis Breakthrough Learnings
+**Success**: Reference-First Database Architecture for pattern interpretation
+- **Approach**: Build game knowledge before pattern analysis for intelligent interpretation
+- **Result**: Transformed raw patterns into meaningful game context (questSystem→active_quest_tracker)
+- **Impact**: Quest detection working ("The Path of Roche"), decision variables found (Roche path choice)
+- **Key Insight**: Game intelligence requires domain knowledge foundation, not just pattern matching
+
+**Error**: DZIP deflate decompression failures across multiple save files
+- **Cause**: Witcher 2 save files use various compression methods or have structural variations
+- **Solution**: Fall back to raw data extraction when deflate fails, still enables pattern recognition
+- **Prevention**: Always implement fallback extraction methods for robust analysis
+
+**Success**: Progressive decision variable detection across save file timeline
+- **Approach**: Test saves from different game stages to track decision implementation
+- **Result**: Early saves show quest IDs, mid-game adds character fates, late saves show path choices
+- **Impact**: Can track player progression and detect when critical decisions are made
+- **Key Insight**: Decision variables appear progressively as story unfolds, not all at once
+
+**Error**: Variable name conflicts with PowerShell automatic variables
+- **Cause**: Using `$matches` variable name conflicts with PowerShell built-in automatic variable
+- **Solution**: Use descriptive names like `$regexMatches`, `$factMatch` to avoid conflicts
+- **Prevention**: Avoid PowerShell automatic variable names ($matches, $error, $args, etc.)
+
+## 🚨 PowerShell Script Guidelines - CRITICAL
+
+### Unicode and Special Characters
+- **NEVER use Unicode symbols** in PowerShell scripts (✓, ❌, 🎯, etc.)
+- **Causes parsing errors** in PowerShell 5.1 on Windows
+- **Use plain ASCII only**: "Success:", "Error:", "Warning:"
+- **File encoding**: Save .ps1 files as UTF-8 without BOM or ASCII
+
+### PowerShell Syntax Rules
+- **Always close braces properly** - missing `}` causes cascading parse errors
+- **Use consistent quoting** - prefer double quotes for strings with variables
+- **Test scripts before committing** - syntax errors break automation
+- **Avoid complex Unicode formatting** - stick to basic colored output
+
+### Error Recovery Patterns
+```powershell
+# Good - Plain ASCII status messages
+Write-Host "Success: DZIP format confirmed!" -ForegroundColor Green
+Write-Host "Error: File not found" -ForegroundColor Red
+Write-Host "Warning: Large file size" -ForegroundColor Yellow
+
+# Bad - Unicode symbols cause parsing failures  
+Write-Host "✓ DZIP format confirmed!" -ForegroundColor Green
+Write-Host "❌ File not found" -ForegroundColor Red
+```
+
+### Learning from Errors
+- **Missing braces**: Always count opening/closing braces in complex scripts
+- **Unicode issues**: Test all scripts on target PowerShell version (5.1)
+- **String termination**: Ensure all quotes are properly closed
+- **Variable scope**: Watch for uninitialized variables in script blocks
+
+## 📝 Error Patterns & Solutions - Learning Log
+
+### PowerShell Script Failures
+**Error**: "Die Zeichenfolge hat kein Abschlusszeichen" (String not terminated)
+- **Cause**: Missing closing braces in foreach loops or if statements
+- **Solution**: Always verify brace matching, use proper indentation
+- **Prevention**: Count opening/closing braces before running scripts
+
+**Error**: Unicode symbols causing parse failures in PowerShell 5.1
+- **Cause**: Using ✓, ❌, 🎯 symbols in PowerShell scripts
+- **Solution**: Replace with plain ASCII: "Success:", "Error:", "Warning:"
+- **Prevention**: Stick to basic ASCII characters in all .ps1 files
+
+### Architectural Violations
+**Error**: Nested public classes in service files
+- **Cause**: Putting multiple classes in SaveFileHexAnalyzer.cs
+- **Solution**: Extract to separate Model files (HexAnalysisResult.cs, DZipInfo.cs)
+- **Prevention**: Follow "one class per file" rule strictly
+
+### File Path Issues
+**Error**: Mixed path separators causing cross-platform issues
+- **Cause**: Using forward slashes in Windows-specific code
+- **Solution**: Use Path.Combine() or consistent backslashes for Windows
+- **Prevention**: Always use Windows-style paths in Windows-specific code
 
 ## 🔍 Key Files to Reference
 - **`frontend/ViewModels/MainViewModel.cs`** - Primary MVVM example
@@ -203,3 +477,9 @@ dotnet restore witcherSmartSaveManager.sln
 - **`frontend/Utils/ResourceHelper.cs`** - Localization utilities
 - **`PRINCIPLES.md`** - Complete architectural guidelines
 - **`installer/Build-Installer.ps1`** - Build automation example
+- **`tools/witcherci/WitcherCI.ps1`** - Task runner infrastructure
+- **`tools/witcher-devagent.bat`** - WitcherCI entry point
+- **`tools/witcherci/scripts/Invoke-EnhancedDZipAnalysis-Clean.ps1`** - Phase 1 breakthrough: Enhanced DZIP analysis with Reference Database
+- **`tools/witcherci/scripts/Hunt-DecisionVariables.ps1`** - Decision variable detection and story progression tracking
+- **`docs/PHASE-0-IMPLEMENTATION-SUMMARY.md`** - Reference Database foundation documentation
+- **`database/witcher_save_manager.db`** - Game knowledge database with pattern mappings

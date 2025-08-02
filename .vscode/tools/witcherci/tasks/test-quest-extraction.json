@@ -1,0 +1,7 @@
+{
+    "command": "quest-extract",
+    "save-path": "savesAnalysis/_backup/AutoSave_0039.sav",
+    "bytes-to-extract": 6144,
+    "quest-filter": "geralt",
+    "output-format": "structured"
+}

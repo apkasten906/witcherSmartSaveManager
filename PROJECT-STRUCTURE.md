@@ -59,7 +59,8 @@ WitcherSmartSaveManager.sln
 │   └── Manage-GitHubIssues.ps1
 │
 ├── docs/                        # Documentation
-│   └── docs-wpf-checkbox-best-practices.md
+│   ├── docs-wpf-checkbox-best-practices.md
+│   └── DATABASE-SCHEMA.md       # Database structure and DZIP integration
 │
 ├── App.config                   # Global config (referenced by DI container)
 ├── README.md

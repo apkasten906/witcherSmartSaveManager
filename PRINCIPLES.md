@@ -15,6 +15,13 @@
 * Use **dependency injection** for all services and utilities.
 * No tight coupling between components – keep them modular.
 
+### File & Class Organization
+* **One class per file** - Each public class gets its own .cs file
+* **Models separation** - Data models belong in `Models/` folders, never embedded in services
+* **Clear naming** - File names match class names exactly (`SaveFileData.cs` contains `SaveFileData`)
+* **Focused services** - Service classes handle logic, models hold data
+* **No nested public classes** - Extract to separate files with descriptive names
+
 ## 🧪 Testing
 
 * Use **NUnit** for all unit tests.

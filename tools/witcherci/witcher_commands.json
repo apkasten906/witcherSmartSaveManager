@@ -1,0 +1,247 @@
+{
+    "enhanced-analyze": {
+        "description": "Enhanced DZIP analysis with game intelligence using reference database",
+        "command": "powershell",
+        "script": "scripts/Invoke-EnhancedDZipAnalysis-Clean.ps1",
+        "parameters": [
+            "save-path",
+            "bytes-to-extract",
+            "output-format",
+            "database-path"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "bytes-to-extract": {
+                "type": "integer",
+                "min": 256,
+                "max": 8192,
+                "required": false,
+                "default": 1024
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "console",
+                    "detailed"
+                ],
+                "required": false,
+                "default": "console"
+            },
+            "database-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".db"
+                ],
+                "required": false,
+                "default": "database/witcher_save_manager.db"
+            }
+        }
+    },
+    "dzip-analyze": {
+        "description": "Analyze DZIP header structure of Witcher 2 save files",
+        "command": "powershell",
+        "script": "scripts/Invoke-DZipAnalysis.ps1",
+        "parameters": [
+            "save-path",
+            "output-format"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": false,
+                "default": "savesAnalysis/_backup"
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "console",
+                    "json",
+                    "csv"
+                ],
+                "required": false,
+                "default": "console"
+            }
+        }
+    },
+    "dzip-decompress": {
+        "description": "Decompress DZIP save files and analyze content structure",
+        "command": "powershell",
+        "script": "scripts/Invoke-DZipDecompression.ps1",
+        "parameters": [
+            "save-path",
+            "count"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": false,
+                "default": "savesAnalysis/_backup"
+            },
+            "count": {
+                "type": "integer",
+                "min": 1,
+                "max": 50,
+                "required": false,
+                "default": 3
+            }
+        }
+    },
+    "hex-analyze": {
+        "description": "Perform hex analysis on save files to identify patterns",
+        "command": "powershell",
+        "script": "scripts/Invoke-HexAnalysis.ps1",
+        "parameters": [
+            "save-path",
+            "pattern"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "pattern": {
+                "type": "string",
+                "required": false,
+                "default": "quest-data"
+            }
+        }
+    },
+    "build-tools": {
+        "description": "Build all Witcher analysis tools",
+        "command": "powershell",
+        "script": "scripts/Build-WitcherTools.ps1",
+        "parameters": [
+            "configuration"
+        ],
+        "validation": {
+            "configuration": {
+                "type": "enum",
+                "values": [
+                    "Debug",
+                    "Release"
+                ],
+                "required": false,
+                "default": "Debug"
+            }
+        }
+    },
+    "simple-dzip-analyze": {
+        "description": "Simple DZIP header analysis using native PowerShell",
+        "command": "powershell",
+        "script": "scripts/Invoke-SimpleDZipAnalysis.ps1",
+        "parameters": [
+            "save-path",
+            "output-format"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "console",
+                    "json"
+                ],
+                "required": false,
+                "default": "console"
+            }
+        }
+    },
+    "native-dzip-decompress": {
+        "description": "Native PowerShell DZIP decompression and content analysis",
+        "command": "powershell",
+        "script": "scripts/Invoke-NativeDZipDecompression.ps1",
+        "parameters": [
+            "save-path",
+            "bytes-to-extract",
+            "output-format"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "bytes-to-extract": {
+                "type": "integer",
+                "min": 256,
+                "max": 10240,
+                "required": false,
+                "default": 1024
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "console",
+                    "hex"
+                ],
+                "required": false,
+                "default": "console"
+            }
+        }
+    },
+    "quest-extract": {
+        "description": "Extract quest data and structures from Witcher 2 save files",
+        "command": "powershell",
+        "script": "scripts/Invoke-QuestDataExtraction.ps1",
+        "parameters": [
+            "save-path",
+            "bytes-to-extract",
+            "quest-filter",
+            "output-format"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": true
+            },
+            "bytes-to-extract": {
+                "type": "integer",
+                "min": 1024,
+                "max": 16384,
+                "required": false,
+                "default": 4096
+            },
+            "quest-filter": {
+                "type": "string",
+                "required": false,
+                "default": ""
+            },
+            "output-format": {
+                "type": "enum",
+                "values": [
+                    "structured",
+                    "detailed",
+                    "summary"
+                ],
+                "required": false,
+                "default": "structured"
+            }
+        }
+    }
+}
