@@ -1,0 +1,330 @@
+{
+  "analysis_timestamp": "2025-08-02T09:53:09.273135",
+  "source_patterns": 2,
+  "total_mappings_generated": 11,
+  "high_confidence_mappings": 4,
+  "games_analyzed": [
+    "witcher1",
+    "witcher3"
+  ],
+  "pattern_mappings": {
+    "questSystem": {
+      "witcher1": [
+        {
+          "candidate_pattern": "quest",
+          "similarity_confidence": 0.8400000000000001,
+          "mapping_type": "quest_tracking",
+          "source_pattern": "questSystem",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        },
+        {
+          "candidate_pattern": "Quest",
+          "similarity_confidence": 0.8400000000000001,
+          "mapping_type": "quest_tracking",
+          "source_pattern": "questSystem",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        }
+      ],
+      "witcher3": [
+        {
+          "candidate_pattern": "quest",
+          "similarity_confidence": 0.8400000000000001,
+          "mapping_type": "quest_tracking",
+          "source_pattern": "questSystem",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        },
+        {
+          "candidate_pattern": "questmanager",
+          "similarity_confidence": 0.6872727272727273,
+          "mapping_type": "quest_tracking",
+          "source_pattern": "questSystem",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        },
+        {
+          "candidate_pattern": "objectives",
+          "similarity_confidence": 0.4984615384615385,
+          "mapping_type": "quest_tracking",
+          "source_pattern": "questSystem",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        }
+      ]
+    },
+    "The Path of Roche": {
+      "witcher1": [
+        {
+          "candidate_pattern": "path",
+          "similarity_confidence": 0.8400000000000001,
+          "mapping_type": "decision_variable",
+          "source_pattern": "The Path of Roche",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        },
+        {
+          "candidate_pattern": "choice",
+          "similarity_confidence": 0.5781818181818182,
+          "mapping_type": "decision_variable",
+          "source_pattern": "The Path of Roche",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        },
+        {
+          "candidate_pattern": "decision",
+          "similarity_confidence": 0.4885714285714286,
+          "mapping_type": "decision_variable",
+          "source_pattern": "The Path of Roche",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        }
+      ],
+      "witcher3": [
+        {
+          "candidate_pattern": "choice",
+          "similarity_confidence": 0.5781818181818182,
+          "mapping_type": "decision_variable",
+          "source_pattern": "The Path of Roche",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        },
+        {
+          "candidate_pattern": "decision",
+          "similarity_confidence": 0.4885714285714286,
+          "mapping_type": "decision_variable",
+          "source_pattern": "The Path of Roche",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        },
+        {
+          "candidate_pattern": "Emperor",
+          "similarity_confidence": 0.21818181818181817,
+          "mapping_type": "decision_variable",
+          "source_pattern": "The Path of Roche",
+          "validation_status": "hypothesis",
+          "discovery_method": "cross_game_mapping"
+        }
+      ]
+    }
+  },
+  "discovery_strategies": {
+    "witcher1": {
+      "target_game": "witcher1",
+      "strategies": [
+        {
+          "strategy_type": "direct_mapping",
+          "priority": "high",
+          "source_pattern": "questSystem",
+          "target_candidates": [
+            {
+              "candidate_pattern": "quest",
+              "similarity_confidence": 0.8400000000000001,
+              "mapping_type": "quest_tracking",
+              "source_pattern": "questSystem",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            },
+            {
+              "candidate_pattern": "Quest",
+              "similarity_confidence": 0.8400000000000001,
+              "mapping_type": "quest_tracking",
+              "source_pattern": "questSystem",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            }
+          ],
+          "search_method": "pattern_frequency_analysis",
+          "validation_criteria": {
+            "min_frequency": 2,
+            "min_confidence": 0.5,
+            "context_relevance": true
+          }
+        },
+        {
+          "strategy_type": "direct_mapping",
+          "priority": "high",
+          "source_pattern": "The Path of Roche",
+          "target_candidates": [
+            {
+              "candidate_pattern": "path",
+              "similarity_confidence": 0.8400000000000001,
+              "mapping_type": "decision_variable",
+              "source_pattern": "The Path of Roche",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            },
+            {
+              "candidate_pattern": "choice",
+              "similarity_confidence": 0.5781818181818182,
+              "mapping_type": "decision_variable",
+              "source_pattern": "The Path of Roche",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            },
+            {
+              "candidate_pattern": "decision",
+              "similarity_confidence": 0.4885714285714286,
+              "mapping_type": "decision_variable",
+              "source_pattern": "The Path of Roche",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            }
+          ],
+          "search_method": "pattern_frequency_analysis",
+          "validation_criteria": {
+            "min_frequency": 2,
+            "min_confidence": 0.5,
+            "context_relevance": true
+          }
+        },
+        {
+          "strategy_type": "structural_analysis",
+          "priority": "medium",
+          "description": "Analyze witcher1 save file structure for quest/decision patterns",
+          "method": "binary_pattern_search",
+          "focus_areas": [
+            "quest management systems",
+            "decision variable storage",
+            "character relationship tracking",
+            "narrative state management"
+          ]
+        },
+        {
+          "strategy_type": "ml_discovery",
+          "priority": "medium",
+          "description": "Use ML confidence engine to validate discovered patterns",
+          "method": "bootstrap_from_w2_knowledge",
+          "ml_features": [
+            "pattern_frequency",
+            "context_similarity",
+            "narrative_coherence",
+            "cross_file_consistency"
+          ]
+        }
+      ],
+      "estimated_patterns": 4,
+      "success_metrics": {
+        "min_patterns_discovered": 2,
+        "target_confidence": 0.7,
+        "cross_validation_required": true
+      }
+    },
+    "witcher3": {
+      "target_game": "witcher3",
+      "strategies": [
+        {
+          "strategy_type": "direct_mapping",
+          "priority": "high",
+          "source_pattern": "questSystem",
+          "target_candidates": [
+            {
+              "candidate_pattern": "quest",
+              "similarity_confidence": 0.8400000000000001,
+              "mapping_type": "quest_tracking",
+              "source_pattern": "questSystem",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            },
+            {
+              "candidate_pattern": "questmanager",
+              "similarity_confidence": 0.6872727272727273,
+              "mapping_type": "quest_tracking",
+              "source_pattern": "questSystem",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            },
+            {
+              "candidate_pattern": "objectives",
+              "similarity_confidence": 0.4984615384615385,
+              "mapping_type": "quest_tracking",
+              "source_pattern": "questSystem",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            }
+          ],
+          "search_method": "pattern_frequency_analysis",
+          "validation_criteria": {
+            "min_frequency": 2,
+            "min_confidence": 0.5,
+            "context_relevance": true
+          }
+        },
+        {
+          "strategy_type": "direct_mapping",
+          "priority": "high",
+          "source_pattern": "The Path of Roche",
+          "target_candidates": [
+            {
+              "candidate_pattern": "choice",
+              "similarity_confidence": 0.5781818181818182,
+              "mapping_type": "decision_variable",
+              "source_pattern": "The Path of Roche",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            },
+            {
+              "candidate_pattern": "decision",
+              "similarity_confidence": 0.4885714285714286,
+              "mapping_type": "decision_variable",
+              "source_pattern": "The Path of Roche",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            },
+            {
+              "candidate_pattern": "Emperor",
+              "similarity_confidence": 0.21818181818181817,
+              "mapping_type": "decision_variable",
+              "source_pattern": "The Path of Roche",
+              "validation_status": "hypothesis",
+              "discovery_method": "cross_game_mapping"
+            }
+          ],
+          "search_method": "pattern_frequency_analysis",
+          "validation_criteria": {
+            "min_frequency": 2,
+            "min_confidence": 0.5,
+            "context_relevance": true
+          }
+        },
+        {
+          "strategy_type": "structural_analysis",
+          "priority": "medium",
+          "description": "Analyze witcher3 save file structure for quest/decision patterns",
+          "method": "binary_pattern_search",
+          "focus_areas": [
+            "quest management systems",
+            "decision variable storage",
+            "character relationship tracking",
+            "narrative state management"
+          ]
+        },
+        {
+          "strategy_type": "ml_discovery",
+          "priority": "medium",
+          "description": "Use ML confidence engine to validate discovered patterns",
+          "method": "bootstrap_from_w2_knowledge",
+          "ml_features": [
+            "pattern_frequency",
+            "context_similarity",
+            "narrative_coherence",
+            "cross_file_consistency"
+          ]
+        }
+      ],
+      "estimated_patterns": 4,
+      "success_metrics": {
+        "min_patterns_discovered": 2,
+        "target_confidence": 0.7,
+        "cross_validation_required": true
+      }
+    }
+  },
+  "next_steps": [
+    "Execute discovery strategies on actual save files",
+    "Validate pattern mappings with ML confidence engine",
+    "Build automated pattern discovery pipeline",
+    "Implement cross-game save correlation"
+  ]
+}

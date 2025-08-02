@@ -1,0 +1,91 @@
+{
+    "dzip-analyze": {
+        "description": "Analyze DZIP header structure of Witcher 2 save files",
+        "command": "dotnet run --project DZipAnalysisConsole --",
+        "parameters": [
+            "save-path"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": false
+            }
+        }
+    },
+    "dzip-decompress": {
+        "description": "Decompress DZIP save files and show data preview",
+        "command": "dotnet run --project DZipTestConsole --",
+        "parameters": [
+            "save-path"
+        ],
+        "validation": {
+            "save-path": {
+                "type": "file-path",
+                "extensions": [
+                    ".sav"
+                ],
+                "required": false
+            }
+        }
+    },
+    "build": {
+        "description": "Build the Witcher Smart Save Manager solution",
+        "command": "dotnet build",
+        "parameters": [
+            "project"
+        ],
+        "validation": {
+            "project": {
+                "type": "file-path",
+                "extensions": [
+                    ".csproj",
+                    ".sln"
+                ],
+                "required": false
+            }
+        }
+    },
+    "test": {
+        "description": "Run unit tests for the project",
+        "command": "dotnet test",
+        "parameters": [
+            "project"
+        ],
+        "validation": {
+            "project": {
+                "type": "file-path",
+                "extensions": [
+                    ".csproj",
+                    ".sln"
+                ],
+                "required": false
+            }
+        }
+    },
+    "clean": {
+        "description": "Clean build artifacts",
+        "command": "dotnet clean",
+        "parameters": [
+            "project"
+        ],
+        "validation": {
+            "project": {
+                "type": "file-path",
+                "extensions": [
+                    ".csproj",
+                    ".sln"
+                ],
+                "required": false
+            }
+        }
+    },
+    "list-projects": {
+        "description": "List available .NET projects and solutions",
+        "command": "Get-ChildItem -Recurse -Include *.csproj,*.sln | ForEach-Object { $_.FullName.Replace($PWD.Path + '\\', '') }",
+        "parameters": [],
+        "validation": {}
+    }
+}
