@@ -2,16 +2,16 @@
 # This version specifically searches for critical decision variables
 
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]${save-path},
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [int]${bytes-to-extract} = 32768,
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]${output-format} = "detailed",
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]${database-path} = "database\witcher_save_manager.db"
 )
 
@@ -22,7 +22,8 @@ Write-Host "[DECISION-HUNTER] Save file: ${save-path}"
 try {
     $saveData = [System.IO.File]::ReadAllBytes(${save-path})
     Write-Host "[DECISION-HUNTER] File size: $($saveData.Length) bytes"
-} catch {
+}
+catch {
     Write-Error "Failed to read save file: $($_.Exception.Message)"
     return
 }
@@ -36,14 +37,14 @@ Write-Host "[DECISION-HUNTER] Extracted $($dataChunk.Length) bytes for analysis"
 
 # Hunt for critical decision variables
 $decisionPatterns = @(
-    @{Pattern="aryan"; Context="Aryan La Valette fate decision"},
-    @{Pattern="roche"; Context="Vernon Roche path choice"},
-    @{Pattern="iorveth"; Context="Iorveth path choice"},
-    @{Pattern="chosen_path"; Context="Critical storyline path"},
-    @{Pattern="la_valette"; Context="La Valette family decisions"},
-    @{Pattern="spared|killed"; Context="Character fate outcomes"},
-    @{Pattern="q101|q201|q301"; Context="Major quest identifiers"},
-    @{Pattern="act1|act2|act3"; Context="Story act progression"}
+    @{Pattern = "aryan"; Context = "Aryan La Valette fate decision" },
+    @{Pattern = "roche"; Context = "Vernon Roche path choice" },
+    @{Pattern = "iorveth"; Context = "Iorveth path choice" },
+    @{Pattern = "chosen_path"; Context = "Critical storyline path" },
+    @{Pattern = "la_valette"; Context = "La Valette family decisions" },
+    @{Pattern = "spared|killed"; Context = "Character fate outcomes" },
+    @{Pattern = "q101|q201|q301"; Context = "Major quest identifiers" },
+    @{Pattern = "act1|act2|act3"; Context = "Story act progression" }
 )
 
 $foundDecisions = @()
@@ -52,9 +53,9 @@ foreach ($decision in $decisionPatterns) {
     $regexMatches = [regex]::Matches($textData, $decision.Pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
     if ($regexMatches.Count -gt 0) {
         $foundDecisions += @{
-            Pattern = $decision.Pattern
-            Context = $decision.Context
-            Matches = $regexMatches.Count
+            Pattern   = $decision.Pattern
+            Context   = $decision.Context
+            Matches   = $regexMatches.Count
             Positions = $regexMatches | ForEach-Object { $_.Index }
         }
         Write-Host "[DECISION-FOUND] $($decision.Pattern): $($regexMatches.Count) matches - $($decision.Context)" -ForegroundColor Green
@@ -86,7 +87,8 @@ if ($foundDecisions.Count -gt 0) {
     foreach ($decision in $foundDecisions) {
         Write-Host "  $($decision.Pattern) ($($decision.Matches) matches): $($decision.Context)" -ForegroundColor White
     }
-} else {
+}
+else {
     Write-Host "No decision variables detected in this save file extract" -ForegroundColor Yellow
 }
 

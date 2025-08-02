@@ -1,5 +1,0 @@
-{
-    "command": "build-tools",
-    "project-path": ".",
-    "build-config": "Debug"
-}

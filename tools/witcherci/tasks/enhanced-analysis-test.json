@@ -1,0 +1,7 @@
+{
+    "command": "enhanced-analyze",
+    "save-path": "c:\\Development\\witcherSmartSaveManager\\savesAnalysis\\_backup\\AutoSave_0111.sav",
+    "bytes-to-extract": "4096",
+    "output-format": "detailed",
+    "database-path": "c:\\Development\\witcherSmartSaveManager\\database\\witcher_save_manager.db"
+}
