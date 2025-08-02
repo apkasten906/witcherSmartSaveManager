@@ -202,7 +202,7 @@ public static string GetSavePath(GameKey gameKey)
 
 ### Organization Structure
 ```
-.vscode/tools/
+tools/
 ├── witcher-devagent.bat              # Entry point batch file
 └── witcherci/                        # WitcherCI framework directory
     ├── WitcherCI.ps1                 # Main task runner
@@ -230,13 +230,13 @@ public static string GetSavePath(GameKey gameKey)
 ### Usage Examples
 ```powershell
 # Start watch mode for continuous task monitoring
-.\.vscode\tools\witcher-devagent.bat
+.\tools\witcher-devagent.bat
 
 # Run single task file
-.\.vscode\tools\witcher-devagent.bat "test-decompression.json"
+.\tools\witcher-devagent.bat "test-decompression.json"
 
 # Show help and available commands
-.\.vscode\tools\witcher-devagent.bat "help"
+.\tools\witcher-devagent.bat "help"
 ```
 
 ### Task File Format
@@ -346,8 +346,14 @@ dotnet restore witcherSmartSaveManager.sln
 ### CI/CD Tool Organization Issues
 **Error**: WitcherCI tool infrastructure scattered across multiple directories
 - **Cause**: Rapid prototyping without proper organizational structure
-- **Solution**: Reorganize into dedicated .vscode\tools\witcherci\ subdirectory with clean separation
-- **Prevention**: Follow DandelionCI patterns with dedicated tool directories from start
+- **Solution**: Reorganize into dedicated tools/witcherci/ subdirectory with clean separation
+- **Prevention**: Follow clean architecture patterns with dedicated tool directories from start
+
+**Success**: WitcherCI architectural restructure from .vscode/tools/ to tools/
+- **Problem**: Application tooling mixed with VS Code configuration space
+- **Solution**: Moved WitcherCI framework to dedicated tools/ directory for better separation
+- **Impact**: Cleaner project structure, better discoverability, proper architectural boundaries
+- **Key Insight**: .vscode/ should only contain editor configuration, not application tooling
 
 **Error**: Batch file pause commands breaking automation workflows
 - **Cause**: Including `pause` commands in CI/CD batch files for debugging
@@ -364,6 +370,16 @@ dotnet restore witcherSmartSaveManager.sln
 - **Solution**: Remove temporary projects, integrate directly with core assemblies
 - **Prevention**: Use PowerShell scripts with direct assembly loading instead of console apps
 
+**Error**: PowerShell script execution failures with PSSQLite parameter binding
+- **Cause**: PSSQLite module requires hashtable parameters, not arrays; complex JSON strings cause parsing errors in PowerShell 5.1
+- **Solution**: Use DBCode direct database connection instead of PowerShell scripts for complex data operations
+- **Prevention**: For database operations with complex data, prefer DBCode tools over PowerShell scripting
+
+**Error**: Unicode symbols breaking PowerShell script parsing
+- **Cause**: Using ✅, 🎯, ❌ symbols in PowerShell scripts on German Windows environment
+- **Solution**: Stick to plain ASCII characters in all .ps1 files 
+- **Prevention**: Documented in coding instructions - use "Success:", "Error:", "Warning:" instead of Unicode
+
 ### File System & Path Resolution Issues
 **Error**: VS Code editor context showing files that don't exist on file system
 - **Cause**: Assuming editor file paths match actual file system locations
@@ -374,6 +390,29 @@ dotnet restore witcherSmartSaveManager.sln
 - **Cause**: Missing dependency resolution when loading .NET assemblies in PowerShell
 - **Solution**: Ensure all required dependencies are available or use alternative integration approaches
 - **Prevention**: Test assembly loading in isolation before complex script integration
+
+### Phase 1 DZIP Analysis Breakthrough Learnings
+**Success**: Reference-First Database Architecture for pattern interpretation
+- **Approach**: Build game knowledge before pattern analysis for intelligent interpretation
+- **Result**: Transformed raw patterns into meaningful game context (questSystem→active_quest_tracker)
+- **Impact**: Quest detection working ("The Path of Roche"), decision variables found (Roche path choice)
+- **Key Insight**: Game intelligence requires domain knowledge foundation, not just pattern matching
+
+**Error**: DZIP deflate decompression failures across multiple save files
+- **Cause**: Witcher 2 save files use various compression methods or have structural variations
+- **Solution**: Fall back to raw data extraction when deflate fails, still enables pattern recognition
+- **Prevention**: Always implement fallback extraction methods for robust analysis
+
+**Success**: Progressive decision variable detection across save file timeline
+- **Approach**: Test saves from different game stages to track decision implementation
+- **Result**: Early saves show quest IDs, mid-game adds character fates, late saves show path choices
+- **Impact**: Can track player progression and detect when critical decisions are made
+- **Key Insight**: Decision variables appear progressively as story unfolds, not all at once
+
+**Error**: Variable name conflicts with PowerShell automatic variables
+- **Cause**: Using `$matches` variable name conflicts with PowerShell built-in automatic variable
+- **Solution**: Use descriptive names like `$regexMatches`, `$factMatch` to avoid conflicts
+- **Prevention**: Avoid PowerShell automatic variable names ($matches, $error, $args, etc.)
 
 ## 🚨 PowerShell Script Guidelines - CRITICAL
 
@@ -438,5 +477,9 @@ Write-Host "❌ File not found" -ForegroundColor Red
 - **`frontend/Utils/ResourceHelper.cs`** - Localization utilities
 - **`PRINCIPLES.md`** - Complete architectural guidelines
 - **`installer/Build-Installer.ps1`** - Build automation example
-- **`.vscode/tools/witcherci/WitcherCI.ps1`** - Task runner infrastructure
-- **`.vscode/tools/witcher-devagent.bat`** - WitcherCI entry point
+- **`tools/witcherci/WitcherCI.ps1`** - Task runner infrastructure
+- **`tools/witcher-devagent.bat`** - WitcherCI entry point
+- **`tools/witcherci/scripts/Invoke-EnhancedDZipAnalysis-Clean.ps1`** - Phase 1 breakthrough: Enhanced DZIP analysis with Reference Database
+- **`tools/witcherci/scripts/Hunt-DecisionVariables.ps1`** - Decision variable detection and story progression tracking
+- **`docs/PHASE-0-IMPLEMENTATION-SUMMARY.md`** - Reference Database foundation documentation
+- **`database/witcher_save_manager.db`** - Game knowledge database with pattern mappings

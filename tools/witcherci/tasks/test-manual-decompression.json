@@ -1,0 +1,6 @@
+{
+    "command": "native-dzip-decompress",
+    "save-path": "savesAnalysis/_backup/ManualSave_0052.sav",
+    "bytes-to-extract": 2048,
+    "output-format": "console"
+}
