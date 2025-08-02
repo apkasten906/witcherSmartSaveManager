@@ -12,6 +12,59 @@ This is a **WPF MVVM application** for managing Witcher game save files with fea
 - **IDE**: Visual Studio Code / Visual Studio
 - **Runtime**: .NET 8.0 Windows Desktop
 
+## 🔌 MCP Server Integration
+
+### Available MCP Servers
+- **GitHub MCP**: Full GitHub repository management and automation
+- **DBCode MCP**: Database connections and SQL query execution
+- **Python MCP**: Python script execution and package management (when available)
+
+### GitHub MCP Server Usage
+```typescript
+// Core GitHub operations available
+mcp_github_get_me()                    // Get authenticated user info
+mcp_github_list_issues()               // List repository issues
+mcp_github_create_issue()              // Create new issues
+mcp_github_list_pull_requests()        // List PRs
+mcp_github_create_pull_request()       // Create PRs
+mcp_github_merge_pull_request()        // Merge PRs
+mcp_github_get_file_contents()         // Read repository files
+mcp_github_create_or_update_file()     // Create/update files
+mcp_github_push_files()                // Batch file operations
+```
+
+### DBCode MCP Server Usage
+```typescript
+// Database operations for SQLite reference database
+dbcode-get-connections()               // List available database connections
+dbcode-get-databases()                 // List databases in connection
+dbcode-get-tables()                    // Get table structure and metadata
+dbcode-execute-query()                 // Execute SQL queries
+dbcode-workspace-connection()          // Get default workspace connection
+```
+
+### Python MCP Server Usage (when available)
+```typescript
+// Python script execution for WitcherAI analysis
+// Note: Fallback to direct Python execution if MCP unavailable
+python_execute()                       // Run Python scripts
+python_install_packages()              // Install packages
+python_list_packages()                 // List installed packages
+```
+
+### MCP Integration Patterns
+- **GitHub Operations**: Use for repository management, PR creation, issue tracking
+- **Database Queries**: Use DBCode for reference database operations and schema inspection
+- **Python Execution**: Primary: MCP when available, Fallback: Direct `python.exe` execution
+- **Error Handling**: Always implement fallback patterns for network/MCP failures
+- **Autonomous Preference**: Prefer direct execution methods for reliability
+
+### Network Independence Strategy
+- **Primary**: Use MCP servers for enhanced capabilities
+- **Fallback**: Autonomous operation using direct tool execution
+- **Reliability**: Never depend solely on MCP - always have offline alternatives
+- **Development Continuity**: Ensure all functionality works without external dependencies
+
 ## 📚 ERROR LEARNING PROTOCOL - HIGHEST PRIORITY
 
 ### Core Learning Principle
@@ -196,6 +249,59 @@ public static string GetSavePath(GameKey gameKey)
     var defaultPath = ConfigurationManager.AppSettings[$"{gameKey}DefaultSaveFolder"];
     return Environment.ExpandEnvironmentVariables(defaultPath);
 }
+```
+
+## 🗄️ Database Operations & WitcherAI Integration
+
+### DBCode MCP Database Patterns
+```csharp
+// Query reference database for pattern analysis
+var connections = await dbcode_get_connections();
+var patterns = await dbcode_execute_query(
+    connectionId: "sqlite_connection",
+    databaseName: "witcher_save_manager", 
+    query: "SELECT * FROM game_patterns WHERE pattern_type = 'quest_system'"
+);
+
+// Enhanced save file analysis with reference data
+public void AnalyzeSaveWithReference(string savePath)
+{
+    var dbPatterns = GetReferencePatterns("quest_system");
+    var hexAnalysis = AnalyzeHexPatterns(savePath, dbPatterns);
+    // Combine parser results with AI analysis
+}
+```
+
+### Python Execution Patterns
+```csharp
+// Primary: Use Python MCP when available
+try {
+    var result = await python_execute("WitcherAI/cross_game_pattern_mapper.py", args);
+    return ProcessWitcherAIResult(result);
+}
+catch (McpException) {
+    // Fallback: Direct Python execution
+    return ExecutePythonDirect("python.exe", scriptPath, args);
+}
+
+// Autonomous Python execution (reliable fallback)
+var pythonExe = "C:/Users/apkas/AppData/Local/Programs/Python/Python313/python.exe";
+var result = await RunProcessAsync(pythonExe, $"{scriptPath} {args}");
+```
+
+### WitcherAI Framework Integration
+```python
+# Autonomous cross-game pattern analysis
+from cross_game_pattern_mapper import CrossGamePatternMapper
+from universal_decision_taxonomy import UniversalDecisionTaxonomy
+
+# TF-IDF similarity analysis across Witcher games
+mapper = CrossGamePatternMapper()
+patterns = mapper.map_patterns_across_games()
+
+# 7-category decision classification
+taxonomy = UniversalDecisionTaxonomy()
+decision_type = taxonomy.classify_decision(pattern_data)
 ```
 
 ## 🛠️ WitcherCI Tool Infrastructure
@@ -446,40 +552,34 @@ Write-Host "❌ File not found" -ForegroundColor Red
 - **String termination**: Ensure all quotes are properly closed
 - **Variable scope**: Watch for uninitialized variables in script blocks
 
-## 📝 Error Patterns & Solutions - Learning Log
+## 🏆 SDLC Due Diligence Checklist
 
-### PowerShell Script Failures
-**Error**: "Die Zeichenfolge hat kein Abschlusszeichen" (String not terminated)
-- **Cause**: Missing closing braces in foreach loops or if statements
-- **Solution**: Always verify brace matching, use proper indentation
-- **Prevention**: Count opening/closing braces before running scripts
+All contributors must follow this checklist before merging any feature or bugfix branch:
 
-**Error**: Unicode symbols causing parse failures in PowerShell 5.1
-- **Cause**: Using ✓, ❌, 🎯 symbols in PowerShell scripts
-- **Solution**: Replace with plain ASCII: "Success:", "Error:", "Warning:"
-- **Prevention**: Stick to basic ASCII characters in all .ps1 files
+1. **Test Automation**
+   - All code changes must be covered by automated unit/integration tests.
+   - Tests must pass before merge (CI/CD or local run).
+   - Document test coverage and any manual test steps if needed.
 
-### Architectural Violations
-**Error**: Nested public classes in service files
-- **Cause**: Putting multiple classes in SaveFileHexAnalyzer.cs
-- **Solution**: Extract to separate Model files (HexAnalysisResult.cs, DZipInfo.cs)
-- **Prevention**: Follow "one class per file" rule strictly
+2. **Learnings & Error Protocol**
+   - Every error or failure is documented (root cause, solution, prevention).
+   - Update the error learning log in `.github/copilot-instructions.md` or a dedicated log.
+   - Share key learnings in PR/commit messages if relevant.
 
-### File Path Issues
-**Error**: Mixed path separators causing cross-platform issues
-- **Cause**: Using forward slashes in Windows-specific code
-- **Solution**: Use Path.Combine() or consistent backslashes for Windows
-- **Prevention**: Always use Windows-style paths in Windows-specific code
+3. **Cleanup**
+   - Remove obsolete, temporary, or empty files.
+   - Refactor code for clarity and maintainability.
+   - Ensure no debug/test artifacts are left in the repo.
 
-## 🔍 Key Files to Reference
-- **`frontend/ViewModels/MainViewModel.cs`** - Primary MVVM example
-- **`WitcherCore/Services/WitcherSaveFileService.cs`** - Service layer pattern
-- **`frontend/Utils/ResourceHelper.cs`** - Localization utilities
-- **`PRINCIPLES.md`** - Complete architectural guidelines
-- **`installer/Build-Installer.ps1`** - Build automation example
-- **`tools/witcherci/WitcherCI.ps1`** - Task runner infrastructure
-- **`tools/witcher-devagent.bat`** - WitcherCI entry point
-- **`tools/witcherci/scripts/Invoke-EnhancedDZipAnalysis-Clean.ps1`** - Phase 1 breakthrough: Enhanced DZIP analysis with Reference Database
-- **`tools/witcherci/scripts/Hunt-DecisionVariables.ps1`** - Decision variable detection and story progression tracking
-- **`docs/PHASE-0-IMPLEMENTATION-SUMMARY.md`** - Reference Database foundation documentation
-- **`database/witcher_save_manager.db`** - Game knowledge database with pattern mappings
+4. **Documentation**
+   - Update or create documentation for new features, changes, and architecture.
+   - Ensure README, phase summaries, and technical docs are current.
+   - Add usage examples and integration notes as needed.
+
+5. **Commit, Push, and Merge**
+   - Use conventional commit messages.
+   - Push all changes to the remote branch.
+   - Open a PR and merge only after review and all checks pass.
+   - If feature is production-ready, merge to main/dev as appropriate.
+
+> **Reference this checklist in PR templates and code review guidelines.**

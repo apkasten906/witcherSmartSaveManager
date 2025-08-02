@@ -256,3 +256,37 @@ The WitcherAI autonomous implementation meets all SDLC requirements:
 *SDLC Review Conducted: August 2, 2025*  
 *Reviewer: GitHub Copilot Development Agent*  
 *Project: Witcher Smart Save Manager - WitcherAI Integration*
+
+---
+
+## 🏆 SDLC Due Diligence Checklist
+
+All contributors must follow this checklist before merging any feature or bugfix branch:
+
+1. **Test Automation**
+   - All code changes must be covered by automated unit/integration tests.
+   - Tests must pass before merge (CI/CD or local run).
+   - Document test coverage and any manual test steps if needed.
+
+2. **Learnings & Error Protocol**
+   - Every error or failure is documented (root cause, solution, prevention).
+   - Update the error learning log in `.github/copilot-instructions.md` or a dedicated log.
+   - Share key learnings in PR/commit messages if relevant.
+
+3. **Cleanup**
+   - Remove obsolete, temporary, or empty files.
+   - Refactor code for clarity and maintainability.
+   - Ensure no debug/test artifacts are left in the repo.
+
+4. **Documentation**
+   - Update or create documentation for new features, changes, and architecture.
+   - Ensure README, phase summaries, and technical docs are current.
+   - Add usage examples and integration notes as needed.
+
+5. **Commit, Push, and Merge**
+   - Use conventional commit messages.
+   - Push all changes to the remote branch.
+   - Open a PR and merge only after review and all checks pass.
+   - If feature is production-ready, merge to main/dev as appropriate.
+
+> **Reference this checklist in PR templates and code review guidelines.**
