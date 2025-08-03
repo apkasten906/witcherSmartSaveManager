@@ -358,8 +358,17 @@ namespace WitcherSmartSaveManager.ViewModels
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_SavesLoaded", Saves.Count);
             }
+            catch (SaveAnalysisException ex)
+            {
+                Logger.Warn(ex, $"Save analysis error in LoadSavesAsync: {{Key={ex.LocalizationKey}}}");
+                if (!string.IsNullOrEmpty(ex.LocalizationKey))
+                    StatusMessage = Utils.ResourceHelper.GetString(ex.LocalizationKey);
+                else
+                    StatusMessage = ex.Message;
+            }
             catch (Exception ex)
             {
+                Logger.Error(ex, "Unexpected error in LoadSavesAsync");
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Error_LoadingSaves", ex.Message);
             }
         }
@@ -420,8 +429,17 @@ namespace WitcherSmartSaveManager.ViewModels
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_BackupComplete", selected.Count);
             }
+            catch (SaveAnalysisException ex)
+            {
+                Logger.Warn(ex, $"Save analysis error in BackupSelectedSaves: {{Key={ex.LocalizationKey}}}");
+                if (!string.IsNullOrEmpty(ex.LocalizationKey))
+                    StatusMessage = Utils.ResourceHelper.GetString(ex.LocalizationKey);
+                else
+                    StatusMessage = ex.Message;
+            }
             catch (Exception ex)
             {
+                Logger.Error(ex, "Unexpected error in BackupSelectedSaves");
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Error_BackupSaves", ex.Message);
             }
         }
@@ -489,8 +507,17 @@ namespace WitcherSmartSaveManager.ViewModels
                 // Use localized status message format
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Status_DeleteComplete", selected.Count);
             }
+            catch (SaveAnalysisException ex)
+            {
+                Logger.Warn(ex, $"Save analysis error in DeleteSelectedSaves: {{Key={ex.LocalizationKey}}}");
+                if (!string.IsNullOrEmpty(ex.LocalizationKey))
+                    StatusMessage = Utils.ResourceHelper.GetString(ex.LocalizationKey);
+                else
+                    StatusMessage = ex.Message;
+            }
             catch (Exception ex)
             {
+                Logger.Error(ex, "Unexpected error in DeleteSelectedSaves");
                 StatusMessage = Utils.ResourceHelper.GetFormattedString("Error_DeletingSaves", ex.Message);
             }
         }
